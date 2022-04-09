@@ -2,6 +2,7 @@ package com.bsep.admin.crypto.pki.certificates;
 
 import com.bsep.admin.crypto.pki.data.IssuerData;
 import com.bsep.admin.crypto.pki.data.SubjectData;
+import com.bsep.admin.crypto.pki.enums.SubjectAlternativeNameEnum;
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.x509.*;
@@ -19,6 +20,10 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CertificateGenerator {
     public CertificateGenerator() {
@@ -63,6 +68,14 @@ public class CertificateGenerator {
             purposes.add(KeyPurposeId.anyExtendedKeyUsage);
 
             certGen.addExtension(Extension.extendedKeyUsage, false, new DERSequence(purposes));
+
+            // Za testiranje samo
+            Map<SubjectAlternativeNameEnum, String> subjectAlternativeNames = new HashMap<>();
+            subjectAlternativeNames.put(SubjectAlternativeNameEnum.Rfc822Name, "user@mail.com");
+            subjectAlternativeNames.put(SubjectAlternativeNameEnum.DNSName, "test.com");
+            subjectAlternativeNames.put(SubjectAlternativeNameEnum.IPAddress, "127.0.0.1");
+            addSubjectAlternativeNameExtension(certGen, subjectAlternativeNames);
+
             // Generise se sertifikat
             X509CertificateHolder certHolder = certGen.build(contentSigner);
 
@@ -78,6 +91,13 @@ public class CertificateGenerator {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void addSubjectAlternativeNameExtension(X509v3CertificateBuilder certificateBuilder, Map<SubjectAlternativeNameEnum, String> names) throws CertIOException {
+        List<GeneralName> alternativeNames = new ArrayList<>();
+        names.forEach((key, value) -> alternativeNames.add(new GeneralName(key.getValue(), value)));
+        GeneralNames subjectAlternativeNames = GeneralNames.getInstance(new DERSequence((GeneralName[]) alternativeNames.toArray(new GeneralName[] {})));
+        certificateBuilder.addExtension(Extension.subjectAlternativeName, false, subjectAlternativeNames);
     }
 
 }
