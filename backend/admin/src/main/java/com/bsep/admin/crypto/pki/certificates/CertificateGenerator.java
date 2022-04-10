@@ -2,8 +2,9 @@ package com.bsep.admin.crypto.pki.certificates;
 
 import com.bsep.admin.crypto.pki.data.IssuerData;
 import com.bsep.admin.crypto.pki.data.SubjectData;
-import com.bsep.admin.crypto.pki.enums.SubjectAlternativeNameEnum;
+import com.bsep.admin.crypto.pki.enums.SubjectAlternativeName;
 import org.bouncycastle.asn1.ASN1EncodableVector;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.x509.*;
 import org.bouncycastle.cert.CertIOException;
@@ -61,20 +62,20 @@ public class CertificateGenerator {
             KeyUsage usage = new KeyUsage(KeyUsage.keyCertSign | KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.cRLSign);
             certGen.addExtension(Extension.keyUsage, false, usage);
 
-
-            ASN1EncodableVector purposes = new ASN1EncodableVector();
-            purposes.add(KeyPurposeId.id_kp_serverAuth);
-            purposes.add(KeyPurposeId.id_kp_clientAuth);
-            purposes.add(KeyPurposeId.anyExtendedKeyUsage);
-
-            certGen.addExtension(Extension.extendedKeyUsage, false, new DERSequence(purposes));
-
             // Za testiranje samo
-            Map<SubjectAlternativeNameEnum, String> subjectAlternativeNames = new HashMap<>();
-            subjectAlternativeNames.put(SubjectAlternativeNameEnum.Rfc822Name, "user@mail.com");
-            subjectAlternativeNames.put(SubjectAlternativeNameEnum.DNSName, "test.com");
-            subjectAlternativeNames.put(SubjectAlternativeNameEnum.IPAddress, "127.0.0.1");
+            Map<SubjectAlternativeName, String> subjectAlternativeNames = new HashMap<>();
+            subjectAlternativeNames.put(SubjectAlternativeName.Rfc822Name, "user@mail.com");
+            subjectAlternativeNames.put(SubjectAlternativeName.DNSName, "test.com");
+            subjectAlternativeNames.put(SubjectAlternativeName.IPAddress, "127.0.0.1");
             addSubjectAlternativeNameExtension(certGen, subjectAlternativeNames);
+
+
+            // Za testiranje
+            List<KeyPurposeId> extendedKeyUsages = new ArrayList<>();
+            extendedKeyUsages.add(KeyPurposeId.anyExtendedKeyUsage);
+            extendedKeyUsages.add(KeyPurposeId.id_kp_clientAuth);
+            extendedKeyUsages.add(KeyPurposeId.id_kp_serverAuth);
+            addExtendedKeyUsageExtension(certGen, extendedKeyUsages);
 
             // Generise se sertifikat
             X509CertificateHolder certHolder = certGen.build(contentSigner);
@@ -93,11 +94,21 @@ public class CertificateGenerator {
         return null;
     }
 
-    public void addSubjectAlternativeNameExtension(X509v3CertificateBuilder certificateBuilder, Map<SubjectAlternativeNameEnum, String> names) throws CertIOException {
+    public void addSubjectAlternativeNameExtension(X509v3CertificateBuilder certificateBuilder, Map<SubjectAlternativeName, String> names) throws CertIOException {
         List<GeneralName> alternativeNames = new ArrayList<>();
         names.forEach((key, value) -> alternativeNames.add(new GeneralName(key.getValue(), value)));
         GeneralNames subjectAlternativeNames = GeneralNames.getInstance(new DERSequence((GeneralName[]) alternativeNames.toArray(new GeneralName[] {})));
         certificateBuilder.addExtension(Extension.subjectAlternativeName, false, subjectAlternativeNames);
+    }
+
+    public void addExtendedKeyUsageExtension(X509v3CertificateBuilder certificateBuilder, List<KeyPurposeId> extendedKeyUsages) throws CertIOException {
+        ASN1EncodableVector purposes = new ASN1EncodableVector();
+//        purposes.add(KeyPurposeId.id_kp_serverAuth);
+//        purposes.add(KeyPurposeId.id_kp_clientAuth);
+//        purposes.add(KeyPurposeId.anyExtendedKeyUsage);
+        extendedKeyUsages.forEach(usage -> purposes.add(usage));
+
+        certificateBuilder.addExtension(Extension.extendedKeyUsage, false, new DERSequence(purposes));
     }
 
 }

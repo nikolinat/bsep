@@ -1,6 +1,6 @@
 package com.bsep.admin.crypto.pki.enums;
 
-public enum SubjectAlternativeNameEnum {
+public enum SubjectAlternativeName {
     OtherName(0),
     Rfc822Name(1),
     DNSName(2),
@@ -12,6 +12,6 @@ public enum SubjectAlternativeNameEnum {
     RegisteredID(8);
 
     private final int value;
-    SubjectAlternativeNameEnum(int value) { this.value = value; }
+    SubjectAlternativeName(int value) { this.value = value; }
     public int getValue() { return value; }
 }
