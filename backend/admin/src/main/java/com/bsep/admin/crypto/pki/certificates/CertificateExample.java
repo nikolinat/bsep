@@ -6,6 +6,7 @@ import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import java.io.IOException;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -45,7 +46,7 @@ public class CertificateExample {
             // Ovde se desava exception, jer se validacija vrsi putem drugog kljuca
             KeyPair anotherPair = generateKeyPair();
             cert.verify(anotherPair.getPublic());
-        } catch (CertificateException | InvalidKeyException | NoSuchAlgorithmException | NoSuchProviderException e) {
+        } catch (CertificateException | InvalidKeyException | NoSuchAlgorithmException | NoSuchProviderException | IOException e) {
             e.printStackTrace();
         } catch (SignatureException e) {
             System.out.println("\nValidacija neuspesna :(");
