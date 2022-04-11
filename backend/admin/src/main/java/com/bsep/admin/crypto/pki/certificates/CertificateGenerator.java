@@ -18,6 +18,7 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -29,7 +30,6 @@ import java.util.Map;
 public class CertificateGenerator {
     public CertificateGenerator() {
     }
-
 
 
     public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData) {
@@ -59,8 +59,18 @@ public class CertificateGenerator {
             certGen.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
 
 
-            KeyUsage usage = new KeyUsage(KeyUsage.keyCertSign | KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.cRLSign);
-            certGen.addExtension(Extension.keyUsage, false, usage);
+            // dodavanje keyUsage
+            List<Integer> keyUsages = new ArrayList<>();
+            keyUsages.add(KeyUsage.keyCertSign);
+            keyUsages.add(KeyUsage.keyCertSign);
+            addKeyUsage(certGen, keyUsages);
+
+            // dodavanje authorityKeyIdentifier
+            Map<SubjectAlternativeName, String> generalNames = new HashMap<>();
+            generalNames.put(SubjectAlternativeName.Rfc822Name, "user@mail.com");
+            generalNames.put(SubjectAlternativeName.RegisteredID, "0.0.1");
+            addAuthorityKeyIdentifier(certGen, subjectData.getPublicKey().getEncoded(), generalNames, new BigInteger(subjectData.getSerialNumber().getBytes()));
+
 
             // Za testiranje samo
             Map<SubjectAlternativeName, String> subjectAlternativeNames = new HashMap<>();
@@ -68,6 +78,7 @@ public class CertificateGenerator {
             subjectAlternativeNames.put(SubjectAlternativeName.DNSName, "test.com");
             subjectAlternativeNames.put(SubjectAlternativeName.IPAddress, "127.0.0.1");
             addSubjectAlternativeNameExtension(certGen, subjectAlternativeNames);
+
 
 
             // Za testiranje
@@ -97,7 +108,7 @@ public class CertificateGenerator {
     public void addSubjectAlternativeNameExtension(X509v3CertificateBuilder certificateBuilder, Map<SubjectAlternativeName, String> names) throws CertIOException {
         List<GeneralName> alternativeNames = new ArrayList<>();
         names.forEach((key, value) -> alternativeNames.add(new GeneralName(key.getValue(), value)));
-        GeneralNames subjectAlternativeNames = GeneralNames.getInstance(new DERSequence((GeneralName[]) alternativeNames.toArray(new GeneralName[] {})));
+        GeneralNames subjectAlternativeNames = GeneralNames.getInstance(new DERSequence((GeneralName[]) alternativeNames.toArray(new GeneralName[]{})));
         certificateBuilder.addExtension(Extension.subjectAlternativeName, false, subjectAlternativeNames);
     }
 
@@ -111,4 +122,20 @@ public class CertificateGenerator {
         certificateBuilder.addExtension(Extension.extendedKeyUsage, false, new DERSequence(purposes));
     }
 
+    public void addKeyUsage(X509v3CertificateBuilder certificateBuilder, List<Integer> keyUsages) throws CertIOException {
+        int usage = 0;
+        for (Integer keyUsage : keyUsages) {
+            usage = usage | keyUsage;
+        }
+        certificateBuilder.addExtension(Extension.keyUsage, false, new KeyUsage(usage));
+    }
+
+    public void addAuthorityKeyIdentifier(X509v3CertificateBuilder certificateBuilder, byte[] keyIdentifier, Map<SubjectAlternativeName, String> names, BigInteger bigInteger) throws CertIOException {
+        List<GeneralName> alternativeNames = new ArrayList<>();
+        names.forEach((key, value) -> alternativeNames.add(new GeneralName(key.getValue(), value)));
+        GeneralNames generalNames = GeneralNames.getInstance(new DERSequence(alternativeNames.toArray(new GeneralName[]{})));
+        certificateBuilder.addExtension(Extension.authorityKeyIdentifier, false, new AuthorityKeyIdentifier(keyIdentifier, generalNames, bigInteger));
+    }
 }
+
+
