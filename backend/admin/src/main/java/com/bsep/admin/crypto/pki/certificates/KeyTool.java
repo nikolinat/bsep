@@ -96,7 +96,7 @@ public class KeyTool {
         return keyGen.generateKeyPair();
     }
 
-    private void createNewSelfSignedCertificate() throws ParseException, NoSuchAlgorithmException, NoSuchProviderException {
+    private void createNewSelfSignedCertificate() throws ParseException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
         // TODO: Upotrebom klasa iz primeri/pki paketa, prikazati sadrzaj keystore-a, gde korisnik unosi sve potrebne podatke
         // Radi ustede hardkodovati podatke vezane za subjekta sertifikata
         KeyPair keyPair = generateKeyPair();
@@ -167,7 +167,7 @@ public class KeyTool {
         return new IssuerData(issuerKey, builder.build());
     }
 
-    private void createNewIssuedCertificate() throws ParseException, NoSuchAlgorithmException, NoSuchProviderException {
+    private void createNewIssuedCertificate() throws ParseException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
         // TODO: Upotrebom klasa iz primeri/pki paketa, prikazati sadrzaj keystore-a, gde korisnik unosi sve potrebne podatke
         // Radi ustede vremena hardkodovati podatke vezane za subjekta sertifikata
         KeyPair keyPair = generateKeyPair();
