@@ -59,7 +59,7 @@ public class CertificateGenerator {
             SubjectKeyIdentifier subjectKeyIdentifier = new JcaX509ExtensionUtils().createSubjectKeyIdentifier(subjectData.getPublicKey());
             certificateGenerator.addExtension(Extension.subjectKeyIdentifier, false, subjectKeyIdentifier);
 
-            certificateGenerator.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
+
 
             // dodavanje keyUsage
             List<Integer> keyUsages = new ArrayList<>();
