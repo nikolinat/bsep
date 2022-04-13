@@ -41,8 +41,14 @@ public class KeyStoreReader {
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
             keyStore.load(in, password);
 
-            // Iscitava se sertifikat koji ima dati alias
-            Certificate cert = keyStore.getCertificate(alias);
+            // Iscitava se lanac sertifikata koji ima dati alias
+            Certificate cert;
+            if (alias.equals("root")) {
+                cert = keyStore.getCertificate(alias);
+            } else {
+                cert = keyStore.getCertificateChain(alias)[1];
+            }
+
 
             // Iscitava se privatni kljuc vezan za javni kljuc koji se nalazi na sertifikatu sa datim aliasom
             PrivateKey privKey = (PrivateKey) keyStore.getKey(alias, keyPass);

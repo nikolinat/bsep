@@ -32,24 +32,23 @@ import java.util.Map;
 
 public class CertificateGenerator {
     private X509v3CertificateBuilder certificateGenerator;
+
     public CertificateGenerator() {
     }
 
 
     public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData) throws IOException {
         try {
-            // Posto klasa za generisanje sertifiakta ne moze da primi direktno privatni kljuc pravi se builder za objekat
-            // Ovaj objekat sadrzi privatni kljuc izdavaoca sertifikata i koristiti se za potpisivanje sertifikata
-            // Parametar koji se prosledjuje je algoritam koji se koristi za potpisivanje sertifiakta
+
             JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
 
-            // Takodje se navodi koji provider se koristi, u ovom slucaju Bouncy Castle
+
             builder = builder.setProvider("BC");
 
-            // Formira se objekat koji ce sadrzati privatni kljuc i koji ce se koristiti za potpisivanje sertifikata
+
             ContentSigner contentSigner = builder.build(issuerData.getPrivateKey());
 
-            // Postavljaju se podaci za generisanje sertifiakta
+
             certificateGenerator = new JcaX509v3CertificateBuilder(issuerData.getX500name(),
                     new BigInteger(subjectData.getSerialNumber().getBytes()),
                     subjectData.getStartDate(),
@@ -81,7 +80,6 @@ public class CertificateGenerator {
             subjectAlternativeNames.put(SubjectAlternativeName.DNSName, "test.com");
             subjectAlternativeNames.put(SubjectAlternativeName.IPAddress, "127.0.0.1");
             addSubjectAlternativeNameExtension(subjectAlternativeNames);
-
 
 
             // Za testiranje
@@ -130,9 +128,6 @@ public class CertificateGenerator {
 
     public void addExtendedKeyUsageExtension(List<KeyPurposeId> extendedKeyUsages) throws CertIOException {
         ASN1EncodableVector purposes = new ASN1EncodableVector();
-//        purposes.add(KeyPurposeId.id_kp_serverAuth);
-//        purposes.add(KeyPurposeId.id_kp_clientAuth);
-//        purposes.add(KeyPurposeId.anyExtendedKeyUsage);
         extendedKeyUsages.forEach(usage -> purposes.add(usage));
 
         certificateGenerator.addExtension(Extension.extendedKeyUsage, false, new DERSequence(purposes));
@@ -171,6 +166,50 @@ public class CertificateGenerator {
         names.forEach((key, value) -> alternativeNames.add(new GeneralName(key.getValue(), value)));
 
         certificateGenerator.addExtension(Extension.issuerAlternativeName, false, new DERSequence(alternativeNames.toArray(new GeneralName[]{})));
+    }
+
+
+    public X509Certificate generateCACertificate(SubjectData subjectData, IssuerData issuerData) {
+        try {
+
+            JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
+            builder = builder.setProvider("BC");
+
+            ContentSigner contentSigner = builder.build(issuerData.getPrivateKey());
+
+            certificateGenerator = new JcaX509v3CertificateBuilder(issuerData.getX500name(),
+                    new BigInteger(subjectData.getSerialNumber().getBytes()),
+                    subjectData.getStartDate(),
+                    subjectData.getEndDate(),
+                    subjectData.getX500name(),
+                    subjectData.getPublicKey());
+
+            SubjectKeyIdentifier subjectKeyIdentifier = new JcaX509ExtensionUtils().createSubjectKeyIdentifier(subjectData.getPublicKey());
+            certificateGenerator.addExtension(Extension.subjectKeyIdentifier, false, subjectKeyIdentifier);
+
+            certificateGenerator.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
+
+            List<Integer> keyUsages = new ArrayList<>();
+            keyUsages.add(KeyUsage.keyCertSign);
+            keyUsages.add(KeyUsage.cRLSign);
+            addKeyUsage(keyUsages);
+
+            Map<SubjectAlternativeName, String> generalNames = new HashMap<>();
+            //OVDE TREBA DODATI ALI NE ZNAM KOJI JE OBLIK :(
+            //generalNames.put(SubjectAlternativeName.DirectoryName, "user@mail.com");
+            addAuthorityKeyIdentifier(subjectData.getPublicKey().getEncoded(), generalNames, new BigInteger(subjectData.getSerialNumber().getBytes()));
+
+            X509CertificateHolder certHolder = certificateGenerator.build(contentSigner);
+
+            JcaX509CertificateConverter certConverter = new JcaX509CertificateConverter();
+            certConverter = certConverter.setProvider("BC");
+
+            return certConverter.getCertificate(certHolder);
+
+        } catch (IllegalArgumentException | IllegalStateException | OperatorCreationException | CertificateException | CertIOException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 
