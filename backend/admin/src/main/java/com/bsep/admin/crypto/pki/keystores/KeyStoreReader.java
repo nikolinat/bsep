@@ -11,7 +11,9 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 
 
 public class KeyStoreReader {
@@ -41,8 +43,14 @@ public class KeyStoreReader {
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
             keyStore.load(in, password);
 
-            // Iscitava se sertifikat koji ima dati alias
-            Certificate cert = keyStore.getCertificate(alias);
+            // Iscitava se lanac sertifikata koji ima dati alias
+            Certificate cert;
+            if (alias.equals("root")) {
+                cert = keyStore.getCertificate(alias);
+            } else {
+                cert = keyStore.getCertificateChain(alias)[1];
+            }
+
 
             // Iscitava se privatni kljuc vezan za javni kljuc koji se nalazi na sertifikatu sa datim aliasom
             PrivateKey privKey = (PrivateKey) keyStore.getKey(alias, keyPass);
@@ -59,7 +67,7 @@ public class KeyStoreReader {
     /**
      * Ucitava sertifikat is KS fajla
      */
-    public Certificate readCertificate(String keyStoreFile, String keyStorePass, String alias) {
+    public Certificate[] readCertificate(String keyStoreFile, String keyStorePass, String alias) {
         try {
             // kreiramo instancu KeyStore
             KeyStore ks = KeyStore.getInstance("JKS", "SUN");
@@ -69,7 +77,7 @@ public class KeyStoreReader {
             ks.load(in, keyStorePass.toCharArray());
 
             if (ks.isKeyEntry(alias)) {
-                return ks.getCertificate(alias);
+                return ks.getCertificateChain(alias);
             }
         } catch (KeyStoreException | NoSuchProviderException | NoSuchAlgorithmException |
                 CertificateException | IOException e) {
@@ -100,10 +108,10 @@ public class KeyStoreReader {
         return null;
     }
 
-    public Enumeration<String> getAllAliases(String keyStoreFile, String keyStorePass) throws KeyStoreException, NoSuchProviderException, IOException, CertificateException, NoSuchAlgorithmException {
+    public List<String> getAllAliases(String keyStoreFile, String keyStorePass) throws KeyStoreException, NoSuchProviderException, IOException, CertificateException, NoSuchAlgorithmException {
         KeyStore ks = KeyStore.getInstance("JKS", "SUN");
         BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
         ks.load(in, keyStorePass.toCharArray());
-        return ks.aliases();
+        return  Collections.list(ks.aliases());
     }
 }

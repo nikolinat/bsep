@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class KeyStoreWriter {
 
@@ -39,11 +42,27 @@ public class KeyStoreWriter {
         }
     }
 
-    public void write(String alias, PrivateKey privateKey, char[] password, java.security.cert.Certificate certificate) {
+    public void write(String alias, String chain, PrivateKey privateKey, char[] password, Certificate certificate) {
+        try {
+            List<Certificate> certificateList = new ArrayList<>(Arrays.asList(findCertificateChain(chain)));
+            certificateList.add(certificate);
+            Certificate[] certificates = certificateList.toArray(findCertificateChain(chain));
+            keyStore.setKeyEntry(alias, privateKey, password, certificates);
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeRoot(String alias, PrivateKey privateKey, char[] password, Certificate certificate) {
         try {
             keyStore.setKeyEntry(alias, privateKey, password, new Certificate[]{certificate});
         } catch (KeyStoreException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public Certificate[] findCertificateChain(String alias) throws KeyStoreException {
+        return keyStore.getCertificateChain(alias);
     }
 }

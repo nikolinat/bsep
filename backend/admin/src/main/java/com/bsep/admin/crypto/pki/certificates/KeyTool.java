@@ -14,16 +14,14 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 
 
 public class KeyTool {
     KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
     KeyStoreReader keyStoreReader = new KeyStoreReader();
     CertificateGenerator certificateGenerator = new CertificateGenerator();
+    CertificateUtil certificateUtil = new CertificateUtil();
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
     public KeyTool(){
@@ -54,8 +52,16 @@ public class KeyTool {
                     kt.createNewIssuedCertificate();
                     break;
                 }
+                case 5:{
+                    kt.certificateUtil.createCACertificate();
+                    break;
+                }
+                case 6: {
+                    kt.certificateUtil.createIntermediateCertificate();
+                    break;
+                }
             }
-        } while (choice != 5);
+        } while (choice != 7);
         keyboard.close();
     }
 
@@ -82,11 +88,16 @@ public class KeyTool {
         System.out.println("Enter password for keystore:");
         String password = keyboard.nextLine();
         String keystoreFileName = makeFilePath(keystore);
-        Enumeration<String> aliases = keyStoreReader.getAllAliases(keystoreFileName, password);
-        while(aliases.hasMoreElements()){
-            Certificate certificate =  keyStoreReader.readCertificate(keystoreFileName, password, aliases.nextElement());
-            System.out.println(certificate);
+        List<String> aliases = keyStoreReader.getAllAliases(keystoreFileName, password);
+        // OVDE SAM IZBACILA ROOT I INTERMEDIATE JER SE U OKVIRU POSLEDNJEG U NIZU UCITAJU I ONI, MISLIM DA JE TO OK
+        aliases.removeIf(a -> a.equals("root") || a.equals("intermediate"));
+        for(String a: aliases) {
+            Certificate[] certificate = keyStoreReader.readCertificate(keystoreFileName, password, a);
+            for(Certificate c: certificate){
+                System.out.println(c);
+            }
         }
+
 
     }
     private KeyPair generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException {
@@ -148,30 +159,16 @@ public class KeyTool {
 
         String keystoreFileName = makeFilePath(keystore);
         keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
-        keyStoreWriter.write("certificate"+sn, keyPair.getPrivate(), password.toCharArray(), certificate);
+        keyStoreWriter.write("certificate"+sn,"intermediate", keyPair.getPrivate(), password.toCharArray(), certificate);
         keyStoreWriter.saveKeyStore(keystoreFileName, password.toCharArray());
+
     }
 
-    //Podaci o issuer
-    private IssuerData generateIssuerData(PrivateKey issuerKey) {
-        X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
-        builder.addRDN(BCStyle.CN, "Pera Peric");
-        builder.addRDN(BCStyle.SURNAME, "Peric");
-        builder.addRDN(BCStyle.GIVENNAME, "Pera");
-        builder.addRDN(BCStyle.O, "SIIT");
-        builder.addRDN(BCStyle.OU, "BSEP");
-        builder.addRDN(BCStyle.C, "RS");
-        builder.addRDN(BCStyle.E, "tim4@uns.ac.rs");
-
-        builder.addRDN(BCStyle.UID, "123456789");
-        return new IssuerData(issuerKey, builder.build());
-    }
 
     private void createNewIssuedCertificate() throws ParseException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
         // TODO: Upotrebom klasa iz primeri/pki paketa, prikazati sadrzaj keystore-a, gde korisnik unosi sve potrebne podatke
         // Radi ustede vremena hardkodovati podatke vezane za subjekta sertifikata
         KeyPair keyPair = generateKeyPair();
-        KeyPair issuerPair = generateKeyPair();
 
         Scanner keyboard = new Scanner(System.in);
         System.out.println("Enter name:");
@@ -215,12 +212,13 @@ public class KeyTool {
 
         SubjectData subjectData = new SubjectData(keyPair.getPublic(), builder.build(), sn, startDate, endDate);
 
-        IssuerData issuerData = generateIssuerData(issuerPair.getPrivate());
+        String alias = "intermediate";
+        String pass = "bsep";
+        IssuerData issuerData = keyStoreReader.readIssuerFromStore(makeFilePath(pass), alias,pass.toCharArray(), pass.toCharArray());
         Certificate certificate = certificateGenerator.generateCertificate(subjectData,issuerData);
-
         String keystoreFileName = makeFilePath(keystore);
         keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
-        keyStoreWriter.write("certificate"+sn, issuerPair.getPrivate(), password.toCharArray(), certificate);
+        keyStoreWriter.write("certificate"+sn,"intermediate", issuerData.getPrivateKey(), password.toCharArray(), certificate);
         keyStoreWriter.saveKeyStore(keystoreFileName, password.toCharArray());
 
     }
@@ -231,7 +229,12 @@ public class KeyTool {
         System.out.println("2.	Show key store content");
         System.out.println("3.	Create new self signed certificate");
         System.out.println("4.	Create new issued certificate");
-        System.out.println("5.	Exit");
+        System.out.println("5.  Create CA certificate");
+        System.out.println("6.  Create intermediate certificate");
+        System.out.println("7.	Exit");
         System.out.print(">>>");
     }
+
+
+
 }
