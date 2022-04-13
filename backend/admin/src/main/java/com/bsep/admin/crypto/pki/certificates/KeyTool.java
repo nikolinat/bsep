@@ -14,10 +14,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 
 
 public class KeyTool {
@@ -91,11 +88,16 @@ public class KeyTool {
         System.out.println("Enter password for keystore:");
         String password = keyboard.nextLine();
         String keystoreFileName = makeFilePath(keystore);
-        Enumeration<String> aliases = keyStoreReader.getAllAliases(keystoreFileName, password);
-        while(aliases.hasMoreElements()){
-            Certificate certificate =  keyStoreReader.readCertificate(keystoreFileName, password, aliases.nextElement());
-            System.out.println(certificate);
+        List<String> aliases = keyStoreReader.getAllAliases(keystoreFileName, password);
+        // OVDE SAM IZBACILA ROOT I INTERMEDIATE JER SE U OKVIRU POSLEDNJEG U NIZU UCITAJU I ONI, MISLIM DA JE TO OK
+        aliases.removeIf(a -> a.equals("root") || a.equals("intermediate"));
+        for(String a: aliases) {
+            Certificate[] certificate = keyStoreReader.readCertificate(keystoreFileName, password, a);
+            for(Certificate c: certificate){
+                System.out.println(c);
+            }
         }
+
 
     }
     private KeyPair generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException {
