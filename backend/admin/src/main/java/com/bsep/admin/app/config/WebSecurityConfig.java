@@ -31,7 +31,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
-                .authorizeRequests().antMatchers("/auth/csr").permitAll()
+                .authorizeRequests().antMatchers("/auth/csr").permitAll().and()
+                .authorizeRequests().antMatchers("/auth/certificate").permitAll()
                 .anyRequest().authenticated().and()
                 .cors().and();
 
@@ -42,6 +43,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/csr");
         web.ignoring().antMatchers(HttpMethod.PUT, "/api/v1/csr/**");
+        web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/certificate");
+        web.ignoring().antMatchers(HttpMethod.PUT, "/api/v1/certificate/**");
+        web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/certificate/**");
         web.ignoring().antMatchers(HttpMethod.GET,"/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html",
                 "/**/*.css", "/**/*.js");
     }
