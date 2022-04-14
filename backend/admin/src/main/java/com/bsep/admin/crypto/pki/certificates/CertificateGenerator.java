@@ -18,11 +18,13 @@ import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.asn1.x509.PolicyConstraints;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
+import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -30,10 +32,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class CertificateGenerator {
     private X509v3CertificateBuilder certificateGenerator;
 
     public CertificateGenerator() {
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
     }
 
 
@@ -47,7 +51,6 @@ public class CertificateGenerator {
 
 
             ContentSigner contentSigner = builder.build(issuerData.getPrivateKey());
-
 
             certificateGenerator = new JcaX509v3CertificateBuilder(issuerData.getX500name(),
                     new BigInteger(subjectData.getSerialNumber().getBytes()),

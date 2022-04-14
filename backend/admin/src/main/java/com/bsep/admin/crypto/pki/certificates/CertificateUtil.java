@@ -17,17 +17,18 @@ import java.util.Date;
 import java.util.UUID;
 
 public class CertificateUtil {
+    // stavila sam da mi je metoda za issuera static pa su mi trebala static polja. Ako bude problema promenicemo.
     KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
-    KeyStoreReader keyStoreReader = new KeyStoreReader();
+    static KeyStoreReader keyStoreReader = new KeyStoreReader();
     CertificateGenerator certificateGenerator = new CertificateGenerator();
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-    private final String password = "bsep";
+    private static final String password = "bsep";
 
     public CertificateUtil() {
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    public String makeFilePath() {
+    public static String makeFilePath() {
         return "src/main/java/files/keystores/bsep.jks";
     }
 
@@ -36,7 +37,7 @@ public class CertificateUtil {
         keyStoreWriter.saveKeyStore(makeFilePath(), password.toCharArray());
     }
 
-    public KeyPair generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException {
+    public static KeyPair generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
         keyGen.initialize(2048, random);
@@ -106,4 +107,11 @@ public class CertificateUtil {
 
     }
 
+    public static IssuerData getIntermediateCertificateDetails() {
+        return keyStoreReader.readIssuerFromStore(makeFilePath(), "intermediate", password.toCharArray(), password.toCharArray());
+    }
+
+    public static String getKeyStorePassword() {
+        return password;
+    }
 }
