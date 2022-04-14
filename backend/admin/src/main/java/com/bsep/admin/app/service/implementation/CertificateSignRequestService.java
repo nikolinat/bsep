@@ -107,10 +107,11 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
         SubjectData subjectData = new SubjectData(keyPair.getPublic(), builder.build(), serialNumber, generateCertificateDto.getStartDate(),
                 generateCertificateDto.getEndDate());
 
-        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData);
+        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData, generateCertificateDto);
 
         String keystoreFileName = CertificateUtil.makeFilePath();
 
+        System.out.println(certificate);
         keyStoreWriter.loadKeyStore(keystoreFileName, CertificateUtil.getKeyStorePassword().toCharArray());
         keyStoreWriter.write("certificate" + serialNumber, "intermediate", issuerData.getPrivateKey(),
                 CertificateUtil.getKeyStorePassword().toCharArray(), certificate);

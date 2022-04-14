@@ -1,5 +1,6 @@
 package com.bsep.admin.crypto.pki.certificates;
 
+import com.bsep.admin.app.dto.GenerateCertificateDto;
 import com.bsep.admin.crypto.pki.data.IssuerData;
 import com.bsep.admin.crypto.pki.data.SubjectData;
 import com.bsep.admin.crypto.pki.keystores.KeyStoreReader;
@@ -98,7 +99,7 @@ public class CertificateUtil {
 
 
         IssuerData issuerData = keyStoreReader.readIssuerFromStore(makeFilePath(), "root", password.toCharArray(), password.toCharArray());
-        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData);
+        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData, new GenerateCertificateDto());
 
         String keystoreFileName = makeFilePath();
         keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
