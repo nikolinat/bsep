@@ -1,5 +1,7 @@
 package com.bsep.admin.crypto.pki.keystores;
 
+import org.springframework.stereotype.Component;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Component
 public class KeyStoreWriter {
 
     private KeyStore keyStore;
