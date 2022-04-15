@@ -14,14 +14,15 @@ import java.security.cert.Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 import java.util.UUID;
 
 public class CertificateUtil {
     // stavila sam da mi je metoda za issuera static pa su mi trebala static polja. Ako bude problema promenicemo.
-    KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
+    static KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
     static KeyStoreReader keyStoreReader = new KeyStoreReader();
-    CertificateGenerator certificateGenerator = new CertificateGenerator();
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    static CertificateGenerator certificateGenerator = new CertificateGenerator();
+    static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     private static final String password = "bsep";
 
     public CertificateUtil() {
@@ -32,7 +33,7 @@ public class CertificateUtil {
         return "src/main/java/files/keystores/bsep.jks";
     }
 
-    public void createNewKeyStore() {
+    public static void createNewKeyStore() {
         keyStoreWriter.loadKeyStore(null, password.toCharArray());
         keyStoreWriter.saveKeyStore(makeFilePath(), password.toCharArray());
     }
@@ -44,7 +45,7 @@ public class CertificateUtil {
         return keyGen.generateKeyPair();
     }
 
-    private X500NameBuilder generateBuilder() {
+    private static X500NameBuilder generateBuilder() {
         X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
         builder.addRDN(BCStyle.CN, "Pera Peric");
         builder.addRDN(BCStyle.SURNAME, "Peric");
@@ -58,30 +59,31 @@ public class CertificateUtil {
         return builder;
     }
 
-    public void createCACertificate() throws NoSuchAlgorithmException, NoSuchProviderException, ParseException, IOException {
+    public static String createCACertificate() throws NoSuchAlgorithmException, NoSuchProviderException, ParseException, IOException {
         KeyPair issuerPair = generateKeyPair();
         Date startDate = formatter.parse("2022-04-10");
         Date endDate = formatter.parse("2023-04-10");
 
-        String sn = UUID.randomUUID().toString();
+        String serialNumber = UUID.randomUUID().toString();
         X500NameBuilder builder = generateBuilder();
-        SubjectData subjectData = new SubjectData(issuerPair.getPublic(), builder.build(), sn, startDate, endDate);
+        SubjectData subjectData = new SubjectData(issuerPair.getPublic(), builder.build(), serialNumber, startDate, endDate);
         IssuerData issuerData = new IssuerData(issuerPair.getPrivate(), builder.build());
 
         Certificate certificate = certificateGenerator.generateCACertificate(subjectData, issuerData);
 
         String keystoreFileName = makeFilePath();
         keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
-        keyStoreWriter.writeRoot("root", issuerPair.getPrivate(), password.toCharArray(), certificate);
+        keyStoreWriter.writeRoot(serialNumber, issuerPair.getPrivate(), password.toCharArray(), certificate);
         keyStoreWriter.saveKeyStore(keystoreFileName, password.toCharArray());
+        return serialNumber;
     }
 
-    public void createIntermediateCertificate() throws NoSuchAlgorithmException, NoSuchProviderException, ParseException, IOException {
+    public static String createIntermediateCertificate(String issuerAlias) throws NoSuchAlgorithmException, NoSuchProviderException, ParseException, IOException {
         KeyPair subjectPair = generateKeyPair();
         Date startDate = formatter.parse("2022-04-10");
         Date endDate = formatter.parse("2023-04-10");
 
-        String sn = UUID.randomUUID().toString();
+        String serialNumber = UUID.randomUUID().toString();
 
 
         X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
@@ -94,24 +96,54 @@ public class CertificateUtil {
         builder.addRDN(BCStyle.E, "tim4@uns.ac.rs");
 
         builder.addRDN(BCStyle.UID, "987654321");
-        SubjectData subjectData = new SubjectData(subjectPair.getPublic(), builder.build(), sn, startDate, endDate);
+        SubjectData subjectData = new SubjectData(subjectPair.getPublic(), builder.build(), serialNumber, startDate, endDate);
 
 
-        IssuerData issuerData = keyStoreReader.readIssuerFromStore(makeFilePath(), "root", password.toCharArray(), password.toCharArray());
+        IssuerData issuerData = keyStoreReader.readIssuerFromStore(makeFilePath(), issuerAlias, password.toCharArray(), password.toCharArray(), true);
         Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData);
 
         String keystoreFileName = makeFilePath();
         keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
-        keyStoreWriter.write("intermediate", "root", subjectPair.getPrivate(), password.toCharArray(), certificate);
+        keyStoreWriter.write(serialNumber, issuerAlias, subjectPair.getPrivate(), password.toCharArray(), certificate);
         keyStoreWriter.saveKeyStore(keystoreFileName, password.toCharArray());
-
+        return serialNumber;
     }
 
     public static IssuerData getIntermediateCertificateDetails() {
-        return keyStoreReader.readIssuerFromStore(makeFilePath(), "intermediate", password.toCharArray(), password.toCharArray());
+        return keyStoreReader.readIssuerFromStore(makeFilePath(), "intermediate", password.toCharArray(), password.toCharArray(), false);
     }
 
     public static String getKeyStorePassword() {
         return password;
+    }
+
+    public static void createNewIssuedCertificate(String issuerAlias) throws ParseException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
+
+        KeyPair keyPair = generateKeyPair();
+
+        Date startDate = formatter.parse("2022-05-05");
+        Date endDate = formatter.parse("2022-06-05");
+
+        String sn = UUID.randomUUID().toString();
+
+        X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
+        builder.addRDN(BCStyle.CN, "mika".concat(" ").concat("mikic"));
+        builder.addRDN(BCStyle.SURNAME, "mikic");
+        builder.addRDN(BCStyle.GIVENNAME, "mika");
+        builder.addRDN(BCStyle.O, "ftn");
+        builder.addRDN(BCStyle.OU, "ftn");
+        builder.addRDN(BCStyle.C, "rs");
+        builder.addRDN(BCStyle.E, "mika@");
+        builder.addRDN(BCStyle.UID, "123");
+
+        SubjectData subjectData = new SubjectData(keyPair.getPublic(), builder.build(), sn, startDate, endDate);
+
+        IssuerData issuerData = keyStoreReader.readIssuerFromStore(makeFilePath(), issuerAlias,getKeyStorePassword().toCharArray(), getKeyStorePassword().toCharArray(), false);
+        Certificate certificate = certificateGenerator.generateCertificate(subjectData,issuerData);
+        String keystoreFileName = makeFilePath();
+        keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
+        keyStoreWriter.write(sn,issuerAlias, issuerData.getPrivateKey(), password.toCharArray(), certificate);
+        keyStoreWriter.saveKeyStore(keystoreFileName, password.toCharArray());
+
     }
 }
