@@ -2,6 +2,7 @@ package com.bsep.admin.app.service.contract;
 
 import com.bsep.admin.app.model.Certificate;
 
+import java.security.cert.X509Certificate;
 import java.util.List;
 
 public interface ICertificateService {
@@ -9,4 +10,5 @@ public interface ICertificateService {
     Certificate findBySerialNumber(String serialNumber) throws Exception;
     Certificate create(Certificate entity) throws Exception;
     Certificate update(Certificate entity, String id) throws Exception;
+    Certificate verifyIssuerCertificate(Certificate issuerCertificate);
 }

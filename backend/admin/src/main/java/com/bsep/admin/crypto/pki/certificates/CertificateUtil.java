@@ -10,7 +10,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.IOException;
 import java.security.*;
+import java.security.cert.CertPath;
 import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -114,4 +116,6 @@ public class CertificateUtil {
     public static String getKeyStorePassword() {
         return password;
     }
+
+
 }
