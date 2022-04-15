@@ -1,5 +1,8 @@
 package com.bsep.admin.crypto.pki.certificates;
 
+import com.bsep.admin.app.dto.GenerateCertificateDto;
+import com.bsep.admin.app.model.CACertificateAlias;
+import com.bsep.admin.app.service.implementation.CaCertificateAliasService;
 import com.bsep.admin.crypto.pki.data.IssuerData;
 import com.bsep.admin.crypto.pki.data.SubjectData;
 import com.bsep.admin.crypto.pki.keystores.KeyStoreReader;
@@ -98,9 +101,8 @@ public class CertificateUtil {
         builder.addRDN(BCStyle.UID, "987654321");
         SubjectData subjectData = new SubjectData(subjectPair.getPublic(), builder.build(), serialNumber, startDate, endDate);
 
-
         IssuerData issuerData = keyStoreReader.readIssuerFromStore(makeFilePath(), issuerAlias, password.toCharArray(), password.toCharArray(), true);
-        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData);
+        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData, new GenerateCertificateDto());
 
         String keystoreFileName = makeFilePath();
         keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
@@ -109,8 +111,8 @@ public class CertificateUtil {
         return serialNumber;
     }
 
-    public static IssuerData getIntermediateCertificateDetails() {
-        return keyStoreReader.readIssuerFromStore(makeFilePath(), "intermediate", password.toCharArray(), password.toCharArray(), false);
+    public static IssuerData getIntermediateCertificateDetails(String intermediateAlias) {
+        return keyStoreReader.readIssuerFromStore(makeFilePath(), intermediateAlias, password.toCharArray(), password.toCharArray(), false);
     }
 
     public static String getKeyStorePassword() {
@@ -139,7 +141,7 @@ public class CertificateUtil {
         SubjectData subjectData = new SubjectData(keyPair.getPublic(), builder.build(), sn, startDate, endDate);
 
         IssuerData issuerData = keyStoreReader.readIssuerFromStore(makeFilePath(), issuerAlias,getKeyStorePassword().toCharArray(), getKeyStorePassword().toCharArray(), false);
-        Certificate certificate = certificateGenerator.generateCertificate(subjectData,issuerData);
+        Certificate certificate = certificateGenerator.generateCertificate(subjectData,issuerData, new GenerateCertificateDto());
         String keystoreFileName = makeFilePath();
         keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
         keyStoreWriter.write(sn,issuerAlias, issuerData.getPrivateKey(), password.toCharArray(), certificate);
