@@ -1,12 +1,15 @@
 package com.bsep.admin.crypto.pki.keystores;
 
+import com.bsep.admin.app.controller.CertificateController;
 import com.bsep.admin.crypto.pki.data.IssuerData;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
@@ -37,7 +40,7 @@ public class KeyStoreReader {
      * @param keyPass      - lozinka koja je neophodna da se izvuce privatni kljuc
      * @return - podatke o izdavaocu i odgovarajuci privatni kljuc
      */
-    public IssuerData readIssuerFromStore(String keyStoreFile, String alias, char[] password, char[] keyPass) {
+    public IssuerData readIssuerFromStore(String keyStoreFile, String alias, char[] password, char[] keyPass, boolean isRoot) {
         try {
             // Datoteka se ucitava
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
@@ -45,7 +48,7 @@ public class KeyStoreReader {
 
             // Iscitava se lanac sertifikata koji ima dati alias
             Certificate cert;
-            if (alias.equals("root")) {
+            if (isRoot) {
                 cert = keyStore.getCertificate(alias);
             } else {
                 cert = keyStore.getCertificateChain(alias)[1];
@@ -114,4 +117,6 @@ public class KeyStoreReader {
         ks.load(in, keyStorePass.toCharArray());
         return  Collections.list(ks.aliases());
     }
+
+
 }
