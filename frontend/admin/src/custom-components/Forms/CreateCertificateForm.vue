@@ -104,7 +104,9 @@ export default {
         },
 
         sslServerTemplate() {
+            this.extendedKeyUsages.display = true;
             this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.1"]
+            this.keyUsageExtension.display = true;
             this.keyUsageExtension.defaultChecked = [128, 32]
         }
     },
