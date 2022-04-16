@@ -1,11 +1,14 @@
 <template>
-    <Form>
+    <Form @submit="onSubmit($event)">
         <form-row>
             <div class="col-12">
                 <text-input 
                     label="Email"
                     v-model="csr.email"
                     type="text"
+                    :isValid="!!csr.email"
+                    :showErrorMessage="showErrorMessage"
+                    errorMessage="Email must be provided."
                 />
             </div>
         </form-row>
@@ -15,6 +18,9 @@
                 <text-input 
                     label="Common name"
                     v-model="csr.commonName"
+                    :isValid="!!csr.commonName"
+                    :showErrorMessage="showErrorMessage"
+                    errorMessage="Common name must be provided."
                     type="text"
                 />
             </div>
@@ -25,6 +31,9 @@
                 <text-input 
                     label="Organization"
                     v-model="csr.organization"
+                    :isValid="!!csr.organization"
+                    :showErrorMessage="showErrorMessage"
+                    errorMessage="Organization must be provided."
                     type="text"
                 />
             </div>
@@ -35,6 +44,9 @@
                 <text-input 
                     label="Organization unit"
                     v-model="csr.organizationUnit"
+                    :isValid="!!csr.organizationUnit"
+                    :showErrorMessage="showErrorMessage"
+                    errorMessage="Organization unit must be provided."
                     type="text"
                 />
             </div>
@@ -45,6 +57,9 @@
                 <text-input 
                     label="Given name"
                     v-model="csr.givenName"
+                    :isValid="!!csr.givenName"
+                    :showErrorMessage="showErrorMessage"
+                    errorMessage="Given name must be provided."
                     type="text"
                 />
             </div>
@@ -55,6 +70,9 @@
                 <text-input 
                     label="Surname"
                     v-model="csr.surname"
+                    :isValid="!!csr.surname"
+                    :showErrorMessage="showErrorMessage"
+                    errorMessage="Surname must be provided."
                     type="text"
                 />
             </div>
@@ -65,6 +83,9 @@
                 <text-input 
                     label="Country"
                     v-model="csr.country"
+                    :isValid="csr.country.length == 2"
+                    :showErrorMessage="showErrorMessage"
+                    errorMessage="Country must have only 2 characters."
                     type="text"
                 />
             </div>
@@ -75,12 +96,15 @@
                 <text-input 
                     label="User id"
                     v-model="csr.userId"
+                    :isValid="!!csr.userId"
+                    :showErrorMessage="showErrorMessage"
+                    errorMessage="User id must be provided."
                     type="text"
                 />
             </div>
         </form-row>
 
-        <Button @click="handleCreateCsr">Create</Button>
+        <Button @click="showErrorMessage = true" type="submit">Create</Button>
     </Form>
 </template>
 
@@ -111,7 +135,9 @@ export default {
             surname: '',
             country: '',
             userId: ''
-          }
+          },
+
+          showErrorMessage: false
         }
     },
 
@@ -128,7 +154,8 @@ export default {
             createCsr: 'csr/createCsr',
         }),
 
-        handleCreateCsr() {
+        onSubmit(e) {
+            e.preventDefault();
             this.createCsr(this.csr)
         }
     }
