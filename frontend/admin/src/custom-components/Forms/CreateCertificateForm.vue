@@ -38,9 +38,15 @@
                 <extended-key-usages-form :defaultChecked="extendedKeyUsages.defaultChecked"></extended-key-usages-form>
             </form-row>
         </form-group>
+
+        <form-group v-if="authorityKeyIdentifier.display"> 
+            <form-row class="col-12">
+                <authority-key-identifier-table />
+            </form-row>
+        </form-group>
         
         <div style="display: flex; justify-content: center;">
-            <Button @click="showErrorMessage = true" type="submit" style="">Create</Button>
+            <Button @click="showErrorMessage = true" type="submit">Create</Button>
         </div>
     </Form>
 </template>
@@ -55,6 +61,8 @@ import { mapActions } from 'vuex'
 import FormGroup from '../../generic-components/Form/FormGroup.vue'
 import KeyUsageForm from './KeyUsageForm.vue'
 import ExtendedKeyUsagesForm from './ExtendedKeyUsagesForm.vue'
+// import AuthorityKeyIdentifierForm from './AuthorityKeyIdentifierForm.vue'
+import AuthorityKeyIdentifierTable from '../Tables/AuthorityKeyIdentifierTable.vue'
 
 export default {
    components: {
@@ -64,7 +72,9 @@ export default {
         DateTimePicker,
         FormGroup,
       KeyUsageForm,
-      ExtendedKeyUsagesForm
+      ExtendedKeyUsagesForm,
+    //   AuthorityKeyIdentifierForm,
+      AuthorityKeyIdentifierTable
     },
 
     data: function() {
@@ -82,6 +92,10 @@ export default {
           extendedKeyUsages: {
               display: true,
               defaultChecked: []
+          },
+          authorityKeyIdentifier: {
+              display: true,
+              addedOptions: []
           }
         }
     },
@@ -108,6 +122,20 @@ export default {
             this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.1"]
             this.keyUsageExtension.display = true;
             this.keyUsageExtension.defaultChecked = [128, 32]
+        },
+
+        sslClientTemplate() {
+            this.extendedKeyUsages.display = true;
+            this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.2"]
+            this.keyUsageExtension.display = true;
+            this.keyUsageExtension.defaultChecked = [32]
+        },
+
+        codeSigningTemplate() {
+            this.extendedKeyUsages.display = true;
+            this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.3"]
+            this.keyUsageExtension.display = true;
+            this.keyUsageExtension.defaultChecked = [128]
         }
     },
 

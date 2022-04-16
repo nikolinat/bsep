@@ -5,7 +5,7 @@
             <select
                 v-model="selectedValue"
                 class="selectpicker form-control"
-                data-style="btn btn-primary btn-round"
+                data-style="btn btn-primary"
                 :disabled="disabled"
             >
                 <option value='' selected>{{label}}</option>
