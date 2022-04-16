@@ -3,6 +3,10 @@ import App from './App.vue'
 import router from './router'
 import AppLayout from '@/layouts/AppLayout'
 import toastr from 'toastr'
+import axios from 'axios';
+import store from './store'
+
+axios.defaults.baseURL = "http://localhost:8081/"
 
 Vue.component('AppLayout', AppLayout)
 
@@ -10,6 +14,7 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app');
 

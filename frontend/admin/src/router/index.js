@@ -19,6 +19,14 @@ const routes = [
     meta: {
       layout: 'AppLayoutMain'
     }
+  },
+  {
+    path: '/valid-certificates',
+    name: 'ValidCertificates',
+    component: () => import('@/pages/ValidCertificatesPage.vue'),
+    meta: {
+      layout: 'AppLayoutMain'
+    }
   }
 ]
 
