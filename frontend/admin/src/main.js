@@ -10,6 +10,7 @@ axios.defaults.baseURL = "http://localhost:8081/"
 
 Vue.component('AppLayout', AppLayout)
 
+
 Vue.config.productionTip = false
 
 new Vue({
