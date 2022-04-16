@@ -19,6 +19,14 @@ const routes = [
     meta: {
       layout: 'AppLayoutMain'
     }
+  },
+  {
+    path: '/csr',
+    name: 'CreateCSR',
+    component: () => import('@/pages/CreateCSRPage.vue'),
+    meta: {
+      layout: 'AppLayoutMain'
+    }
   }
 ]
 
