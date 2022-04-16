@@ -15,6 +15,12 @@ export default {
    components: {
         MultiSelectOptionInput
     },
+    props: {
+        defaultChecked: {
+            type: Array,
+            default: () => []
+        }
+    },
 
     data: function() {
         return {
@@ -52,7 +58,7 @@ export default {
                   value: 32768
               },
           ],
-        checkedOptions: []
+        checkedOptions: this.defaultChecked
         }
     },
 
@@ -62,6 +68,9 @@ export default {
 
     watch: {
         checkedOptions(checked) {
+            this.checkedOptions = checked;
+        },
+        defaultChecked(checked) {
             this.checkedOptions = checked;
         }
     },

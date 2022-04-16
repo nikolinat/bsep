@@ -26,9 +26,16 @@
                 </div>
             </form-row>
         </form-group>
-        <form-group v-if="keyUsageExtension">
+
+        <form-group v-if="keyUsageExtension.display">
             <form-row class="col-12">
-                <key-usage-form></key-usage-form>
+                <key-usage-form :defaultChecked="keyUsageExtension.defaultChecked"></key-usage-form>
+            </form-row>
+        </form-group>
+
+        <form-group v-if="extendedKeyUsages.display"> 
+            <form-row class="col-12">
+                <extended-key-usages-form :defaultChecked="extendedKeyUsages.defaultChecked"></extended-key-usages-form>
             </form-row>
         </form-group>
         
@@ -47,6 +54,7 @@ import DateTimePicker from '../../generic-components/Form/DateTimePicker.vue'
 import { mapActions } from 'vuex'
 import FormGroup from '../../generic-components/Form/FormGroup.vue'
 import KeyUsageForm from './KeyUsageForm.vue'
+import ExtendedKeyUsagesForm from './ExtendedKeyUsagesForm.vue'
 
 export default {
    components: {
@@ -55,7 +63,8 @@ export default {
         Button,
         DateTimePicker,
         FormGroup,
-      KeyUsageForm
+      KeyUsageForm,
+      ExtendedKeyUsagesForm
     },
 
     data: function() {
@@ -64,9 +73,16 @@ export default {
             startDate: '',
             endDate: '',
           },
-
+        
           showErrorMessage: false,
-          keyUsageExtension: true
+          keyUsageExtension: {
+              display: true,
+              defaultChecked: []
+          },
+          extendedKeyUsages: {
+              display: true,
+              defaultChecked: []
+          }
         }
     },
 
@@ -85,7 +101,16 @@ export default {
 
         onSubmit(e) {
             e.preventDefault();
+        },
+
+        sslServerTemplate() {
+            this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.1"]
+            this.keyUsageExtension.defaultChecked = [128, 32]
         }
+    },
+
+    mounted() {
+        this.sslServerTemplate()
     }
 }
 
