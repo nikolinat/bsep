@@ -28,11 +28,12 @@ public class CertificateController {
 
     @PutMapping("/{reason}")
     public ResponseEntity<?> revokeCertificate(@RequestBody CertificateDto certificate, @PathVariable String reason) throws Exception {
+        System.out.println(certificate.getSerialNumber());
         certificateService.revoke(certificate, reason);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<?> getAllValidCertificates() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, ParseException, NoSuchProviderException {
         List<CertificateDto> certificates = certificateService.findAllValidCertificates();
         return new ResponseEntity<>(certificates, HttpStatus.OK);

@@ -27,7 +27,7 @@ const routes = [
     meta: {
       layout: 'AppLayoutMain'
     }
-  }
+  },
 ]
 
 const router = new VueRouter({

@@ -12,7 +12,7 @@ const getters = {
 
 const actions = {
     fetchValidCertificates: (context) => {
-        axios.get(`/`)
+        axios.get(`/certificate`)
         .then(response => {
             context.commit('setValidCertificates', response.data);
         })
@@ -22,8 +22,8 @@ const actions = {
         });
     },
 
-    revokeCertificate: (context, certificate, reason) => {
-        axios.put(`/certificate/${reason}`, certificate)
+    revokeCertificate: (context, revokedCertificate) => {
+        axios.put(`/certificate/${revokedCertificate.reason}`, revokedCertificate.certificate)
         .then(response => {
             console.log(response);
             context.commit('setResult', {
@@ -48,6 +48,7 @@ const mutations = {
     setValidCertificates: (state, validCertificates) => {
         state.validCertificates = validCertificates;
     },
+    
     setResult: (state, result) => {
         state.result = result;
     }
