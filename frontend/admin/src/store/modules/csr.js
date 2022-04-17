@@ -26,7 +26,7 @@ const actions = {
     axios
       .post(`/csr`, csr)
       .then((resp) => {
-        console.log(resp);
+        console.log(resp)
         context.commit("setResult", {
           label: "create",
           ok: true,
@@ -41,14 +41,25 @@ const actions = {
         });
       });
   },
-};
-
-export default {
-  state: state,
-  getters: getters,
-  actions: actions,
-  mutations: mutations,
-  namespaced: true,
+  acceptCsr: (context, { csrId, certificate}) => {
+    console.log(certificate)
+      axios.put(`/csr/accept/` + csrId, certificate)
+      .then((resp) => {
+        console.log(resp)
+        context.commit("setResult", {
+          label: "accept",
+          ok: true,
+          message: "Successfuly created certificate."
+        })
+      })
+      .catch((err) => {
+        context.commit("setResult", {
+          label: "accept",
+          ok: false,
+          message: err.response.data.ErrorMessage,
+        });
+      })
+  }
 };
 
 const mutations = {
@@ -58,4 +69,12 @@ const mutations = {
   setResult: (state, result) => {
     state.result = result;
   },
+};
+
+export default {
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations,
+  namespaced: true,
 };

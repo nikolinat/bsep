@@ -1,7 +1,6 @@
 
 <template>
-    <div class="col-6"> 
-        <label class="bmd-label-floating">Authority Key Issuer</label>
+    <div class="col-8"> 
         <Table>
             <TableHead :columnNames="['General Name', 'Value', '']"></TableHead>
             <TableBody>
@@ -24,9 +23,9 @@
         </Table>
 
         <div class="col-6">
-            <AddGeneralNameModal modalBoxId="addGeneralName" @newGeneralName="handleAddGeneralNameToAuthorityKeyIdentifier"/>
+            <AddGeneralNameModal :modalBoxId="modalBoxId" @newGeneralName="handleAddGeneralNameToAuthorityKeyIdentifier"/>
 
-            <ModalOpener modalBoxId="addGeneralName">
+            <ModalOpener :modalBoxId="modalBoxId">
                 <Button type="button">Add a General Name</Button>
             </ModalOpener>
         </div>
@@ -61,6 +60,9 @@ export default {
       addedOptions: {
           type: Array,
             default: () => []
+      },
+      modalBoxId: {
+          type: String
       }
     },
 
