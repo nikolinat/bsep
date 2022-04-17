@@ -13,7 +13,11 @@ import java.util.List;
 public interface ICertificateService {
     List<RevokedCertificate> findAll();
 
+<<<<<<< HEAD
     RevokedCertificate findBySerialNumber(Long serialNumber) throws Exception;
+=======
+    RevokedCertificate findByAlias(String alias) throws Exception;
+>>>>>>> develop
 
     RevokedCertificate create(RevokedCertificate entity) throws Exception;
 
@@ -22,4 +26,8 @@ public interface ICertificateService {
     List<CertificateDto> findAllValidCertificates() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, NoSuchProviderException;
 
     void createAll() throws Exception;
+
+    List<CertificateDto> findAllRevokedCertificates() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, NoSuchProviderException;
+
+    CertificateDto verifyIssuerCertificate(CertificateDto issuerCertificate) throws Exception;
 }

@@ -7,8 +7,8 @@ import javax.persistence.*;
 public class RevokedCertificate {
 
     @Id
-    @Column(name = "serialNumber", nullable = false)
-    private Long serialNumber;
+    @Column(name = "alias", nullable = false)
+    private String alias;
 
     @Column(name = "reason", nullable = false)
     private String reason;
@@ -17,17 +17,17 @@ public class RevokedCertificate {
 
     }
 
-    public RevokedCertificate(Long serialNumber, String reason) {
-        this.serialNumber = serialNumber;
+    public RevokedCertificate(String alias, String reason) {
+        this.alias = alias;
         this.reason = reason;
     }
 
-    public Long getSerialNumber() {
-        return serialNumber;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setSerialNumber(Long serialNumber) {
-        this.serialNumber = serialNumber;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public String getReason() {

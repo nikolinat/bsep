@@ -2,11 +2,13 @@ import axios from "axios";
 
 const state = {
     validCertificates: null,
+    revokedCertificates: null,
     result: null
 };
 
 const getters = {
     getValidCertificates: state => state.validCertificates,
+    getRevokedCertificates: (state) => state.revokedCertificates,
     getResult: state => state.result
 };
 
@@ -19,6 +21,18 @@ const actions = {
         .catch(error => {
             console.log(error);
             context.commit('setResult', { label: 'fetch', ok: false });
+        });
+    },
+
+    fetchRevokedCertificates: (context) => {
+      axios
+        .get(`/certificate/revoked`)
+        .then((response) => {
+          context.commit("setRevokedCertificates", response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          context.commit("setResult", { label: "fetch", ok: false });
         });
     },
 
@@ -43,21 +57,24 @@ const actions = {
     },
    
 };
-
 const mutations = {
-    setValidCertificates: (state, validCertificates) => {
-        state.validCertificates = validCertificates;
-    },
-    
-    setResult: (state, result) => {
-        state.result = result;
-    }
+  setValidCertificates: (state, validCertificates) => {
+    state.validCertificates = validCertificates;
+  },
+
+  setRevokedCertificates: (state, revokedCertificates) => {
+    state.revokedCertificates = revokedCertificates;
+  },
+
+  setResult: (state, result) => {
+    state.result = result;
+  },
 };
 
 export default {
-    state: state,
-    getters: getters,
-    actions: actions,
-    mutations: mutations,
-    namespaced: true
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations,
+  namespaced: true,
 };

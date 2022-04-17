@@ -5,34 +5,27 @@
         <ul class="nav">
           <sidebar-item name="Home" icon="dashboard" to="/"></sidebar-item>
           <sidebar-item name="Valid certificates" icon="assignment" to="/valid-certificates"></sidebar-item>
+          <sidebar-item name="Revoked certificates" icon="assignment" to="/revoked-certificates"></sidebar-item>
         </ul>
       </div>
-    </div>
+  </div>
 </template>
 
 <script>
-import SidebarItem from './SidebarItem.vue'
-import SidebarLogo from './SidebarLogo.vue'
+import SidebarItem from "./SidebarItem.vue";
+import SidebarLogo from "./SidebarLogo.vue";
 
 export default {
   data: () => {
-    return {
-      
-    }
+    return {};
   },
-  mounted() {
-    
-  },
+  mounted() {},
   components: {
     SidebarLogo,
-    SidebarItem
+    SidebarItem,
   },
-  methods: {
-    
-  }
-}
+  methods: {},
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
     <div>
         <Form>
             <form-row>
@@ -136,5 +137,4 @@ export default {
         },
     }
 }
-
 </script>

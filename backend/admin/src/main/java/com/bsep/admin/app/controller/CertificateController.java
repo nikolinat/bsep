@@ -1,6 +1,7 @@
 package com.bsep.admin.app.controller;
 
 import com.bsep.admin.app.dto.CertificateDto;
+import com.bsep.admin.app.model.RevokedCertificate;
 import com.bsep.admin.app.service.contract.ICertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,12 @@ public class CertificateController {
     @GetMapping("")
     public ResponseEntity<?> getAllValidCertificates() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, ParseException, NoSuchProviderException {
         List<CertificateDto> certificates = certificateService.findAllValidCertificates();
+        return new ResponseEntity<>(certificates, HttpStatus.OK);
+    }
+
+    @GetMapping("/revoked")
+    public ResponseEntity<?> getAllRevokedCertificates() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, ParseException, NoSuchProviderException {
+        List<CertificateDto> certificates = certificateService.findAllRevokedCertificates();
         return new ResponseEntity<>(certificates, HttpStatus.OK);
     }
 

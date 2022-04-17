@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div>
     <Table>
       <TableHead :columnNames="['Entry Name','Certificate Expiry','Algorithm','Key Size',' ',]"></TableHead>

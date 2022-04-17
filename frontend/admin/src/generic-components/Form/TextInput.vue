@@ -4,7 +4,7 @@
         <label v-if="!!label" class="bmd-label-floating">{{label}}</label>
         <input 
           :type="type" 
-          class="form-control"
+          :class="classes"
           v-bind:value="!!value ? value + '' : value"
           v-on:input="$emit('input', $event.target.value)"
           :disabled="disabled"
@@ -53,6 +53,10 @@ export default {
       type: String,
       default: "Invalid input."
     },
+    classes: {
+      type: String,
+      default: "form-control"
+    }
   }
 }
 </script>
