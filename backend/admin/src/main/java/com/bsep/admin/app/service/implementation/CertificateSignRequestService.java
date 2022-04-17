@@ -3,6 +3,7 @@ package com.bsep.admin.app.service.implementation;
 import com.bsep.admin.app.dto.GenerateCertificateDto;
 import com.bsep.admin.app.exception.BadLogicException;
 import com.bsep.admin.app.exception.MissingEntityException;
+import com.bsep.admin.app.model.CACertificateAlias;
 import com.bsep.admin.app.model.CertificateSigningRequest;
 import com.bsep.admin.app.repository.CertificateSigningRequestRepository;
 import com.bsep.admin.app.service.contract.ICertificateSigningRequestService;
@@ -26,14 +27,17 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
     private CertificateSigningRequestRepository certificateSigningRequestRepository;
     private CertificateGenerator certificateGenerator;
     private KeyStoreWriter keyStoreWriter;
+    private CaCertificateAliasService caCertificateAliasService;
 
     @Autowired
     public CertificateSignRequestService(CertificateSigningRequestRepository certificateSigningRequestRepository,
                                          CertificateGenerator certificateGenerator,
-                                         KeyStoreWriter keyStoreWriter) {
+                                         KeyStoreWriter keyStoreWriter,
+                                         CaCertificateAliasService caCertificateAliasService) {
         this.certificateSigningRequestRepository = certificateSigningRequestRepository;
         this.certificateGenerator = certificateGenerator;
         this.keyStoreWriter = keyStoreWriter;
+        this.caCertificateAliasService = caCertificateAliasService;
     }
 
     @Override
@@ -89,7 +93,8 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
         csr.setAccepted(true);
         certificateSigningRequestRepository.save(csr);
 
-        IssuerData issuerData = CertificateUtil.getIntermediateCertificateDetails();
+        CACertificateAlias caCertificateAlias = caCertificateAliasService.getActiveIntermediate();
+        IssuerData issuerData = CertificateUtil.getIntermediateCertificateDetails(caCertificateAlias.getAlias());
         KeyPair keyPair = CertificateUtil.generateKeyPair();
 
         X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
@@ -107,12 +112,13 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
         SubjectData subjectData = new SubjectData(keyPair.getPublic(), builder.build(), serialNumber, generateCertificateDto.getStartDate(),
                 generateCertificateDto.getEndDate());
 
-        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData);
+        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData, generateCertificateDto);
 
         String keystoreFileName = CertificateUtil.makeFilePath();
 
+        System.out.println(certificate);
         keyStoreWriter.loadKeyStore(keystoreFileName, CertificateUtil.getKeyStorePassword().toCharArray());
-        keyStoreWriter.write("certificate" + serialNumber, "intermediate", issuerData.getPrivateKey(),
+        keyStoreWriter.write(serialNumber, caCertificateAlias.getAlias(), issuerData.getPrivateKey(),
                 CertificateUtil.getKeyStorePassword().toCharArray(), certificate);
         keyStoreWriter.saveKeyStore(keystoreFileName, CertificateUtil.getKeyStorePassword().toCharArray());
     }

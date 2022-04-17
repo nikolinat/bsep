@@ -3,23 +3,18 @@ import App from "./App.vue";
 import router from "./router";
 import AppLayout from "@/layouts/AppLayout";
 import toastr from "toastr";
-import { BootstrapVue, IconsPlugin, BootstrapVueIcons } from "bootstrap-vue";
+import axios from "axios";
+import store from "./store";
 
-// Import Bootstrap an BootstrapVue CSS files (order is important)
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
+axios.defaults.baseURL = "http://localhost:8081/api/v1";
 
-// Make BootstrapVue available throughout your project
-Vue.use(BootstrapVue);
-// Optionally install the BootstrapVue icon components plugin
-Vue.use(IconsPlugin);
-Vue.use(BootstrapVueIcons);
 Vue.component("AppLayout", AppLayout);
 
 Vue.config.productionTip = false;
 
 new Vue({
   router,
+  store,
   render: (h) => h(App),
 }).$mount("#app");
 

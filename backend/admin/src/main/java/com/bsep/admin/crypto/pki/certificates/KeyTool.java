@@ -1,5 +1,6 @@
 package com.bsep.admin.crypto.pki.certificates;
 
+import com.bsep.admin.app.dto.GenerateCertificateDto;
 import com.bsep.admin.crypto.pki.data.IssuerData;
 import com.bsep.admin.crypto.pki.data.SubjectData;
 import com.bsep.admin.crypto.pki.keystores.KeyStoreReader;
@@ -25,7 +26,6 @@ public class KeyTool {
     KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
     KeyStoreReader keyStoreReader = new KeyStoreReader();
     CertificateGenerator certificateGenerator = new CertificateGenerator();
-    CertificateUtil certificateUtil = new CertificateUtil();
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
     public KeyTool() {
@@ -36,6 +36,7 @@ public class KeyTool {
         KeyTool kt = new KeyTool();
         System.out.println("===== Konzolna aplikacija za upravljanje sertifikatima i kljucevima =====");
         Scanner keyboard = new Scanner(System.in);
+        String seralNumber = "";
         int choice = 0;
         do {
             kt.menu();
@@ -58,11 +59,11 @@ public class KeyTool {
                     break;
                 }
                 case 5: {
-                    kt.certificateUtil.createCACertificate();
+                    seralNumber = CertificateUtil.createCACertificate();
                     break;
                 }
                 case 6: {
-                    kt.certificateUtil.createIntermediateCertificate("");
+                    CertificateUtil.createIntermediateCertificate(seralNumber);
                     break;
                 }
             }
@@ -161,8 +162,8 @@ public class KeyTool {
 
         SubjectData subjectData = new SubjectData(keyPair.getPublic(), builder.build(), sn, startDate, endDate);
 
-        IssuerData issuerData = new IssuerData(keyPair.getPrivate(), builder.build());
-        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData);
+        IssuerData issuerData = new  IssuerData(keyPair.getPrivate(), builder.build());
+        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData, new GenerateCertificateDto());
 
         String keystoreFileName = makeFilePath(keystore);
         keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
@@ -221,8 +222,10 @@ public class KeyTool {
 
         String alias = "intermediate";
         String pass = "bsep";
+
         IssuerData issuerData = keyStoreReader.readIssuerFromStore(makeFilePath(pass), alias, pass.toCharArray(), pass.toCharArray(), false);
-        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData);
+        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData, new GenerateCertificateDto());
+
         String keystoreFileName = makeFilePath(keystore);
         keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
         keyStoreWriter.write(sn, "intermediate", issuerData.getPrivateKey(), password.toCharArray(), certificate);

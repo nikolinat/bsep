@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -25,6 +26,12 @@ public class CertificateSigningRequestController {
     public ResponseEntity<CertificateSigningRequest> createCertificateSigningRequest(@RequestBody CertificateSigningRequest certificateSigningRequest)
             throws Exception {
         return new ResponseEntity<>(certificateSigningRequestService.create(certificateSigningRequest), HttpStatus.CREATED);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<CertificateSigningRequest>> getCertificateSigningRequest()
+            throws Exception {
+        return new ResponseEntity<>(certificateSigningRequestService.findAll(), HttpStatus.OK);
     }
 
     @PutMapping("/decline/{id}")

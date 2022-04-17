@@ -1,5 +1,6 @@
 package com.bsep.admin.crypto.pki.certificates;
 
+import com.bsep.admin.app.dto.GenerateCertificateDto;
 import com.bsep.admin.crypto.pki.data.IssuerData;
 import com.bsep.admin.crypto.pki.data.SubjectData;
 import com.bsep.admin.crypto.pki.enums.SubjectAlternativeName;
@@ -38,7 +39,7 @@ public class CertificateGenerator {
     }
 
 
-    public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData) throws IOException {
+    public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData, GenerateCertificateDto generateCertificateDto) throws IOException {
         try {
 
             JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
@@ -59,48 +60,49 @@ public class CertificateGenerator {
             SubjectKeyIdentifier subjectKeyIdentifier = new JcaX509ExtensionUtils().createSubjectKeyIdentifier(subjectData.getPublicKey());
             certificateGenerator.addExtension(Extension.subjectKeyIdentifier, false, subjectKeyIdentifier);
 
-
-
             // dodavanje keyUsage
-            List<Integer> keyUsages = new ArrayList<>();
-            keyUsages.add(KeyUsage.keyCertSign);
-            keyUsages.add(KeyUsage.keyCertSign);
-            addKeyUsage(keyUsages);
+            if(generateCertificateDto.getKeyUsagesExtension() != null) {
+                addKeyUsage(generateCertificateDto.getKeyUsagesExtension());
+            }
 
             // dodavanje authorityKeyIdentifier
-            Map<SubjectAlternativeName, String> generalNames = new HashMap<>();
-            generalNames.put(SubjectAlternativeName.Rfc822Name, "user@mail.com");
-            generalNames.put(SubjectAlternativeName.RegisteredID, "0.0.1");
-            addAuthorityKeyIdentifier(subjectData.getPublicKey().getEncoded(), generalNames, new BigInteger(subjectData.getSerialNumber().getBytes()));
+            if(generateCertificateDto.getGeneralNamesForAuthorityKeyIdentifier() != null) {
+                addAuthorityKeyIdentifier(subjectData.getPublicKey().getEncoded(), generateCertificateDto.getGeneralNamesForAuthorityKeyIdentifier(),
+                        new BigInteger(subjectData.getSerialNumber().getBytes()));
+            }
 
+            // Dodavanje subject alternateive names
+            if(generateCertificateDto.getSubjectAlternativeNames() != null) {
+                addSubjectAlternativeNameExtension(generateCertificateDto.getSubjectAlternativeNames());
+            }
 
-            // Za testiranje samo
-            Map<SubjectAlternativeName, String> subjectAlternativeNames = new HashMap<>();
-            subjectAlternativeNames.put(SubjectAlternativeName.Rfc822Name, "user@mail.com");
-            subjectAlternativeNames.put(SubjectAlternativeName.DNSName, "test.com");
-            subjectAlternativeNames.put(SubjectAlternativeName.IPAddress, "127.0.0.1");
-            addSubjectAlternativeNameExtension(subjectAlternativeNames);
+            // Dodavanje extended key usages
+            if(generateCertificateDto.getExtendedKeyUsages() != null) {
+                addExtendedKeyUsageExtension(generateCertificateDto.getExtendedKeyUsages());
+            }
 
+            // Dodavanje policy constraints extenstion
+            if(generateCertificateDto.getInhibitPolicyMapping() != null && generateCertificateDto.getRequireExplicitPolicy() != null) {
+                addPolicyConstraintsExtension(generateCertificateDto.getRequireExplicitPolicy(), generateCertificateDto.getInhibitPolicyMapping());
+            }
 
-            // Za testiranje
-            List<KeyPurposeId> extendedKeyUsages = new ArrayList<>();
-            extendedKeyUsages.add(KeyPurposeId.anyExtendedKeyUsage);
-            extendedKeyUsages.add(KeyPurposeId.id_kp_clientAuth);
-            extendedKeyUsages.add(KeyPurposeId.id_kp_serverAuth);
-            addExtendedKeyUsageExtension(extendedKeyUsages);
+            // Dodavanje name constraint extension
+            // Ne mogu da potrefim formate general name preko postmana..
+//            if(generateCertificateDto.getPermitedSubtrees() != null || generateCertificateDto.getExcludedSubtrees() != null) {
+//                List<GeneralSubtree> permitedSubtrees = new ArrayList<>();
+//                List<GeneralSubtree> excludedSubtrees = new ArrayList<>();
+//                generateCertificateDto.getExcludedSubtrees().forEach(element -> excludedSubtrees.add(new GeneralSubtree(
+//                        new GeneralName(element.getTag(), element.getObj()), element.getMinimin(), element.getMaximum()
+//                )));
+//                generateCertificateDto.getPermitedSubtrees().forEach(element -> permitedSubtrees.add(new GeneralSubtree(
+//                        new GeneralName(element.getTag(), element.getObj()), element.getMinimin(), element.getMaximum()
+//                )));
+//                addNameConstraintsExtension(permitedSubtrees, excludedSubtrees);
+//            }
 
-            addPolicyConstraintsExtension(new BigInteger("1"), new BigInteger("1"));
-
-            List<GeneralSubtree> permitedSubtrees = new ArrayList<>();
-            List<GeneralSubtree> excludedSubtrees = new ArrayList<>();
-            permitedSubtrees.add(new GeneralSubtree(new GeneralName(GeneralName.rfc822Name, "nesti"), new BigInteger("1"), new BigInteger("5")));
-            excludedSubtrees.add(new GeneralSubtree(new GeneralName(GeneralName.uniformResourceIdentifier, "nesto1"), new BigInteger("2"), new BigInteger("8")));
-            addNameConstraintsExtension(permitedSubtrees, excludedSubtrees);
-
-            Map<SubjectAlternativeName, String> issuerAlternativeNames = new HashMap<>();
-            issuerAlternativeNames.put(SubjectAlternativeName.Rfc822Name, "user@mail.com");
-            addIssuerAlternativeNameExtension(issuerAlternativeNames);
-
+            if(generateCertificateDto.getIssuerAlternativeNames() != null) {
+                addIssuerAlternativeNameExtension(generateCertificateDto.getIssuerAlternativeNames());
+            }
 
             // Generise se sertifikat
             X509CertificateHolder certHolder = certificateGenerator.build(contentSigner);
@@ -126,9 +128,11 @@ public class CertificateGenerator {
         certificateGenerator.addExtension(Extension.subjectAlternativeName, false, subjectAlternativeNames);
     }
 
-    public void addExtendedKeyUsageExtension(List<KeyPurposeId> extendedKeyUsages) throws CertIOException {
+    public void addExtendedKeyUsageExtension(List<String> extendedKeyUsages) throws CertIOException {
+        List<KeyPurposeId> keyPurposeIds = new ArrayList<>();
+        extendedKeyUsages.forEach(usage -> keyPurposeIds.add(new KeyPurposeId(usage)));
         ASN1EncodableVector purposes = new ASN1EncodableVector();
-        extendedKeyUsages.forEach(usage -> purposes.add(usage));
+        keyPurposeIds.forEach(id -> purposes.add(id));
 
         certificateGenerator.addExtension(Extension.extendedKeyUsage, false, new DERSequence(purposes));
     }
@@ -211,8 +215,6 @@ public class CertificateGenerator {
         }
         return null;
     }
-
-
 }
 
 

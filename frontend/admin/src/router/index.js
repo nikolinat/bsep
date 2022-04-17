@@ -21,6 +21,23 @@ const routes = [
     },
   },
   {
+    path: "/valid-certificates",
+    name: "ValidCertificates",
+    component: () => import("@/pages/ValidCertificatesPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    },
+  },
+  {
+    path: "/revoked-certificates",
+    name: "RevokedCertificates",
+    component: () => import("@/pages/RevokedCertificatesPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    },
+  },
+  //empty page for developing
+  {
     path: "/tmp",
     name: "Tmp",
     component: () => import("@/pages/tmp.vue"),
