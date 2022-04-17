@@ -1,5 +1,6 @@
 package com.bsep.admin.crypto.pki.certificates;
 
+import com.bsep.admin.app.dto.GeneralSubtreeElement;
 import com.bsep.admin.app.dto.GenerateCertificateDto;
 import com.bsep.admin.crypto.pki.data.IssuerData;
 import com.bsep.admin.crypto.pki.data.SubjectData;
@@ -61,46 +62,39 @@ public class CertificateGenerator {
             certificateGenerator.addExtension(Extension.subjectKeyIdentifier, false, subjectKeyIdentifier);
 
             // dodavanje keyUsage
-            if(generateCertificateDto.getKeyUsagesExtension() != null) {
+            if (generateCertificateDto.getKeyUsagesExtension() != null) {
                 addKeyUsage(generateCertificateDto.getKeyUsagesExtension());
             }
 
             // dodavanje authorityKeyIdentifier
-            if(generateCertificateDto.getGeneralNamesForAuthorityKeyIdentifier() != null) {
+            if (generateCertificateDto.getGeneralNamesForAuthorityKeyIdentifier() != null) {
                 addAuthorityKeyIdentifier(subjectData.getPublicKey().getEncoded(), generateCertificateDto.getGeneralNamesForAuthorityKeyIdentifier(),
                         new BigInteger(subjectData.getSerialNumber().getBytes()));
             }
 
             // Dodavanje subject alternateive names
-            if(generateCertificateDto.getSubjectAlternativeNames() != null) {
+            if (generateCertificateDto.getSubjectAlternativeNames() != null) {
                 addSubjectAlternativeNameExtension(generateCertificateDto.getSubjectAlternativeNames());
             }
 
             // Dodavanje extended key usages
-            if(generateCertificateDto.getExtendedKeyUsages() != null) {
+            if (generateCertificateDto.getExtendedKeyUsages() != null) {
                 addExtendedKeyUsageExtension(generateCertificateDto.getExtendedKeyUsages());
             }
 
             // Dodavanje policy constraints extenstion
-            if(generateCertificateDto.getInhibitPolicyMapping() != null && generateCertificateDto.getRequireExplicitPolicy() != null) {
+            if (generateCertificateDto.getInhibitPolicyMapping() != null && generateCertificateDto.getRequireExplicitPolicy() != null) {
                 addPolicyConstraintsExtension(generateCertificateDto.getRequireExplicitPolicy(), generateCertificateDto.getInhibitPolicyMapping());
             }
 
             // Dodavanje name constraint extension
-            // Ne mogu da potrefim formate general name preko postmana..
-//            if(generateCertificateDto.getPermitedSubtrees() != null || generateCertificateDto.getExcludedSubtrees() != null) {
-//                List<GeneralSubtree> permitedSubtrees = new ArrayList<>();
-//                List<GeneralSubtree> excludedSubtrees = new ArrayList<>();
-//                generateCertificateDto.getExcludedSubtrees().forEach(element -> excludedSubtrees.add(new GeneralSubtree(
-//                        new GeneralName(element.getTag(), element.getObj()), element.getMinimin(), element.getMaximum()
-//                )));
-//                generateCertificateDto.getPermitedSubtrees().forEach(element -> permitedSubtrees.add(new GeneralSubtree(
-//                        new GeneralName(element.getTag(), element.getObj()), element.getMinimin(), element.getMaximum()
-//                )));
-//                addNameConstraintsExtension(permitedSubtrees, excludedSubtrees);
-//            }
+            if (generateCertificateDto.getPermitedSubtrees() != null || generateCertificateDto.getExcludedSubtrees() != null) {
+                addNameConstraintsExtension(mapGeneralSubtree(generateCertificateDto.getPermitedSubtrees()),
+                        mapGeneralSubtree(generateCertificateDto.getExcludedSubtrees()));
+            }
 
-            if(generateCertificateDto.getIssuerAlternativeNames() != null) {
+            // Dodavanje issuera alternative name extension
+            if (generateCertificateDto.getIssuerAlternativeNames() != null) {
                 addIssuerAlternativeNameExtension(generateCertificateDto.getIssuerAlternativeNames());
             }
 
@@ -172,6 +166,17 @@ public class CertificateGenerator {
         certificateGenerator.addExtension(Extension.issuerAlternativeName, false, new DERSequence(alternativeNames.toArray(new GeneralName[]{})));
     }
 
+    public List<GeneralSubtree> mapGeneralSubtree(List<GeneralSubtreeElement> generalSubtreeElements) {
+
+        List<GeneralSubtree> generalSubtrees = new ArrayList<>();
+        generalSubtreeElements.forEach(generalSubtreeElement -> generalSubtrees.add(new GeneralSubtree(
+                new GeneralName(generalSubtreeElement.getTag(), generalSubtreeElement.getObj()),
+                generalSubtreeElement.getMinimin(), generalSubtreeElement.getMaximum()
+        )));
+
+        return generalSubtrees;
+
+    }
 
     public X509Certificate generateCACertificate(SubjectData subjectData, IssuerData issuerData) {
         try {
@@ -199,8 +204,7 @@ public class CertificateGenerator {
             addKeyUsage(keyUsages);
 
             Map<SubjectAlternativeName, String> generalNames = new HashMap<>();
-            //OVDE TREBA DODATI ALI NE ZNAM KOJI JE OBLIK :(
-            //generalNames.put(SubjectAlternativeName.DirectoryName, "user@mail.com");
+            generalNames.put(SubjectAlternativeName.DirectoryName, "CN=r,OU=r,O=r,L=r,ST=r,C=rs");
             addAuthorityKeyIdentifier(subjectData.getPublicKey().getEncoded(), generalNames, new BigInteger(subjectData.getSerialNumber().getBytes()));
 
             X509CertificateHolder certHolder = certificateGenerator.build(contentSigner);

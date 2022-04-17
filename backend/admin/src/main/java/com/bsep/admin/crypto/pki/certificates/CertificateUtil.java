@@ -144,7 +144,7 @@ public class CertificateUtil {
         Certificate certificate = certificateGenerator.generateCertificate(subjectData,issuerData, new GenerateCertificateDto());
         String keystoreFileName = makeFilePath();
         keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
-        keyStoreWriter.write(sn,issuerAlias, issuerData.getPrivateKey(), password.toCharArray(), certificate);
+        keyStoreWriter.write(sn,issuerAlias, keyPair.getPrivate(), password.toCharArray(), certificate);
         keyStoreWriter.saveKeyStore(keystoreFileName, password.toCharArray());
 
     }
