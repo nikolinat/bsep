@@ -1,9 +1,8 @@
 <template>
-<<<<<<< HEAD
     <div>
         <Form>
             <form-row>
-                <div class="col-5">
+                <div class="col-6">
                     <text-input 
                         label="Valid from"
                         :value="formatDate(certificate.startDate)"
@@ -28,7 +27,7 @@
             </form-row>
 
             <form-row>
-                <div class="col-5">
+                <div class="col-6">
                     <text-input 
                         label="Email"
                         v-model="certificate.subject.email" 
@@ -47,7 +46,7 @@
             </form-row>
 
             <form-row>
-                <div class="col-5">
+                <div class="col-6">
                     <text-input 
                         label="Organization"
                         v-model="certificate.subject.organization"
@@ -66,7 +65,7 @@
             </form-row>
 
             <form-row>
-                <div class="col-5">
+                <div class="col-6">
                     <text-input 
                         label="Given name"
                         v-model="certificate.subject.givenName"
@@ -85,7 +84,7 @@
             </form-row>
 
             <form-row>
-                <div class="col-5">
+                <div class="col-6">
                     <text-input 
                         label="Country"
                         v-model="certificate.subject.country"
@@ -103,12 +102,14 @@
                     />
                 </div>
             </form-row>
-
-            <ModalOpener :modalBoxId="'extensionsModalOpener'">
-                <Button> Extensions </Button>
-            </ModalOpener>
-        
         </Form>
+
+        <ExtensionsModal :modalBoxId="'extensionsModalOpener'" :extensions="certificate.extensions"></ExtensionsModal>
+
+        <ModalOpener modalBoxId="extensionsModalOpener">
+            <Button> Extensions </Button>
+        </ModalOpener>
+            
     </div>
 </template>
 
@@ -118,18 +119,21 @@ import FormRow from '../../generic-components/Form/FormRow.vue'
 import TextInput from '../../generic-components/Form/TextInput.vue'
 import Button from '../../generic-components/Form/Button.vue'
 import ModalOpener from '../../generic-components/Modal/ModalOpener.vue'
+import ExtensionsModal from '../../custom-components/Modals/ExtensionsModal.vue'
 import moment from "moment";
 
 export default {
     props: {
         certificate: {}
     },
+    mounted() {console.log(this.certificate)},
    components: {
        Form,
        FormRow,
        TextInput,
        Button,
-       ModalOpener
+       ModalOpener,
+       ExtensionsModal
     },
     methods: {
        formatDate(d) {

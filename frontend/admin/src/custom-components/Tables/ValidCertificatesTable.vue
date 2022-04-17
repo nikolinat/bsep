@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <div>
     <Table>
       <TableHead :columnNames="['Entry Name','Certificate Expiry','Algorithm','Key Size',' ',]"></TableHead>
@@ -39,7 +38,7 @@
       </div>
     </Modal>
 
-    <Modal modalBoxId="moreDetailsModalOpener" title="More details">
+    <Modal modalBoxId="moreDetailsModalOpener" title="More details" :sizeClass="'modal-lg'">
       <div slot="body" v-if="selectedCertificate !== null">
         <CertificateDetailsForm :certificate="selectedCertificate"></CertificateDetailsForm>
       </div>

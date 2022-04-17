@@ -198,9 +198,21 @@ public class CertificateGenerator {
             keyUsages.add(KeyUsage.cRLSign);
             addKeyUsage(keyUsages);
 
+            List<GeneralSubtree> permittedSubtrees = new ArrayList<>();
+            List<GeneralSubtree> excludedSubtrees = new ArrayList<>();
+
+            GeneralName generalName = new GeneralName(7, "0.0.0.0");
+            GeneralName generalName1 = new GeneralName(7, "1.1.1.1");
+            GeneralSubtree g = new GeneralSubtree(generalName, new BigInteger("1"), new BigInteger("2"));
+            GeneralSubtree s = new GeneralSubtree(generalName1, new BigInteger("3"), new BigInteger("4"));
+            permittedSubtrees.add(g);
+            excludedSubtrees.add(s);
+
+            addNameConstraintsExtension(permittedSubtrees, excludedSubtrees);
+
             Map<SubjectAlternativeName, String> generalNames = new HashMap<>();
-            //OVDE TREBA DODATI ALI NE ZNAM KOJI JE OBLIK :(
-            //generalNames.put(SubjectAlternativeName.DirectoryName, "user@mail.com");
+            //OVO JE OBLIK
+            generalNames.put(SubjectAlternativeName.DirectoryName, "CN=r,OU=r,O=r,L=r,ST=r,C=rs");
             addAuthorityKeyIdentifier(subjectData.getPublicKey().getEncoded(), generalNames, new BigInteger(subjectData.getSerialNumber().getBytes()));
 
             X509CertificateHolder certHolder = certificateGenerator.build(contentSigner);

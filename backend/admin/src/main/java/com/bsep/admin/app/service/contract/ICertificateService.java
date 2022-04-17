@@ -13,11 +13,7 @@ import java.util.List;
 public interface ICertificateService {
     List<RevokedCertificate> findAll();
 
-<<<<<<< HEAD
-    RevokedCertificate findBySerialNumber(Long serialNumber) throws Exception;
-=======
     RevokedCertificate findByAlias(String alias) throws Exception;
->>>>>>> develop
 
     RevokedCertificate create(RevokedCertificate entity) throws Exception;
 

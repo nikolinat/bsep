@@ -2,6 +2,7 @@ package com.bsep.admin.app.dto;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 
 public class CertificateDto {
 
@@ -12,13 +13,15 @@ public class CertificateDto {
     private SubjectDto subject;
     private boolean isRoot;
     private boolean isIntermediate;
+    private List<ExtensionDto> extensions;
 
-    public CertificateDto(BigInteger serialNumber,String alias, Date startDate, Date endDate, SubjectDto subject, boolean isRoot, boolean isIntermediate) {
+    public CertificateDto(BigInteger serialNumber, String alias, Date startDate, Date endDate, SubjectDto subject, List<ExtensionDto> extensions, boolean isRoot, boolean isIntermediate) {
         this.serialNumber = serialNumber;
         this.alias = alias;
         this.startDate = startDate;
         this.endDate = endDate;
         this.subject = subject;
+        this.extensions = extensions;
         this.isRoot = isRoot;
         this.isIntermediate = isIntermediate;
     }
@@ -45,6 +48,14 @@ public class CertificateDto {
 
     public void setSubject(SubjectDto subject) {
         this.subject = subject;
+    }
+
+    public List<ExtensionDto> getExtensions() {
+        return extensions;
+    }
+
+    public void setExtensions(List<ExtensionDto> extensions) {
+        this.extensions = extensions;
     }
 
     public Date getStartDate() {

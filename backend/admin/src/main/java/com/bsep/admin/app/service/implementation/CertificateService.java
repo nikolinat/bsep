@@ -1,15 +1,18 @@
 package com.bsep.admin.app.service.implementation;
 
 import com.bsep.admin.app.dto.CertificateDto;
+import com.bsep.admin.app.dto.ExtensionDto;
 import com.bsep.admin.app.dto.SubjectDto;
 import com.bsep.admin.app.model.CACertificateAlias;
 import com.bsep.admin.app.model.RevokedCertificate;
 import com.bsep.admin.app.repository.CertificateRepository;
 import com.bsep.admin.app.service.contract.ICACertificateAliasService;
 import com.bsep.admin.app.service.contract.ICertificateService;
+import com.bsep.admin.app.utils.ExtensionsUtil;
 import com.bsep.admin.app.utils.SubjectUtil;
 import com.bsep.admin.crypto.pki.certificates.CertificateUtil;
 import com.bsep.admin.crypto.pki.keystores.KeyStoreReader;
+import org.bouncycastle.asn1.x509.Extensions;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +57,6 @@ public class CertificateService implements ICertificateService {
         return certificateRepository.save(entity);
 
     }
-
     @Override
     public void revoke(CertificateDto certificateDto, String reason) throws Exception {
 
@@ -68,11 +70,7 @@ public class CertificateService implements ICertificateService {
                 for (Certificate c : certificate) {
                     BigInteger serialNumber = new X509CertificateHolder(c.getEncoded()).getSerialNumber();
                     String certificateAlias = new String(serialNumber.toByteArray(), StandardCharsets.UTF_8);
-<<<<<<< HEAD
-                    RevokedCertificate revokedCertificate = new RevokedCertificate(serialNumber.longValue(), reason);
-=======
                     RevokedCertificate revokedCertificate = new RevokedCertificate(certificateAlias, reason);
->>>>>>> develop
                     create(revokedCertificate);
                 }
             }
@@ -93,42 +91,25 @@ public class CertificateService implements ICertificateService {
                     BigInteger serialNumber = new X509CertificateHolder(c.getEncoded()).getSerialNumber();
                     if (!serialNumber.equals(new BigInteger(root.getAlias().getBytes()))) {
                         String certificateAlias = new String(serialNumber.toByteArray(), StandardCharsets.UTF_8);
-<<<<<<< HEAD
-                        RevokedCertificate revokedCertificate = new RevokedCertificate(serialNumber.longValue(), reason);
-=======
                         RevokedCertificate revokedCertificate = new RevokedCertificate(certificateAlias, reason);
->>>>>>> develop
                         create(revokedCertificate);
                     }
                 }
             }
             certificateAliasService.update(intermediate.getAlias(), false);
-<<<<<<< HEAD
-            CertificateUtil.createIntermediateCertificate(certificateAliasService.getActiveCA().getAlias());
-            CACertificateAlias intermediateCertificate = new CACertificateAlias(CertificateUtil.createIntermediateCertificate(root.getAlias()), false, true, true);
-            certificateAliasService.create(intermediateCertificate);
-        } else {
-
-            RevokedCertificate revokedCertificate = new RevokedCertificate(certificateDto.getSerialNumber().longValue(), reason);
-=======
             CertificateUtil.createIntermediateCertificate(root.getAlias());
             CACertificateAlias intermediateCertificate = new CACertificateAlias(CertificateUtil.createIntermediateCertificate(root.getAlias()), false, true, true);
             certificateAliasService.create(intermediateCertificate);
         } else {
             RevokedCertificate revokedCertificate = new RevokedCertificate(certificateDto.getAlias(), reason);
->>>>>>> develop
             create(revokedCertificate);
         }
 
     }
 
-    public boolean check(List<CertificateDto> certificateDtos, BigInteger serialNumber) {
+    public boolean check(List<CertificateDto> certificateDtos, String alias) {
         for (CertificateDto certificateDto : certificateDtos) {
-<<<<<<< HEAD
-            if (certificateDto.getSerialNumber().equals(serialNumber)) {
-=======
             if (certificateDto.getAlias().equals(alias)) {
->>>>>>> develop
                 return true;
             }
         }
@@ -158,41 +139,23 @@ public class CertificateService implements ICertificateService {
         for (String a : aliases) {
             Certificate[] certificate = keyStoreReader.readCertificate(CertificateUtil.makeFilePath(), CertificateUtil.getKeyStorePassword(), a);
             for (Certificate c : certificate) {
-<<<<<<< HEAD
-                    BigInteger serialNumber = new X509CertificateHolder(c.getEncoded()).getSerialNumber();
-                    String certificateAlias = new String(serialNumber.toByteArray(), StandardCharsets.UTF_8);
-                    String subjectString = new X509CertificateHolder(c.getEncoded()).getSubject().toString();
-                    SubjectDto subject = SubjectUtil.extractSubject(subjectString);
-                    if (!check(certificateDtos, serialNumber)) {
-                        if (findBySerialNumber(serialNumber.longValue()) == null) {
-                        Date startDate = new X509CertificateHolder(c.getEncoded()).getNotBefore();
-                        Date endDate = new X509CertificateHolder(c.getEncoded()).getNotAfter();
-                        if (serialNumber.equals(new BigInteger(root.getAlias().getBytes()))) {
-                            CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject,  true, false);
-                            certificateDtos.add(certificateDto);
-                        } else if (serialNumber.equals(new BigInteger(intermediate.getAlias().getBytes()))) {
-                            CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate,subject,  false, true);
-                            certificateDtos.add(certificateDto);
-                        } else {
-                            CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate,subject, false, false);
-=======
                 BigInteger serialNumber = new X509CertificateHolder(c.getEncoded()).getSerialNumber();
                 String certificateAlias = new String(serialNumber.toByteArray(), StandardCharsets.UTF_8);
                 String subjectString = new X509CertificateHolder(c.getEncoded()).getSubject().toString();
                 SubjectDto subject = SubjectUtil.extractSubject(subjectString);
                 if (!check(certificateDtos, certificateAlias)) {
+                    List<ExtensionDto> extensions = ExtensionsUtil.convertToMap(new X509CertificateHolder(c.getEncoded()).getExtensions());
                     Date startDate = new X509CertificateHolder(c.getEncoded()).getNotBefore();
                     Date endDate = new X509CertificateHolder(c.getEncoded()).getNotAfter();
                     if ((!valid && findByAlias(certificateAlias) != null) || (valid && findByAlias(certificateAlias) == null)) {
                         if (serialNumber.equals(new BigInteger(root.getAlias().getBytes()))) {
-                            CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, true, false);
+                            CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, true, false);
                             certificateDtos.add(certificateDto);
                         } else if (serialNumber.equals(new BigInteger(intermediate.getAlias().getBytes()))) {
-                            CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, false, true);
+                            CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, false, true);
                             certificateDtos.add(certificateDto);
                         } else {
-                            CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, false, false);
->>>>>>> develop
+                            CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, false, false);
                             certificateDtos.add(certificateDto);
                         }
 
@@ -202,10 +165,7 @@ public class CertificateService implements ICertificateService {
         }
         return certificateDtos;
 
-<<<<<<< HEAD
-=======
 
->>>>>>> develop
     }
 
     @Override
@@ -219,18 +179,13 @@ public class CertificateService implements ICertificateService {
 
     }
 
-<<<<<<< HEAD
-=======
     //return null when certificate is invalid or return certificate
-    public CertificateDto verifyIssuerCertificate(CertificateDto issuerCertificate) throws Exception {
+    public CertificateDto verifyIssuerCertificate (CertificateDto issuerCertificate) throws Exception {
         RevokedCertificate certificate = certificateRepository.findByAlias(issuerCertificate.getAlias());
-
-        if(certificate != null || issuerCertificate.getEndDate().compareTo(new Date()) < 0)
+        if (certificate != null || issuerCertificate.getEndDate().compareTo(new Date()) < 0)
             return null;
-
         return issuerCertificate;
     }
 
->>>>>>> develop
 }
 
