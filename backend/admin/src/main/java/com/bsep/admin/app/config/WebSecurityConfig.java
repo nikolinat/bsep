@@ -42,6 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/csr");
+        web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/csr");
+        web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/csr/**");
         web.ignoring().antMatchers(HttpMethod.PUT, "/api/v1/csr/**");
         web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/certificate");
         web.ignoring().antMatchers(HttpMethod.PUT, "/api/v1/certificate/**");
