@@ -14,6 +14,11 @@
           icon="assignment"
           to="/revoked-certificates"
         ></sidebar-item>
+        <sidebar-item
+          name="Certificate Signing Requests"
+          icon="assignment"
+          to="/CertificateSigningRequests"
+        ></sidebar-item>
       </ul>
     </div>
   </div>

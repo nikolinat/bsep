@@ -54,6 +54,14 @@ const routes = [
       layout: "AppLayoutMain",
     },
   },
+  {
+    path: "/CertificateSigningRequests",
+    name: "CertificateSigningRequests",
+    component: () => import("@/pages/CertificateSigningRequestsPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    },
+  },
   //empty page for developing
   {
     path: "/tmp",

@@ -1,31 +1,97 @@
 <template>
-  <div class="content">
-    <Card title="Valid certificates">
-      <CertificateSigningRequests
-        :certificateSigningRequests="certificateSigningRequests"
-      ></CertificateSigningRequests>
-    </Card>
+  <div>
+    <div :id="id" class="form-group">
+      <label v-if="showLabel" class="form-control-label center">{{
+        label
+      }}</label>
+      <select
+        v-model="selectedValue"
+        class="selectpicker form-control"
+        data-style="btn btn-primary"
+        :disabled="disabled"
+      >
+        <option
+          v-for="(option, index) in options"
+          :value="option.value"
+          :key="index"
+        >
+          {{ option.label }}
+        </option>
+      </select>
+    </div>
+    <InputErrorMessage :isValid="showErrorMessage ? isValid : true">
+      {{ errorMessage }}
+    </InputErrorMessage>
   </div>
 </template>
+
 <script>
-import CertificateSigningRequests from "../custom-components/Tables/certificateSigningRequestsTable.vue";
-import { mapGetters, mapActions } from "vuex";
-import Card from "../generic-components/Card/Card.vue";
+import InputErrorMessage from "../generic-components/Form/InputErrorMessage.vue";
+const $ = window.$;
 export default {
-  certificateSigningRequests: null,
-  computed: {
-    ...mapGetters({
-      certificateSigningRequests: "csr/getCsr",
-    }),
+  components: {
+    InputErrorMessage,
   },
-  methods: {
-    ...mapActions({
-      fetchCsr: "csr/fetchCsr",
-    }),
+  props: {
+    id: {
+      type: String,
+      default: "single",
+    },
+    label: {
+      type: String,
+      default: "",
+    },
+    value: {
+      default: "",
+    },
+    isValid: {
+      type: Boolean,
+      default: true,
+    },
+    options: {
+      type: Array,
+      default: () => [],
+    },
+    showErrorMessage: {
+      type: Boolean,
+      default: false,
+    },
+    errorMessage: {
+      type: String,
+      default: "You have to select a valid option.",
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    showLabel: {
+      type: Boolean,
+      default: true,
+    },
   },
-  mounted() {
-    this.fetchCsr();
+  data: function () {
+    return {
+      selectedValue: "",
+    };
   },
-  components: { CertificateSigningRequests, Card },
+  watch: {
+    options(opts) {
+      this.options = opts;
+      this.$nextTick(function () {
+        $(`#${this.id} .selectpicker`).selectpicker("refresh");
+      });
+    },
+    selectedValue(value) {
+      this.$emit("input", value);
+    },
+    value(val) {
+      this.selectedValue = val;
+      this.$nextTick(function () {
+        $(`#${this.id} .selectpicker`).selectpicker("refresh");
+      });
+    },
+  },
 };
 </script>
+
+<style></style>
