@@ -3,6 +3,8 @@ import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
+const $ = window.$;
+
 const routes = [
   {
     path: "/auth",
@@ -51,6 +53,13 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+router.afterEach((to, from) => {
+  console.log(to + from);
+  setTimeout(() => {
+    $(".selectpicker").selectpicker("refresh");
+  }, 100);
 });
 
 export default router;

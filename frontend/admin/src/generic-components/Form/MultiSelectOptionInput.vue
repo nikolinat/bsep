@@ -6,7 +6,7 @@
                 multiple data-role="tagsinput"
                 v-model="selectedValues"
                 class="selectpicker form-control"
-                data-style="btn btn-primary btn-round"
+                data-style="btn btn-primary"
             >
                 <option v-for="(option, index) in options" :value="option.value" :key="index">{{option.label}}</option>
             </select>

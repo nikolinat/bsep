@@ -1,12 +1,12 @@
 import axios from "axios";
 
 const state = {
-  csr: null,
+  csr: [],
   result: null,
 };
 
 const getters = {
-  getCsr: (state) => state.csr,
+  getAllCsr: (state) => state.allCsr,
   getResult: (state) => state.result,
 };
 
@@ -22,14 +22,24 @@ const actions = {
         context.commit("setResult", { label: "fetch", ok: false });
       });
   },
-};
-
-const mutations = {
-  setCsr: (state, csr) => {
-    state.csr = csr;
-  },
-  setResult: (state, result) => {
-    state.result = result;
+  createCsr: (context, csr) => {
+    axios
+      .post(`api/v1/csr`, csr)
+      .then((resp) => {
+        console.log(resp);
+        context.commit("setResult", {
+          label: "create",
+          ok: true,
+          message: "Successfuly created.",
+        });
+      })
+      .catch((err) => {
+        context.commit("setResult", {
+          label: "create",
+          ok: false,
+          message: err.response.data.ErrorMessage,
+        });
+      });
   },
 };
 
@@ -39,4 +49,13 @@ export default {
   actions: actions,
   mutations: mutations,
   namespaced: true,
+};
+
+const mutations = {
+  setAllCsr: (state, allCsr) => {
+    state.allCsr = allCsr;
+  },
+  setResult: (state, result) => {
+    state.result = result;
+  },
 };
