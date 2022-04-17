@@ -25,6 +25,22 @@
                     />
                 </div>
             </form-row>
+            <form-row>
+                <SelectOptionInput
+                class="col-6"
+                :label="'Select standard template'"
+                :showLabel="true"
+                :options="templates"
+                v-model="currentTemplate"
+                />
+
+                <MultiSelectOptionInput class="col-6"
+                    label="Add extensions"
+                    :showLabel="false"
+                    :options="extensions"
+                    v-model="checkedExtensions"
+                />
+            </form-row>
         </form-group>
 
         <form-group v-if="keyUsageExtension.display">
@@ -61,8 +77,11 @@ import { mapActions } from 'vuex'
 import FormGroup from '../../generic-components/Form/FormGroup.vue'
 import KeyUsageForm from './KeyUsageForm.vue'
 import ExtendedKeyUsagesForm from './ExtendedKeyUsagesForm.vue'
-// import AuthorityKeyIdentifierForm from './AuthorityKeyIdentifierForm.vue'
 import AuthorityKeyIdentifierTable from '../Tables/AuthorityKeyIdentifierTable.vue'
+import SelectOptionInput from '../../generic-components/Form/SelectOptionInput.vue'
+import MultiSelectOptionInput from '../../generic-components/Form/MultiSelectOptionInput.vue'
+
+const $ = window.$;
 
 export default {
    components: {
@@ -71,32 +90,63 @@ export default {
         Button,
         DateTimePicker,
         FormGroup,
-      KeyUsageForm,
-      ExtendedKeyUsagesForm,
-    //   AuthorityKeyIdentifierForm,
-      AuthorityKeyIdentifierTable
+        KeyUsageForm,
+        ExtendedKeyUsagesForm,
+        AuthorityKeyIdentifierTable,
+        SelectOptionInput,
+        MultiSelectOptionInput
     },
 
     data: function() {
         return {
-          certificate: {
-            startDate: '',
-            endDate: '',
-          },
+            certificate: {
+                startDate: '',
+                endDate: '',
+            },
         
-          showErrorMessage: false,
-          keyUsageExtension: {
-              display: true,
-              defaultChecked: []
-          },
-          extendedKeyUsages: {
-              display: true,
-              defaultChecked: []
-          },
-          authorityKeyIdentifier: {
-              display: true,
-              addedOptions: []
-          }
+            showErrorMessage: false,
+            keyUsageExtension: {
+                display: false,
+                defaultChecked: []
+            },
+            extendedKeyUsages: {
+                display: false,
+                defaultChecked: []
+            },
+            authorityKeyIdentifier: {
+                display: false,
+                addedOptions: []
+            },
+            templates: [
+              {
+                  label: "SSL Server",
+                  value: 0
+              },
+              {
+                  label: "SSL Client",
+                  value: 1
+              },
+              {
+                  label: "Code Signing",
+                  value: 2
+              },
+            ],
+            currentTemplate: null,
+            extensions: [
+                {
+                    label: "Policy Constraints",
+                    value: 0
+                },
+                {
+                    label: "Name Constraints",
+                    value: 1
+                },
+                {
+                    label: "Issuer Alternative Name",
+                    value: 2
+                }
+            ],
+            checkedExtensions: []
         }
     },
 
@@ -105,7 +155,26 @@ export default {
     },
 
     watch: {
+        currentTemplate(option) {
 
+            setTimeout(() => {
+                $('.selectpicker').selectpicker('refresh');
+            }, 100);
+
+            this.currentTemplate = option;
+            if(this.currentTemplate === 0) {
+                this.sslServerTemplate();
+            }
+            else if(this.currentTemplate === 1) {
+                this.sslClientTemplate()
+            }
+            else if(this.currentTemplate === 2) {
+                this.codeSigningTemplate()
+            }
+            else {
+                this.removeAllExtensions()
+            }   
+        }
     },
 
     methods: {
@@ -122,6 +191,7 @@ export default {
             this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.1"]
             this.keyUsageExtension.display = true;
             this.keyUsageExtension.defaultChecked = [128, 32]
+            this.authorityKeyIdentifier.display = true;
         },
 
         sslClientTemplate() {
@@ -129,6 +199,7 @@ export default {
             this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.2"]
             this.keyUsageExtension.display = true;
             this.keyUsageExtension.defaultChecked = [32]
+            this.authorityKeyIdentifier.display = false;
         },
 
         codeSigningTemplate() {
@@ -136,11 +207,20 @@ export default {
             this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.3"]
             this.keyUsageExtension.display = true;
             this.keyUsageExtension.defaultChecked = [128]
+            this.authorityKeyIdentifier.display = false;
+        },
+
+        removeAllExtensions() {
+            this.extendedKeyUsages.display = false;
+            this.extendedKeyUsages.defaultChecked = []
+            this.keyUsageExtension.display = false;
+            this.keyUsageExtension.defaultChecked = []
+            this.authorityKeyIdentifier.display = false;
+            this.authorityKeyIdentifier.addedOptions = []
         }
     },
 
     mounted() {
-        this.sslServerTemplate()
     }
 }
 
