@@ -45,19 +45,40 @@
 
         <form-group v-if="keyUsageExtension.display">
             <form-row class="col-12">
-                <key-usage-form :defaultChecked="keyUsageExtension.defaultChecked"></key-usage-form>
+                <key-usage-form :defaultChecked="keyUsageExtension.defaultChecked" @addedKey="setKey"></key-usage-form>
             </form-row>
         </form-group>
 
         <form-group v-if="extendedKeyUsages.display"> 
             <form-row class="col-12">
-                <extended-key-usages-form :defaultChecked="extendedKeyUsages.defaultChecked"></extended-key-usages-form>
+                <extended-key-usages-form :defaultChecked="extendedKeyUsages.defaultChecked" @addedExtendedKey="setExtendedKey"></extended-key-usages-form>
             </form-row>
         </form-group>
 
         <form-group v-if="authorityKeyIdentifier.display"> 
+            <form-row>
+                <label class="bmd-label-floating" style="margin-left: 3%">Authority Key Identifier</label>
+            </form-row>
             <form-row class="col-12">
-                <authority-key-identifier-table />
+                <general-name-table :addedOptions="authorityKeyIdentifier.addedOptions" modalBoxId="authorityKeyIdentifier" />
+            </form-row>
+        </form-group>
+
+        <form-group v-if="subjectAlternativeNamese.display"> 
+            <form-row>
+                <label class="bmd-label-floating" style="margin-left: 3%">Subject Alternative Name</label>
+            </form-row>
+            <form-row class="col-12">
+                <general-name-table :addedOptions="subjectAlternativeNamese.addedOptions" modalBoxId="subjectAlternativeNames" />
+            </form-row>
+        </form-group>
+
+        <form-group v-if="issuerAlternativeNames.display"> 
+            <form-row>
+                <label class="bmd-label-floating" style="margin-left: 3%">Issuer Alternative Name</label>
+            </form-row>
+            <form-row class="col-12">
+                <general-name-table :addedOptions="issuerAlternativeNames.addedOptions" modalBoxId="issuerAlternativeNames" />
             </form-row>
         </form-group>
         
@@ -77,11 +98,11 @@ import { mapActions } from 'vuex'
 import FormGroup from '../../generic-components/Form/FormGroup.vue'
 import KeyUsageForm from './KeyUsageForm.vue'
 import ExtendedKeyUsagesForm from './ExtendedKeyUsagesForm.vue'
-import AuthorityKeyIdentifierTable from '../Tables/AuthorityKeyIdentifierTable.vue'
+import GeneralNameTable from '../Tables/GeneralNameTable.vue'
 import SelectOptionInput from '../../generic-components/Form/SelectOptionInput.vue'
 import MultiSelectOptionInput from '../../generic-components/Form/MultiSelectOptionInput.vue'
 
-const $ = window.$;
+// const $ = window.$;
 
 export default {
    components: {
@@ -92,7 +113,7 @@ export default {
         FormGroup,
         KeyUsageForm,
         ExtendedKeyUsagesForm,
-        AuthorityKeyIdentifierTable,
+        GeneralNameTable,
         SelectOptionInput,
         MultiSelectOptionInput
     },
@@ -146,7 +167,15 @@ export default {
                     value: 2
                 }
             ],
-            checkedExtensions: []
+            checkedExtensions: [],
+            subjectAlternativeNamese: {
+                display: false,
+                addedOptions: []
+            },
+            issuerAlternativeNames: {
+                display: false,
+                addedOptions: []
+            }
         }
     },
 
@@ -156,11 +185,6 @@ export default {
 
     watch: {
         currentTemplate(option) {
-
-            setTimeout(() => {
-                $('.selectpicker').selectpicker('refresh');
-            }, 100);
-
             this.currentTemplate = option;
             if(this.currentTemplate === 0) {
                 this.sslServerTemplate();
@@ -173,7 +197,15 @@ export default {
             }
             else {
                 this.removeAllExtensions()
-            }   
+            }  
+        },
+        checkedExtensions(checked) {
+            this.checkedExtensions = checked;
+            this.checkedExtensions.forEach(option => {
+                if(option === 2) {
+                    this.issuerAlternativeNames.display = true;
+                }
+            })
         }
     },
 
@@ -192,6 +224,7 @@ export default {
             this.keyUsageExtension.display = true;
             this.keyUsageExtension.defaultChecked = [128, 32]
             this.authorityKeyIdentifier.display = true;
+            this.subjectAlternativeNamese.display = true;
         },
 
         sslClientTemplate() {
@@ -199,7 +232,8 @@ export default {
             this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.2"]
             this.keyUsageExtension.display = true;
             this.keyUsageExtension.defaultChecked = [32]
-            this.authorityKeyIdentifier.display = false;
+            this.authorityKeyIdentifier.display = true;
+            this.subjectAlternativeNamese.display = false;
         },
 
         codeSigningTemplate() {
@@ -207,7 +241,8 @@ export default {
             this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.3"]
             this.keyUsageExtension.display = true;
             this.keyUsageExtension.defaultChecked = [128]
-            this.authorityKeyIdentifier.display = false;
+            this.authorityKeyIdentifier.display = true;
+            this.subjectAlternativeNamese.display = false;
         },
 
         removeAllExtensions() {
@@ -217,7 +252,18 @@ export default {
             this.keyUsageExtension.defaultChecked = []
             this.authorityKeyIdentifier.display = false;
             this.authorityKeyIdentifier.addedOptions = []
+            this.subjectAlternativeNamese.display = false;
+            this.subjectAlternativeNamese.addedOptions = []
+        },
+
+        setExtendedKey(arg) {
+            this.extendedKeyUsages.defaultChecked = arg;
+        },
+
+        setKey(arg) {
+            this.keyUsageExtension.defaultChecked = arg;
         }
+
     },
 
     mounted() {
