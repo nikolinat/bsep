@@ -4,12 +4,12 @@
             <SelectOptionInput
                 class="col-12"
                 :label="'Authority Cert Issuer (General Names)'"
-                :showLabel="false"
+                :showLabel="true"
                 :options="options"
                 v-model="currentOption"
             />
 
-            <Form @submit="onSubmit($event, currentOption)" class="col-10" style="margin-left: 4%" v-if="currentOption !== null">
+            <Form @submit="onSubmit($event, currentOption)" class="col-10" style="margin-left: 4%" v-if="currentOption !== null && currentOption !== ''">
                 <form-row>
                     <text-input 
                         v-model="option.enteredValue"

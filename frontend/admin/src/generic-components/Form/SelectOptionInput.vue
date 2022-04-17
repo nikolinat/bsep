@@ -8,7 +8,6 @@
                 data-style="btn btn-primary"
                 :disabled="disabled"
             >
-                <option value='' selected>{{label}}</option>
                 <option v-for="(option, index) in options" :value="option.value" :key="index">{{option.label}}</option>
             </select>
         </div>
