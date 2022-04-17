@@ -11,7 +11,6 @@
 import { mapActions } from 'vuex'
 import MultiSelectOptionInput from '../../generic-components/Form/MultiSelectOptionInput.vue'
 
-const $ = window.$;
 
 export default {
    components: {
@@ -113,9 +112,10 @@ export default {
     },
      
     mounted() {
-        setTimeout(() => {
-                $('.selectpicker').selectpicker('refresh');
-        }, 100);
+        console.log(this.checkedOptions)
+        const checked = []
+        this.checkedOptions.forEach(option => checked.push(option));
+        this.checkedOptions = checked;
     }
 }
 

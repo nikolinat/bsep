@@ -86,9 +86,9 @@ export default {
     },
 
     mounted() {
-        // setTimeout(() => {
-        //         $('.selectpicker').selectpicker('refresh');
-        // }, 100);
+        const checked = []
+        this.checkedOptions.forEach(option => checked.push(option));
+        this.checkedOptions = checked;
     }
 }
 

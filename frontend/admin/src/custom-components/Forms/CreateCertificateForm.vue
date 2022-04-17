@@ -102,7 +102,7 @@ import GeneralNameTable from '../Tables/GeneralNameTable.vue'
 import SelectOptionInput from '../../generic-components/Form/SelectOptionInput.vue'
 import MultiSelectOptionInput from '../../generic-components/Form/MultiSelectOptionInput.vue'
 
-// const $ = window.$;
+const $ = window.$;
 
 export default {
    components: {
@@ -198,6 +198,10 @@ export default {
             else {
                 this.removeAllExtensions()
             }  
+
+            setTimeout(() => {
+                $('.selectpicker').selectpicker('refresh');
+            }, 100);
         },
         checkedExtensions(checked) {
             this.checkedExtensions = checked;
@@ -206,17 +210,17 @@ export default {
                     this.issuerAlternativeNames.display = true;
                 }
             })
+
+            setTimeout(() => {
+                $('.selectpicker').selectpicker('refresh');
+            }, 100);
         }
     },
 
     methods: {
         ...mapActions({ 
-
+            createCertificate: 'csr/acceptCsr'
         }),
-
-        onSubmit(e) {
-            e.preventDefault();
-        },
 
         sslServerTemplate() {
             this.extendedKeyUsages.display = true;
@@ -262,8 +266,47 @@ export default {
 
         setKey(arg) {
             this.keyUsageExtension.defaultChecked = arg;
-        }
+        },
 
+        onSubmit(e) {
+            e.preventDefault();
+
+            const certificate = {
+                startDate: this.certificate.startDate,
+                endDate: this.certificate.endDate,
+            }
+
+            if(this.keyUsageExtension.display && this.keyUsageExtension.defaultChecked.length > 0) {
+                certificate.keyUsagesExtension = this.keyUsageExtension.defaultChecked;
+            }
+
+            if(this.extendedKeyUsages.display && this.extendedKeyUsages.defaultChecked.length > 0) {
+                certificate.extendedKeyUsages = this.extendedKeyUsages.defaultChecked;
+            }
+
+            if(this.authorityKeyIdentifier.display && this.authorityKeyIdentifier.addedOptions.length > 0) {
+                const map = new Map();
+                this.authorityKeyIdentifier.addedOptions.forEach(option => map.set(option.value, option.enteredValue))
+                certificate.generalNamesForAuthorityKeyIdentifier = Object.fromEntries(map);
+            } 
+
+            if(this.subjectAlternativeNamese.display && this.subjectAlternativeNamese.addedOptions.length > 0) {
+                const map = new Map();
+                this.subjectAlternativeNamese.addedOptions.forEach(option => map.set(option.value, option.enteredValue))
+                certificate.subjectAlternativeNames = Object.fromEntries(map);
+            } 
+
+            if(this.issuerAlternativeNames.display && this.issuerAlternativeNames.addedOptions.length > 0) {
+                const map = new Map();
+                this.issuerAlternativeNames.addedOptions.forEach(option => map.set(option.value, option.enteredValue))
+                certificate.issuerAlternativeNames = Object.fromEntries(map);
+            } 
+
+            console.log(certificate);
+            const csrId = 1;
+            this.createCertificate({ csrId, certificate})
+
+        }
     },
 
     mounted() {
