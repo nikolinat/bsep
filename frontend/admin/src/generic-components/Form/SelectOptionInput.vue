@@ -1,11 +1,11 @@
 <template>
     <div>
         <div :id="id" class="form-group">
-            <label v-if="showLabel" class="form-control-label text-white center">{{label}}</label>
+            <label v-if="showLabel" class="form-control-label center">{{label}}</label>
             <select
                 v-model="selectedValue"
                 class="selectpicker form-control"
-                data-style="btn btn-primary btn-round"
+                data-style="btn btn-primary"
                 :disabled="disabled"
             >
                 <option value='' selected>{{label}}</option>
