@@ -112,7 +112,6 @@ export default {
     },
      
     mounted() {
-        console.log(this.checkedOptions)
         const checked = []
         this.checkedOptions.forEach(option => checked.push(option));
         this.checkedOptions = checked;

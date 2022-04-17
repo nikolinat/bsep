@@ -1,6 +1,6 @@
 
 <template>
-    <div class="col-6"> 
+    <div class="col-8"> 
         <Table>
             <TableHead :columnNames="['General Name', 'Value', '']"></TableHead>
             <TableBody>
