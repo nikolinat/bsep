@@ -15,25 +15,12 @@
   </div>
 </template>
 <script>
-import NameConstraintForm from "../custom-components/Forms/NameConstraintSubtreesForm.vue";
-import { mapGetters, mapActions } from "vuex";
-import Card from "../generic-components/Card/Card.vue";
+import NameConstraintForm from "../../custom-components/Forms/NameConstraintSubtreesForm.vue";
+import Card from "../../generic-components/Card/Card.vue";
 export default {
-  certificateSigningRequests: null,
-  computed: {
-    ...mapGetters({
-      //certificateSigningRequests: "csr/getCsr",
-    }),
-  },
-  methods: {
-    ...mapActions({
-      //fetchCsr: "csr/fetchCsr",
-    }),
-  },
-  mounted() {
-    this.fetchCsr();
-  },
+  permittedSubtrees: null,
+  excludedSubtrees: null,
+
   components: { NameConstraintForm, Card },
-  name: "CertificateSigningRequestsPage",
 };
 </script>
