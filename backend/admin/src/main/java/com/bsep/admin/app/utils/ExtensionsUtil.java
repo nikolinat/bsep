@@ -208,8 +208,8 @@ public class ExtensionsUtil {
                 ExtensionDto policyConstraintsExtension = new ExtensionDto("Policy Constraints", policyConstraintsDisplay(policyConstraints));
                 list.add(policyConstraintsExtension);
             } else if (identifier == Extension.issuerAlternativeName) {
-                ASN1OctetString extensionValue = extensions.getExtension(Extension.issuerAlternativeName).getExtnValue();
-                Extension extension = Extension.getInstance(extensionValue.getOctets());
+                //ASN1OctetString extensionValue = extensions.getExtension(Extension.issuerAlternativeName).getExtnValue();
+                //Extension extension = Extension.getInstance(extensionValue.getOctets());
                 //GeneralNames generalNames = GeneralNames.getInstance(issuerAlternativeName.getEncoded());
                 //ExtensionDto issuerAlternativeNameExtension = new ExtensionDto("Issuer Alternative Name",generalNamesDisplay(generalNames));
                 //list.add(issuerAlternativeNameExtension);
