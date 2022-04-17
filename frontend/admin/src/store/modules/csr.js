@@ -24,7 +24,7 @@ const actions = {
   },
   createCsr: (context, csr) => {
     axios
-      .post(`api/v1/csr`, csr)
+      .post(`/csr`, csr)
       .then((resp) => {
         console.log(resp);
         context.commit("setResult", {

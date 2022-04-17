@@ -38,6 +38,22 @@ const routes = [
       layout: "AppLayoutMain",
     },
   },
+  {
+    path: "/csr",
+    name: "CreateCSR",
+    component: () => import("@/pages/CreateCSRPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    },
+  },
+  {
+    path: "/create-certificate",
+    name: "CreateCertificate",
+    component: () => import("@/pages/CreateCertificatePage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    },
+  },
   //empty page for developing
   {
     path: "/tmp",
