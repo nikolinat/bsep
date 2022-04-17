@@ -11,14 +11,14 @@
 import { mapActions } from 'vuex'
 import MultiSelectOptionInput from '../../generic-components/Form/MultiSelectOptionInput.vue'
 
+
 export default {
    components: {
         MultiSelectOptionInput
     },
     props: {
         defaultChecked: {
-            type: Array,
-            default: () => []
+            type: Array
         }
     },
 
@@ -97,9 +97,11 @@ export default {
     watch: {
         checkedOptions(checked) {
             this.checkedOptions = checked;
+            this.$emit("addedExtendedKey", this.checkedOptions)
         },
         defaultChecked(checked) {
-            this.checkedOptions = checked
+            this.defaultChecked = checked
+            this.checkedOptions = checked;
         }
     },
 
@@ -107,6 +109,13 @@ export default {
         ...mapActions({ 
 
         }),
+    },
+     
+    mounted() {
+        console.log(this.checkedOptions)
+        const checked = []
+        this.checkedOptions.forEach(option => checked.push(option));
+        this.checkedOptions = checked;
     }
 }
 

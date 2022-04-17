@@ -3,13 +3,14 @@
         <div slot="body">
             <SelectOptionInput
                 class="col-12"
+                id="selektovan"
                 :label="'Authority Cert Issuer (General Names)'"
-                :showLabel="false"
+                :showLabel="true"
                 :options="options"
                 v-model="currentOption"
             />
 
-            <Form @submit="onSubmit($event, currentOption)" class="col-10" style="margin-left: 4%" v-if="currentOption !== null">
+            <Form @submit="onSubmit($event, currentOption)" class="col-10" style="margin-left: 4%" v-if="currentOption !== null && currentOption !== ''">
                 <form-row>
                     <text-input 
                         v-model="option.enteredValue"
@@ -51,27 +52,27 @@ export default {
           options: [
               {
                   label: "DNS Name",
-                  value: 2
+                  value: "DNSName"
               },
               {
                   label: "IP Address",
-                  value: 7
+                  value: "X400Address"
               },
               {
                   label: "Register ID",
-                  value: 8
+                  value: "RegisteredID"
               },
               {
                   label: "RFC 822 Name",
-                  value: 1
+                  value: "Rfc822Name"
               },
               {
                   label: "URI",
-                  value: 6
+                  value: "UniformResourceIdentifier"
               },
               {
                   label: "UPN",
-                  value: 0
+                  value: "OtherName"
               }
           ],
         option: {
@@ -102,6 +103,9 @@ export default {
 
             this.$emit('newGeneralName', this.option)
         }
+    },
+
+    mounted() {
     }
 }
 </script>
