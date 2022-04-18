@@ -11,7 +11,7 @@
             />
 
             <Form @submit="onSubmitDirectoryName($event)" class="col-10" style="margin-left: 4%" 
-                v-if="currentOption !== null && currentOption !== '' && currentOption === 'DirectoryName'">
+                v-if="currentOption !== null && currentOption !== '' && currentOption === 'directoryName'">
                 <form-row>
                     <text-input 
                         v-model="directoryName.CN"
@@ -27,7 +27,7 @@
                 </form-row>
                 <form-row>
                     <text-input 
-                        v-model="directoryName.ON"
+                        v-model="directoryName.O"
                         type="text"
                         label="Organization Name"
                     />
@@ -66,7 +66,7 @@
                 </form-row>
                 <form-row>
                     <text-input 
-                        v-model="directoryName.GN"
+                        v-model="directoryName.GIVENNAME"
                         type="text"
                         label="Given Name"
                     />
@@ -124,7 +124,7 @@
                     />
                     <text-input 
                         style="margin-left: 2em;"
-                        v-model="directoryName.DN_QUALIFIER"
+                        v-model="directoryName.DN"
                         type="text"
                         label="DN Qualifier"
                     />
@@ -219,13 +219,13 @@ export default {
         directoryName: {
             CN: '',
             OU: '',
-            ON: '',
+            O: '',
             L: '',
             ST: '',
             C: '',
             E: '',
             SN: '',
-            GN: '',
+            GIVENNAME: '',
             SURNAME: '',
             DC: '',
             UID: '',
@@ -234,7 +234,7 @@ export default {
             T: '',
             INITIALS: '',
             PSEUDONYM: '',
-            DN_QUALIFIER: '',
+            DN: '',
             GENERATION: ''
             }
         }
