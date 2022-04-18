@@ -37,7 +37,7 @@ const actions = {
         context.commit("setResult", {
           label: "create",
           ok: false,
-          message: err.response.data.ErrorMessage,
+          message: err.response.data.errorMessage,
         });
       });
   },
@@ -56,6 +56,24 @@ const actions = {
       .catch((err) => {
         context.commit("setResult", {
           label: "accept",
+          ok: false,
+          message: err.response.data.errorMessage,
+        });
+      })
+  },
+
+  declineCsr: (context, csr) => {
+      axios.put(`/csr/decline/${csr.id}`,csr.reason)
+      .then(() => {
+        context.commit("setResult", {
+          label: "decline",
+          ok: true,
+          message: "Successfuly decline certificate."
+        })
+      })
+      .catch((err) => {
+        context.commit("setResult", {
+          label: "decline",
           ok: false,
           message: err.response.data.ErrorMessage,
         });

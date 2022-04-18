@@ -19,16 +19,16 @@ const routes = [
     name: "Home",
     component: () => import("@/pages/HomePage.vue"),
     meta: {
-      layout: 'AppLayoutMain'
-    }
+      layout: "AppLayoutMain",
+    },
   },
   {
-    path: '/valid-certificates',
-    name: 'ValidCertificates',
-    component: () => import('@/pages/ValidCertificatesPage.vue'),
+    path: "/valid-certificates",
+    name: "ValidCertificates",
+    component: () => import("@/pages/ValidCertificatesPage.vue"),
     meta: {
-      layout: 'AppLayoutMain'
-    }
+      layout: "AppLayoutMain",
+    },
   },
   {
     path: "/revoked-certificates",
@@ -47,7 +47,7 @@ const routes = [
     },
   },
   {
-    path: "/create-certificate",
+    path: "/create-certificate/:id",
     name: "CreateCertificate",
     component: () => import("@/pages/CreateCertificatePage.vue"),
     meta: {
@@ -55,20 +55,11 @@ const routes = [
     },
   },
   {
-    path: "/CertificateSigningRequests",
-    name: "CertificateSigningRequests",
-    component: () => import("@/pages/CertificateSigningRequestsPage.vue"),
+    path: "/csr-preview",
+    name: "CSRPage",
+    component: () => import("@/pages/CSRPage.vue"),
     meta: {
       layout: "AppLayoutMain",
-    },
-  },
-  //empty page for developing
-  {
-    path: "/tmp",
-    name: "Tmp",
-    component: () => import("@/pages/tmp.vue"),
-    meta: {
-      layout: "AppLayoutDefault",
     },
   },
 ];

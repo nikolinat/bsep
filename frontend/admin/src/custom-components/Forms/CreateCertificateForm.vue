@@ -131,7 +131,6 @@
         />
       </form-row>
     </form-group>
-
     <div style="display: flex; justify-content: center">
       <Button @click="showErrorMessage = true" type="submit">Create</Button>
     </div>
@@ -143,16 +142,18 @@ import Button from "../../generic-components/Form/Button.vue";
 import Form from "../../generic-components/Form/Form.vue";
 import FormRow from "../../generic-components/Form/FormRow.vue";
 import DateTimePicker from "../../generic-components/Form/DateTimePicker.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import FormGroup from "../../generic-components/Form/FormGroup.vue";
 import KeyUsageForm from "./KeyUsageForm.vue";
 import ExtendedKeyUsagesForm from "./ExtendedKeyUsagesForm.vue";
 import GeneralNameTable from "../Tables/GeneralNameTable.vue";
 import SelectOptionInput from "../../generic-components/Form/SelectOptionInput.vue";
 import MultiSelectOptionInput from "../../generic-components/Form/MultiSelectOptionInput.vue";
-import PolicyConstraint from "../Tables/PolicyConstraintTable.vue"
-import NameConstraint from "../Tables/NameConstraintTable.vue"
-// const $ = window.$;
+import toastr from "toastr";
+import PolicyConstraint from "../Tables/PolicyConstraintTable.vue";
+import NameConstraint from "../Tables/NameConstraintTable.vue";
+
+const $ = window.$;
 
 export default {
   components: {
@@ -168,6 +169,9 @@ export default {
     MultiSelectOptionInput,
     PolicyConstraint,
     NameConstraint,
+  },
+  props: {
+    csrId: null,
   },
 
   data: function () {
@@ -239,8 +243,11 @@ export default {
     };
   },
 
-  computed: {},
-
+  computed: {
+    ...mapGetters({
+      result: "csr/getResult",
+    }),
+  },
   watch: {
     currentTemplate(option) {
       this.currentTemplate = option;
@@ -253,6 +260,9 @@ export default {
       } else {
         this.removeAllExtensions();
       }
+      setTimeout(() => {
+        $(".selectpicker").selectpicker("refresh");
+      }, 100);
     },
     checkedExtensions(checked) {
       this.checkedExtensions = checked;
@@ -267,16 +277,25 @@ export default {
           this.issuerAlternativeNames.display = true;
         }
       });
+      setTimeout(() => {
+        $(".selectpicker").selectpicker("refresh");
+      }, 100);
+    },
+    result({ message, ok, label }) {
+      if (label === "accept") {
+        if (ok) {
+          toastr.success(message);
+          this.fetchValidCertificates();
+        } else {
+          toastr.error(message);
+        }
+      }
     },
   },
-
   methods: {
-    ...mapActions({}),
-
-    onSubmit(e) {
-      e.preventDefault();
-    },
-
+    ...mapActions({
+      createCertificate: "csr/acceptCsr",
+    }),
     sslServerTemplate() {
       this.extendedKeyUsages.display = true;
       this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.1"];
@@ -285,7 +304,6 @@ export default {
       this.authorityKeyIdentifier.display = true;
       this.subjectAlternativeNamese.display = true;
     },
-
     sslClientTemplate() {
       this.extendedKeyUsages.display = true;
       this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.2"];
@@ -294,7 +312,6 @@ export default {
       this.authorityKeyIdentifier.display = true;
       this.subjectAlternativeNamese.display = false;
     },
-
     codeSigningTemplate() {
       this.extendedKeyUsages.display = true;
       this.extendedKeyUsages.defaultChecked = ["1.3.6.1.5.5.7.3.3"];
@@ -303,7 +320,6 @@ export default {
       this.authorityKeyIdentifier.display = true;
       this.subjectAlternativeNamese.display = false;
     },
-
     removeAllExtensions() {
       this.extendedKeyUsages.display = false;
       this.extendedKeyUsages.defaultChecked = [];
@@ -314,16 +330,66 @@ export default {
       this.subjectAlternativeNamese.display = false;
       this.subjectAlternativeNamese.addedOptions = [];
     },
-
     setExtendedKey(arg) {
       this.extendedKeyUsages.defaultChecked = arg;
     },
-
     setKey(arg) {
       this.keyUsageExtension.defaultChecked = arg;
     },
+    onSubmit(e) {
+      e.preventDefault();
+      const certificate = {
+        startDate: this.certificate.startDate,
+        endDate: this.certificate.endDate,
+      };
+      if (
+        this.keyUsageExtension.display &&
+        this.keyUsageExtension.defaultChecked.length > 0
+      ) {
+        certificate.keyUsagesExtension = this.keyUsageExtension.defaultChecked;
+      }
+      if (
+        this.extendedKeyUsages.display &&
+        this.extendedKeyUsages.defaultChecked.length > 0
+      ) {
+        certificate.extendedKeyUsages = this.extendedKeyUsages.defaultChecked;
+      }
+      if (
+        this.authorityKeyIdentifier.display &&
+        this.authorityKeyIdentifier.addedOptions.length > 0
+      ) {
+        const map = new Map();
+        this.authorityKeyIdentifier.addedOptions.forEach((option) =>
+          map.set(option.value, option.enteredValue)
+        );
+        certificate.generalNamesForAuthorityKeyIdentifier =
+          Object.fromEntries(map);
+      }
+      if (
+        this.subjectAlternativeNamese.display &&
+        this.subjectAlternativeNamese.addedOptions.length > 0
+      ) {
+        const map = new Map();
+        this.subjectAlternativeNamese.addedOptions.forEach((option) =>
+          map.set(option.value, option.enteredValue)
+        );
+        certificate.subjectAlternativeNames = Object.fromEntries(map);
+      }
+      if (
+        this.issuerAlternativeNames.display &&
+        this.issuerAlternativeNames.addedOptions.length > 0
+      ) {
+        const map = new Map();
+        this.issuerAlternativeNames.addedOptions.forEach((option) =>
+          map.set(option.value, option.enteredValue)
+        );
+        certificate.issuerAlternativeNames = Object.fromEntries(map);
+      }
+      console.log(certificate);
+      const csrId = this.csrId;
+      this.createCertificate({ csrId, certificate });
+    },
   },
-
   mounted() {},
 };
 </script>

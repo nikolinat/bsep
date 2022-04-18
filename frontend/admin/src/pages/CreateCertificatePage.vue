@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="center align-items-center col-10" style="margin-left: 10%">
                 <card :title="'Create certificate'">
-                    <CreateCertificateForm />
+                    <CreateCertificateForm :csrId="csrId"/>
                 </card>
             </div>
         </div>
@@ -20,5 +20,13 @@ export default {
         CreateCertificateForm
     },
     name: 'CreateCertificatePage',
+    data: () => {
+        return {
+            csrId: null,
+        }
+    },
+    mounted() {
+        this.csrId =  this.$route.params.id;
+    },
 }
 </script>

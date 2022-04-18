@@ -29,8 +29,7 @@ public class CertificateSigningRequestController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<CertificateSigningRequest>> getCertificateSigningRequest()
-            throws Exception {
+    public ResponseEntity<List<CertificateSigningRequest>> getCertificateSigningRequest() {
         return new ResponseEntity<>(certificateSigningRequestService.findAll(), HttpStatus.OK);
     }
 

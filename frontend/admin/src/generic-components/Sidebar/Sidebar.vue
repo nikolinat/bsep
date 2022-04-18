@@ -15,9 +15,14 @@
           to="/revoked-certificates"
         ></sidebar-item>
         <sidebar-item
-          name="Certificate Signing Requests"
+          name="CSR"
           icon="assignment"
-          to="/CertificateSigningRequests"
+          to="/csr-preview"
+        ></sidebar-item>
+        <sidebar-item
+          name="Create CSR"
+          icon="assignment"
+          to="/csr"
         ></sidebar-item>
       </ul>
     </div>
@@ -27,7 +32,6 @@
 <script>
 import SidebarItem from "./SidebarItem.vue";
 import SidebarLogo from "./SidebarLogo.vue";
-
 export default {
   data: () => {
     return {};
