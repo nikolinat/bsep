@@ -40,7 +40,7 @@ public class CustomizedExceptionHandling extends ResponseEntityExceptionHandler 
 
             String fieldName = ((FieldError) error).getField();
             String message = error.getDefaultMessage();
-            errors.put(fieldName, message);
+            errors.put("errorMessage", message);
         });
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
     }

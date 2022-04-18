@@ -3,14 +3,14 @@ package com.bsep.admin.app.exception;
 import java.time.LocalDateTime;
 
 public class ExceptionResponse {
-    private String message;
+    private String errorMessage;
     private LocalDateTime dateTime;
 
     public String getMessage() {
-        return message;
+        return errorMessage;
     }
     public void setMessage(String message) {
-        this.message = message;
+        this.errorMessage = message;
     }
     public LocalDateTime getDateTime() {
         return dateTime;

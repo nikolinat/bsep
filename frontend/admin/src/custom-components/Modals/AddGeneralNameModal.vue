@@ -164,6 +164,8 @@ import SelectOptionInput from '../../generic-components/Form/SelectOptionInput.v
 import TextInput from '../../generic-components/Form/TextInput.vue'
 import FormRow from '../../generic-components/Form/FormRow.vue'
 import Button from '../../generic-components/Form/Button.vue'
+import { validateIPaddress } from '../../utils/validation'
+import toastr from "toastr";
 
 export default {
 
@@ -184,27 +186,27 @@ export default {
           options: [
               {
                   label: "DNS Name",
-                  value: "DNSName"
+                  value: "dnsName"
               },
               {
                   label: "IP Address",
-                  value: "IPAddress"
+                  value: "ipAddress"
               },
               {
                   label: "Register ID",
-                  value: "RegisteredID"
+                  value: "registeredId"
               },
               {
                   label: "RFC 822 Name",
-                  value: "Rfc822Name"
+                  value: "rfc822Name"
               },
               {
                   label: "URI",
-                  value: "UniformResourceIdentifier"
+                  value: "uri"
               },
               {
                   label: "Directory Name",
-                  value: "DirectoryName"
+                  value: "directoryName"
               }
           ],
         option: {
@@ -247,6 +249,11 @@ export default {
     methods: {
         onSubmit(e, option) {
             e.preventDefault()
+
+            if(!this.validateEnteredValue(option)) {
+                return;
+            }
+
             this.option.value = option;
             this.options.forEach(o => {
                 if(o.value === option) {
@@ -271,6 +278,16 @@ export default {
             this.option.enteredValue = enteredValue.substring(0, enteredValue.length - 1);
 
             this.$emit('newGeneralName', this.option)
+        },
+
+        validateEnteredValue(option) {
+            if(option === "IPAddress") {
+                if(!validateIPaddress(this.option.enteredValue)) {
+                    toastr.error("You have entered an invalid IP address.")
+                    return false;
+                }
+            }
+            return true;
         }
     },
 

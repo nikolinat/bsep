@@ -37,7 +37,7 @@ const actions = {
         context.commit("setResult", {
           label: "create",
           ok: false,
-          message: err.response.data.ErrorMessage,
+          message: err.response.data.errorMessage,
         });
       });
   },
@@ -56,7 +56,7 @@ const actions = {
         context.commit("setResult", {
           label: "accept",
           ok: false,
-          message: err.response.data.ErrorMessage,
+          message: err.response.data.errorMessage,
         });
       })
   },
