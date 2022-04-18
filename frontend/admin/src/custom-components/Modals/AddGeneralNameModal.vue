@@ -266,7 +266,7 @@ export default {
 
         onSubmitDirectoryName(e) {
             e.preventDefault();
-            this.option.value = "DirectoryName";
+            this.option.value = "directoryName";
             this.option.label = "Directory Name";
             let enteredValue = "";
             let directoryNameMap = new Map(Object.entries(this.directoryName));
