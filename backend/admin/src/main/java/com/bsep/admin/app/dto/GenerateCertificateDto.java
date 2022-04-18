@@ -5,6 +5,7 @@ import com.bsep.admin.crypto.pki.enums.SubjectAlternativeName;
 import org.bouncycastle.asn1.x509.GeneralSubtree;
 import org.bouncycastle.asn1.x509.KeyPurposeId;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.util.Date;
@@ -17,14 +18,17 @@ public class GenerateCertificateDto {
     @NotNull(message = "End date should not be null or empty")
     private Date endDate;
     private List<Integer> keyUsagesExtension;
-    private Map<SubjectAlternativeName, String> generalNamesForAuthorityKeyIdentifier;
-    private Map<SubjectAlternativeName, String> subjectAlternativeNames;
+    @Valid
+    private GeneralNames generalNamesForAuthorityKeyIdentifier;
+    @Valid
+    private GeneralNames subjectAlternativeNames;
     private List<String> extendedKeyUsages;
-    private BigInteger requireExplicitPolicy;
+    private BigInteger requireExplicitPolicy;   
     private BigInteger inhibitPolicyMapping;
     private List<GeneralSubtreeElement> permitedSubtrees;
     private List<GeneralSubtreeElement> excludedSubtrees;
-    private Map<SubjectAlternativeName, String> issuerAlternativeNames;
+    @Valid
+    private GeneralNames issuerAlternativeNames;
 
     public GenerateCertificateDto() {
 
@@ -35,11 +39,10 @@ public class GenerateCertificateDto {
         this.endDate = endDate;
     }
 
-    public GenerateCertificateDto(Date startDate, Date endDate, List<Integer> keyUsagesExtension, Map<SubjectAlternativeName, String>
-            generalNamesForAuthorityKeyIdentifier, Map<SubjectAlternativeName, String> subjectAlternativeNames,
-                                  List<String> extendedKeyUsages, BigInteger requireExplicitPolicy, BigInteger
-                                          inhibitPolicyMapping, List<GeneralSubtreeElement> permitedSubtrees, List<GeneralSubtreeElement> excludedSubtrees,
-                                  Map<SubjectAlternativeName, String> issuerAlternativeNames) {
+    public GenerateCertificateDto(Date startDate, Date endDate, List<Integer> keyUsagesExtension,
+                                  GeneralNames generalNamesForAuthorityKeyIdentifier, GeneralNames subjectAlternativeNames,
+                                  List<String> extendedKeyUsages, BigInteger requireExplicitPolicy, BigInteger inhibitPolicyMapping,
+                                  List<GeneralSubtreeElement> permitedSubtrees, List<GeneralSubtreeElement> excludedSubtrees, GeneralNames issuerAlternativeNames) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.keyUsagesExtension = keyUsagesExtension;
@@ -77,19 +80,19 @@ public class GenerateCertificateDto {
         this.keyUsagesExtension = keyUsagesExtension;
     }
 
-    public Map<SubjectAlternativeName, String> getGeneralNamesForAuthorityKeyIdentifier() {
+    public GeneralNames getGeneralNamesForAuthorityKeyIdentifier() {
         return generalNamesForAuthorityKeyIdentifier;
     }
 
-    public void setGeneralNamesForAuthorityKeyIdentifier(Map<SubjectAlternativeName, String> generalNamesForAuthorityKeyIdentifier) {
+    public void setGeneralNamesForAuthorityKeyIdentifier(GeneralNames generalNamesForAuthorityKeyIdentifier) {
         this.generalNamesForAuthorityKeyIdentifier = generalNamesForAuthorityKeyIdentifier;
     }
 
-    public Map<SubjectAlternativeName, String> getSubjectAlternativeNames() {
+    public GeneralNames getSubjectAlternativeNames() {
         return subjectAlternativeNames;
     }
 
-    public void setSubjectAlternativeNames(Map<SubjectAlternativeName, String> subjectAlternativeNames) {
+    public void setSubjectAlternativeNames(GeneralNames subjectAlternativeNames) {
         this.subjectAlternativeNames = subjectAlternativeNames;
     }
 
@@ -133,11 +136,11 @@ public class GenerateCertificateDto {
         this.excludedSubtrees = excludedSubtrees;
     }
 
-    public Map<SubjectAlternativeName, String> getIssuerAlternativeNames() {
+    public GeneralNames getIssuerAlternativeNames() {
         return issuerAlternativeNames;
     }
 
-    public void setIssuerAlternativeNames(Map<SubjectAlternativeName, String> issuerAlternativeNames) {
+    public void setIssuerAlternativeNames(GeneralNames issuerAlternativeNames) {
         this.issuerAlternativeNames = issuerAlternativeNames;
     }
 }

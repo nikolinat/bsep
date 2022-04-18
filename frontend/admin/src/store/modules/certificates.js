@@ -50,7 +50,7 @@ const actions = {
             context.commit('setResult', {
                 label: 'update',
                 ok: false,
-                message: error.response.data.ErrorMessage
+                message: error.response.data.errorMessage
                 
             });
         });

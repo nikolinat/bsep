@@ -94,13 +94,14 @@ import Button from '../../generic-components/Form/Button.vue'
 import Form from '../../generic-components/Form/Form.vue'
 import FormRow from '../../generic-components/Form/FormRow.vue'
 import DateTimePicker from '../../generic-components/Form/DateTimePicker.vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import FormGroup from '../../generic-components/Form/FormGroup.vue'
 import KeyUsageForm from './KeyUsageForm.vue'
 import ExtendedKeyUsagesForm from './ExtendedKeyUsagesForm.vue'
 import GeneralNameTable from '../Tables/GeneralNameTable.vue'
 import SelectOptionInput from '../../generic-components/Form/SelectOptionInput.vue'
 import MultiSelectOptionInput from '../../generic-components/Form/MultiSelectOptionInput.vue'
+import toastr from 'toastr'
 
 const $ = window.$;
 
@@ -180,7 +181,9 @@ export default {
     },
 
     computed: {
-
+        ...mapGetters({
+            result: "csr/getResult",
+        }),
     },
 
     watch: {
@@ -214,7 +217,17 @@ export default {
             setTimeout(() => {
                 $('.selectpicker').selectpicker('refresh');
             }, 100);
-        }
+        },
+        result({ message, ok, label }) {
+            if (label === "accept") {
+                if (ok) {
+                toastr.success(message);
+                this.fetchValidCertificates();
+                } else {
+                toastr.error(message);
+                }
+            }
+            },
     },
 
     methods: {
