@@ -1,16 +1,13 @@
 package com.bsep.admin.app.dto;
 
 
-import com.bsep.admin.crypto.pki.enums.SubjectAlternativeName;
-import org.bouncycastle.asn1.x509.GeneralSubtree;
-import org.bouncycastle.asn1.x509.KeyPurposeId;
+import com.bsep.admin.app.validators.constraints.ExtendedKeyUsageConstraint;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class GenerateCertificateDto {
     @NotNull(message = "End date should not be null or empty")
@@ -22,6 +19,10 @@ public class GenerateCertificateDto {
     private GeneralNames generalNamesForAuthorityKeyIdentifier;
     @Valid
     private GeneralNames subjectAlternativeNames;
+<<<<<<< HEAD
+=======
+    @ExtendedKeyUsageConstraint
+>>>>>>> f7ddb8c3bdad9e8630f940c296305357f8049a8c
     private List<String> extendedKeyUsages;
     private BigInteger requireExplicitPolicy;
     private BigInteger inhibitPolicyMapping;

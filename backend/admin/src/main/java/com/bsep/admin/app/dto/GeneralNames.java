@@ -1,5 +1,9 @@
 package com.bsep.admin.app.dto;
 
+<<<<<<< HEAD
+=======
+import com.bsep.admin.app.validators.constraints.DirectoryNameConstraint;
+>>>>>>> f7ddb8c3bdad9e8630f940c296305357f8049a8c
 import com.bsep.admin.crypto.pki.enums.SubjectAlternativeName;
 
 import javax.validation.constraints.Pattern;
@@ -7,7 +11,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GeneralNames {
+<<<<<<< HEAD
     private String directoryName;
+=======
+
+    @DirectoryNameConstraint
+    private String directoryName;
+
+>>>>>>> f7ddb8c3bdad9e8630f940c296305357f8049a8c
     @Pattern(regexp =
             "\"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\\\-]*[a-zA-Z0-9])\\\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\\\-]*[A-Za-z0-9])$\"",
             message = "Invalid DNS Name.")
@@ -91,6 +102,7 @@ public class GeneralNames {
     public Map<SubjectAlternativeName, String> getMapFromObject() {
         Map<SubjectAlternativeName, String> map = new HashMap<>();
 
+<<<<<<< HEAD
         if(this.directoryName != null) {
             map.put(SubjectAlternativeName.DirectoryName, this.directoryName);
         }
@@ -112,6 +124,29 @@ public class GeneralNames {
         }
 
         if(this.uri != null) {
+=======
+        if (this.directoryName != null) {
+            map.put(SubjectAlternativeName.DirectoryName, this.directoryName);
+        }
+
+        if (this.dnsName != null) {
+            map.put(SubjectAlternativeName.DNSName, this.dnsName);
+        }
+
+        if (this.ipAddress != null) {
+            map.put(SubjectAlternativeName.IPAddress, this.ipAddress);
+        }
+
+        if (this.rfc822Name != null) {
+            map.put(SubjectAlternativeName.Rfc822Name, this.rfc822Name);
+        }
+
+        if (this.registeredId != null) {
+            map.put(SubjectAlternativeName.RegisteredID, this.registeredId);
+        }
+
+        if (this.uri != null) {
+>>>>>>> f7ddb8c3bdad9e8630f940c296305357f8049a8c
             map.put(SubjectAlternativeName.UniformResourceIdentifier, this.uri);
         }
 

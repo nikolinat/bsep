@@ -71,6 +71,7 @@ import TextInput from "../../generic-components/Form/TextInput.vue";
 import ModalCloser from "../../generic-components/Modal/ModalCloser.vue";
 import toastr from "toastr";
 import { mapActions, mapGetters } from "vuex";
+
 export default {
   props: { certificateSigningRequests: {} },
   components: {
@@ -92,6 +93,7 @@ export default {
       reason: "",
     };
   },
+
   computed: {
     ...mapGetters({
       result: "csr/getResult",
@@ -121,6 +123,7 @@ export default {
       });
       document.getElementById("declineCSRModalCloser").click();
     },
+
     onAcceptSubmit(csr) {
       this.selectedCSR = csr;
       this.$router.push(`/create-certificate/${this.selectedCSR.id}`);

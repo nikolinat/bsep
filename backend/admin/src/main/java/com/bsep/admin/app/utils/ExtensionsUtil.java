@@ -94,7 +94,7 @@ public class ExtensionsUtil {
         }
     }
 
-    private static String extendedKeyName(String id) {
+    public static String extendedKeyName(String id) {
         if (id.equals("1.3.6.1.5.5.7.3.1")) {
             return "TLS Web Server Authentication";
         } else if (id.equals("1.3.6.1.5.5.7.3.2")) {

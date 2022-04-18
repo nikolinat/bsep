@@ -132,6 +132,7 @@
         />
       </form-row>
     </form-group>
+
     <div style="display: flex; justify-content: center">
       <Button @click="showErrorMessage = true" type="submit">Create</Button>
     </div>
@@ -150,9 +151,9 @@ import ExtendedKeyUsagesForm from "./ExtendedKeyUsagesForm.vue";
 import GeneralNameTable from "../Tables/GeneralNameTable.vue";
 import SelectOptionInput from "../../generic-components/Form/SelectOptionInput.vue";
 import MultiSelectOptionInput from "../../generic-components/Form/MultiSelectOptionInput.vue";
-import toastr from "toastr";
 import PolicyConstraint from "../Tables/PolicyConstraintTable.vue";
 import NameConstraint from "../Tables/NameConstraintTable.vue";
+import toastr from "toastr";
 
 const $ = window.$;
 
@@ -174,7 +175,6 @@ export default {
   props: {
     csrId: null,
   },
-
   data: function () {
     return {
       certificate: {
@@ -243,7 +243,6 @@ export default {
       },
     };
   },
-
   computed: {
     ...mapGetters({
       result: "csr/getResult",
@@ -268,12 +267,6 @@ export default {
     checkedExtensions(checked) {
       this.checkedExtensions = checked;
       this.checkedExtensions.forEach((option) => {
-        if (option === 0) {
-          this.policyConstraint.display = true;
-        }
-        if (option === 1) {
-          this.nameConstraint.display = true;
-        }
         if (option === 2) {
           this.issuerAlternativeNames.display = true;
         }
@@ -286,7 +279,6 @@ export default {
       if (label === "accept") {
         if (ok) {
           toastr.success(message);
-          this.fetchValidCertificates();
         } else {
           toastr.error(message);
         }
@@ -336,9 +328,6 @@ export default {
     },
     setKey(arg) {
       this.keyUsageExtension.defaultChecked = arg;
-    },
-    setPolicy(arg) {
-      this.policyConstraint.addedOptions = arg;
     },
     onSubmit(e) {
       e.preventDefault();
