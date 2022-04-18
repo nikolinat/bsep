@@ -68,13 +68,13 @@ public class CertificateGenerator {
 
             // dodavanje authorityKeyIdentifier
             if (generateCertificateDto.getGeneralNamesForAuthorityKeyIdentifier() != null) {
-                addAuthorityKeyIdentifier(subjectData.getPublicKey().getEncoded(), generateCertificateDto.getGeneralNamesForAuthorityKeyIdentifier(),
+                addAuthorityKeyIdentifier(subjectData.getPublicKey().getEncoded(), generateCertificateDto.getGeneralNamesForAuthorityKeyIdentifier().getMapFromObject(),
                         new BigInteger(subjectData.getSerialNumber().getBytes()));
             }
 
             // Dodavanje subject alternateive names
             if (generateCertificateDto.getSubjectAlternativeNames() != null) {
-                addSubjectAlternativeNameExtension(generateCertificateDto.getSubjectAlternativeNames());
+                addSubjectAlternativeNameExtension(generateCertificateDto.getSubjectAlternativeNames().getMapFromObject());
             }
 
             // Dodavanje extended key usages
@@ -95,7 +95,7 @@ public class CertificateGenerator {
 
             // Dodavanje issuera alternative name extension
             if (generateCertificateDto.getIssuerAlternativeNames() != null) {
-                addIssuerAlternativeNameExtension(generateCertificateDto.getIssuerAlternativeNames());
+                addIssuerAlternativeNameExtension(generateCertificateDto.getIssuerAlternativeNames().getMapFromObject());
             }
 
             // Generise se sertifikat

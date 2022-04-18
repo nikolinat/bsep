@@ -114,7 +114,8 @@ import Button from '../../generic-components/Form/Button.vue'
 import Form from '../../generic-components/Form/Form.vue'
 import FormRow from '../../generic-components/Form/FormRow.vue'
 import TextInput from '../../generic-components/Form/TextInput.vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import toastr from 'toastr'
 
 export default {
    components: {
@@ -142,11 +143,22 @@ export default {
     },
 
     computed: {
-
+        ...mapGetters({
+            result: "csr/getResult",
+            }),
     },
 
     watch: {
-
+        result({ message, ok, label }) {
+            if (label === "create") {
+                if (ok) {
+                toastr.success(message);
+                this.fetchValidCertificates();
+                } else {
+                toastr.error(message);
+                }
+            }
+            },
     },
 
     methods: {
