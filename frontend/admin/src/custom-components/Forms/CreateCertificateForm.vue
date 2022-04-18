@@ -117,6 +117,9 @@ export default {
         SelectOptionInput,
         MultiSelectOptionInput
     },
+     props: {
+        csrId: null,
+        },
 
     data: function() {
         return {
@@ -214,7 +217,7 @@ export default {
             setTimeout(() => {
                 $('.selectpicker').selectpicker('refresh');
             }, 100);
-        }
+        },
     },
 
     methods: {
@@ -303,7 +306,7 @@ export default {
             } 
 
             console.log(certificate);
-            const csrId = 1;
+            const csrId = this.csrId;
             this.createCertificate({ csrId, certificate})
 
         }

@@ -8,10 +8,10 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
+import java.util.Date;
 import java.util.List;
 
 public interface ICertificateService {
-    List<RevokedCertificate> findAll();
 
     RevokedCertificate findByAlias(String alias) throws Exception;
 
@@ -25,5 +25,5 @@ public interface ICertificateService {
 
     List<CertificateDto> findAllRevokedCertificates() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, NoSuchProviderException;
 
-    CertificateDto verifyIssuerCertificate(CertificateDto issuerCertificate) throws Exception;
+    boolean verifyIssuerCertificate(String alias, Date endDate) throws Exception;
 }

@@ -47,20 +47,19 @@ const routes = [
     },
   },
   {
-    path: "/create-certificate",
+    path: "/create-certificate/:id",
     name: "CreateCertificate",
     component: () => import("@/pages/CreateCertificatePage.vue"),
     meta: {
       layout: "AppLayoutMain",
     },
   },
-  //empty page for developing
   {
-    path: "/tmp",
-    name: "Tmp",
-    component: () => import("@/pages/tmp.vue"),
+    path: "/csr-preview",
+    name: "CSRPage",
+    component: () => import("@/pages/CSRPage.vue"),
     meta: {
-      layout: "AppLayoutDefault",
+      layout: "AppLayoutMain",
     },
   },
 ];

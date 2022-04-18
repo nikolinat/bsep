@@ -46,7 +46,7 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
     }
 
     @Override
-    public CertificateSigningRequest findById(Integer id) throws Exception {
+    public CertificateSigningRequest findById(Integer id) {
         CertificateSigningRequest csr = certificateSigningRequestRepository.findById(id).orElse(null);
 
         if(csr == null) {
@@ -63,17 +63,7 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
     }
 
     @Override
-    public CertificateSigningRequest update(CertificateSigningRequest entity, Integer id) throws Exception {
-        CertificateSigningRequest csr = this.findById(id);
-
-        csr.setAccepted(entity.isAccepted());
-        csr.setReasonForDeclining(entity.getReasonForDeclining());
-
-        return certificateSigningRequestRepository.save(csr);
-    }
-
-    @Override
-    public void declineCertificateSigningRequest(Integer id, String reason) throws Exception {
+    public void declineCertificateSigningRequest(Integer id, String reason) {
         CertificateSigningRequest csr = this.findById(id);
 
         if(csr.isAccepted()) {
@@ -81,6 +71,7 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
         }
 
         csr.setAccepted(false);
+        csr.setDeleted(true);
         csr.setReasonForDeclining(reason);
 
         certificateSigningRequestRepository.save(csr);
@@ -89,9 +80,6 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
     @Override
     public void acceptCertificateSigningRequest(Integer id, GenerateCertificateDto generateCertificateDto) throws Exception {
         CertificateSigningRequest csr = this.findById(id);
-
-        csr.setAccepted(true);
-        certificateSigningRequestRepository.save(csr);
 
         CACertificateAlias caCertificateAlias = caCertificateAliasService.getActiveIntermediate();
         IssuerData issuerData = CertificateUtil.getIntermediateCertificateDetails(caCertificateAlias.getAlias());
@@ -121,5 +109,9 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
         keyStoreWriter.write(serialNumber, caCertificateAlias.getAlias(), issuerData.getPrivateKey(),
                 CertificateUtil.getKeyStorePassword().toCharArray(), certificate);
         keyStoreWriter.saveKeyStore(keystoreFileName, CertificateUtil.getKeyStorePassword().toCharArray());
+
+        csr.setAccepted(true);
+        csr.setDeleted(true);
+        certificateSigningRequestRepository.save(csr);
     }
 }

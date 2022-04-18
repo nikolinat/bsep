@@ -1,8 +1,6 @@
 package com.bsep.admin.crypto.pki.certificates;
 
 import com.bsep.admin.app.dto.GenerateCertificateDto;
-import com.bsep.admin.app.model.CACertificateAlias;
-import com.bsep.admin.app.service.implementation.CaCertificateAliasService;
 import com.bsep.admin.crypto.pki.data.IssuerData;
 import com.bsep.admin.crypto.pki.data.SubjectData;
 import com.bsep.admin.crypto.pki.keystores.KeyStoreReader;
@@ -14,10 +12,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
-import java.util.Scanner;
 import java.util.UUID;
 
 public class CertificateUtil {
@@ -25,7 +22,7 @@ public class CertificateUtil {
     static KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
     static KeyStoreReader keyStoreReader = new KeyStoreReader();
     static CertificateGenerator certificateGenerator = new CertificateGenerator();
-    static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    static ZoneId defaultZoneId = ZoneId.systemDefault();
     private static final String password = "bsep";
 
     public CertificateUtil() {
@@ -62,10 +59,14 @@ public class CertificateUtil {
         return builder;
     }
 
-    public static String createCACertificate() throws NoSuchAlgorithmException, NoSuchProviderException, ParseException, IOException {
+    public static String createCACertificate() throws NoSuchAlgorithmException, NoSuchProviderException {
         KeyPair issuerPair = generateKeyPair();
-        Date startDate = formatter.parse("2022-04-10");
-        Date endDate = formatter.parse("2023-04-10");
+
+        LocalDate localStartDate = LocalDate.now();
+
+        Date startDate = Date.from(localStartDate.atStartOfDay(defaultZoneId).toInstant());
+        LocalDate localEndDate = localStartDate.plusYears(1);
+        Date endDate = Date.from(localEndDate.atStartOfDay(defaultZoneId).toInstant());
 
         String serialNumber = UUID.randomUUID().toString();
         X500NameBuilder builder = generateBuilder();
@@ -81,10 +82,13 @@ public class CertificateUtil {
         return serialNumber;
     }
 
-    public static String createIntermediateCertificate(String issuerAlias) throws NoSuchAlgorithmException, NoSuchProviderException, ParseException, IOException {
+    public static String createIntermediateCertificate(String issuerAlias) throws NoSuchAlgorithmException, NoSuchProviderException {
         KeyPair subjectPair = generateKeyPair();
-        Date startDate = formatter.parse("2022-04-10");
-        Date endDate = formatter.parse("2023-04-10");
+        LocalDate localStartDate = LocalDate.now();
+
+        Date startDate = Date.from(localStartDate.atStartOfDay(defaultZoneId).toInstant());
+        LocalDate localEndDate = localStartDate.plusYears(1);
+        Date endDate = Date.from(localEndDate.atStartOfDay(defaultZoneId).toInstant());
 
         String serialNumber = UUID.randomUUID().toString();
 
@@ -102,7 +106,7 @@ public class CertificateUtil {
         SubjectData subjectData = new SubjectData(subjectPair.getPublic(), builder.build(), serialNumber, startDate, endDate);
 
         IssuerData issuerData = keyStoreReader.readIssuerFromStore(makeFilePath(), issuerAlias, password.toCharArray(), password.toCharArray(), true);
-        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData, new GenerateCertificateDto());
+        Certificate certificate = certificateGenerator.generateCACertificate(subjectData, issuerData);
 
         String keystoreFileName = makeFilePath();
         keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
@@ -119,12 +123,15 @@ public class CertificateUtil {
         return password;
     }
 
-    public static void createNewIssuedCertificate(String issuerAlias) throws ParseException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
+    public static void createNewIssuedCertificate(String issuerAlias) throws NoSuchAlgorithmException, NoSuchProviderException, IOException {
 
         KeyPair keyPair = generateKeyPair();
 
-        Date startDate = formatter.parse("2022-05-05");
-        Date endDate = formatter.parse("2022-06-05");
+        LocalDate localStartDate = LocalDate.now();
+
+        Date startDate = Date.from(localStartDate.atStartOfDay(defaultZoneId).toInstant());
+        LocalDate localEndDate = localStartDate.plusMonths(2);
+        Date endDate = Date.from(localEndDate.atStartOfDay(defaultZoneId).toInstant());
 
         String sn = UUID.randomUUID().toString();
 
