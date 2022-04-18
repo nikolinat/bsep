@@ -3,14 +3,20 @@
     <div>
       <ul class="pagination">
         <li class="paginate_button page-item next" id="datatables_next">
-          <Button className="btn btn-sm btn-default">Add</Button>
+          <div>
+            <add-subtrees-name-policy-modal :modalBoxId="modalBoxId" />
+
+            <ModalOpener :modalBoxId="modalBoxId">
+              <Button className="btn btn-sm btn-default">Add</Button>
+            </ModalOpener>
+          </div>
         </li>
-        <li class="paginate_button page-item next" id="datatables_next">
+        <!-- <li class="paginate_button page-item next" id="datatables_next">
           <Button className="btn btn-sm btn-default">Edit</Button>
         </li>
         <li class="paginate_button page-item next" id="datatables_next">
           <Button className="btn btn-sm btn-default">Delete</Button>
-        </li>
+        </li> -->
       </ul>
     </div>
     <Table>
@@ -22,7 +28,6 @@
           :values="[p.base, p.min, p.max]"
         >
         </TableRow>
-        <Pagination @pageChange="$emit('pageChange', $event)" />
       </TableBody>
     </Table>
     <br /><br />
@@ -35,17 +40,47 @@ import Table from "../../generic-components/Table/Table.vue";
 import TableBody from "../../generic-components/Table/TableBody.vue";
 import TableHead from "../../generic-components/Table/TableHead.vue";
 import TableRow from "../../generic-components/Table/TableRow.vue";
-import Pagination from "../../generic-components/Table/Pagination.vue";
 import { mapGetters } from "vuex";
+import addSubtreesNamePolicyModal from "../Modals/AddSubtreesNamePolicyModal.vue";
+import ModalOpener from "../../generic-components/Modal/ModalOpener.vue";
 
 export default {
-  props: { subtrees: {} },
-  components: { Table, TableBody, TableHead, TableRow, Pagination, Button },
+  components: {
+    Table,
+    TableBody,
+    TableHead,
+    TableRow,
+    Button,
+    addSubtreesNamePolicyModal,
+    ModalOpener,
+  },
 
   computed: {
     ...mapGetters({
       //result: "csr/getResult",
     }),
+  },
+  props: {
+    subtrees: {
+      type: Array,
+      default: () => [],
+    },
+    modalBoxId: {
+      type: String,
+    },
+  },
+  methods: {
+    remove(index) {
+      this.addedOptions.splice(index, 1);
+    },
+
+    handleAddGeneralNameToAuthorityKeyIdentifier(arg) {
+      this.addedOptions.push({
+        label: arg.label,
+        value: arg.value,
+        enteredValue: arg.enteredValue,
+      });
+    },
   },
 };
 </script>

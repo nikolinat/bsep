@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.26.1",
     "core-js": "^3.6.5",
+    "moment": "^2.29.2",
     "toastr": "^2.1.4",
     "vue": "^2.6.11",
     "vue-moment": "^4.1.0",

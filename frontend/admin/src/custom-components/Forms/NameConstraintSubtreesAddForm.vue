@@ -1,47 +1,49 @@
 <template>
-  <Card title="Subtrees">
-    <Form @submit="onSubmit($event)">
-      <form-row>
-        <div class="col-12">
-          <text-input
-            label="Base"
-            v-model="sub.minimum"
-            type="text"
-            :disabled="true"
-          />
-        </div>
-        <Button>Edit</Button>
-        <Button>Clear</Button>
-      </form-row>
+  <div>
+    <Card title="Subtrees">
+      <Form @submit="onSubmit($event)">
+        <form-row>
+          <div class="col-12">
+            <text-input
+              label="Base"
+              v-model="sub.minimum"
+              type="text"
+              :disabled="true"
+            />
+          </div>
+          <Button>Edit</Button>
+          <Button>Clear</Button>
+        </form-row>
 
-      <form-row>
-        <div class="col-12">
-          <text-input
-            label="Minimum"
-            v-model="sub.minimum"
-            type="number"
-            :isValid="sub.minimum != null"
-            :showErrorMessage="showErrorMessage"
-            errorMessage="A value is required for minimum."
-          />
-        </div>
-      </form-row>
+        <form-row>
+          <div class="col-12">
+            <text-input
+              label="Minimum"
+              v-model="sub.minimum"
+              type="number"
+              :isValid="sub.minimum != null"
+              :showErrorMessage="showErrorMessage"
+              errorMessage="A value is required for minimum."
+            />
+          </div>
+        </form-row>
 
-      <form-row>
-        <div class="col-12">
-          <text-input
-            label="Maximum"
-            v-model="sub.maximum"
-            type="number"
-            :showErrorMessage="showErrorMessage"
-            errorMessage="A value is required for at leaste one cell."
-          />
-        </div>
-      </form-row>
-      <Button>Ok</Button>
-      <Button>Cancel</Button>
-    </Form>
-  </Card>
+        <form-row>
+          <div class="col-12">
+            <text-input
+              label="Maximum"
+              v-model="sub.maximum"
+              type="number"
+              :showErrorMessage="showErrorMessage"
+              errorMessage="A value is required for at leaste one cell."
+            />
+          </div>
+        </form-row>
+        <Button>Ok</Button>
+        <Button>Cancel</Button>
+      </Form>
+    </Card>
+  </div>
 </template>
 
 <script>
@@ -63,5 +65,14 @@ export default {
       showErrorMessage: false,
     };
   },
+  // props: {
+  //   addedOptions: {
+  //     type: Array,
+  //     default: () => [],
+  //   },
+  //   modalBoxId: {
+  //     type: String,
+  //   },
+  // },
 };
 </script>

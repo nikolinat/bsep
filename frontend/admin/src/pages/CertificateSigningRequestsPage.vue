@@ -17,7 +17,7 @@ export default {
   certificateSigningRequests: null,
   computed: {
     ...mapGetters({
-      certificateSigningRequests: "csr/getCsr",
+      certificateSigningRequests: "csr/getAllCsr",
     }),
   },
   methods: {

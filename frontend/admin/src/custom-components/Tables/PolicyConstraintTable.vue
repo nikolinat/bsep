@@ -14,9 +14,6 @@
           errorMessage="A value is required for at leaste one cell."
         />
       </div>
-    </form-row>
-
-    <form-row>
       <div class="col-12">
         <text-input
           label="Inhabit Policy Mapping Skip Certificates"
@@ -31,17 +28,18 @@
         />
       </div>
     </form-row>
-    <Button @click="showErrorMessage = true" type="submit">Create</Button>
-    <Button @click="onCancle">Cancel</Button>
+    <Button @click="showErrorMessage = true" type="submit"
+      >Add Policy Constraint</Button
+    >
   </Form>
 </template>
 
 <script>
 import { mapActions } from "vuex";
-import Button from "../generic-components/Form/Button.vue";
-import Form from "../generic-components/Form/Form.vue";
-import FormRow from "../generic-components/Form/FormRow.vue";
-import TextInput from "../generic-components/Form/TextInput.vue";
+import Button from "../../generic-components/Form/Button.vue";
+import Form from "../../generic-components/Form/Form.vue";
+import FormRow from "../../generic-components/Form/FormRow.vue";
+import TextInput from "../../generic-components/Form/TextInput.vue";
 
 export default {
   components: { Form, FormRow, TextInput, Button },

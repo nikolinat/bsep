@@ -1,10 +1,10 @@
-import Vue from "vue";
-import App from "./App.vue";
-import router from "./router";
-import AppLayout from "@/layouts/AppLayout";
-import toastr from "toastr";
-import axios from "axios";
-import store from "./store";
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+import AppLayout from '@/layouts/AppLayout'
+import toastr from 'toastr'
+import axios from 'axios';
+import store from './store'
 
 axios.defaults.baseURL = "http://localhost:8081/api/v1";
 
@@ -15,8 +15,9 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
-  render: (h) => h(App),
-}).$mount("#app");
+  render: h => h(App)
+}).$mount('#app');
+
 
 toastr.options = {
   closeButton: false,
