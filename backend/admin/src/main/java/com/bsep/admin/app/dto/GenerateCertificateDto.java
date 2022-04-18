@@ -23,7 +23,7 @@ public class GenerateCertificateDto {
     @Valid
     private GeneralNames subjectAlternativeNames;
     private List<String> extendedKeyUsages;
-    private BigInteger requireExplicitPolicy;
+    private BigInteger requireExplicitPolicy;   
     private BigInteger inhibitPolicyMapping;
     private List<GeneralSubtreeElement> permitedSubtrees;
     private List<GeneralSubtreeElement> excludedSubtrees;
