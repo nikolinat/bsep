@@ -76,9 +76,7 @@ const reasons = [
   { value: 1, label: "Certificate is counterfeit" },
   { value: 2, label: "Private key has been compromised" },
   { value: 3, label: "The issuing CA has been compromised" },
-  {
-    value: 4,
-    label:
+  {value: 4,label:
       "The certificate owner no longer owns the domain for which it was issued",
   },
   { value: 5, label: "The certificate owner has ceased operations entirely" },

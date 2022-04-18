@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DirectoryNameConstraint {
-    String message() default "Country code must me two characters in length.";
+    String message() default "Country code must be two characters in length.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
