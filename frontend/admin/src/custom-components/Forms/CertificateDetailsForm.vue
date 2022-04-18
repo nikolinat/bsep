@@ -104,10 +104,8 @@
             </form-row>
         </Form>
 
-        <ExtensionsModal :modalBoxId="'extensionsModalOpener'" :extensions="certificate.extensions"></ExtensionsModal>
-
         <ModalOpener modalBoxId="extensionsModalOpener">
-            <Button> Extensions </Button>
+            <Button @click="emitClick()"> Extensions </Button>
         </ModalOpener>
             
     </div>
@@ -119,7 +117,7 @@ import FormRow from '../../generic-components/Form/FormRow.vue'
 import TextInput from '../../generic-components/Form/TextInput.vue'
 import Button from '../../generic-components/Form/Button.vue'
 import ModalOpener from '../../generic-components/Modal/ModalOpener.vue'
-import ExtensionsModal from '../../custom-components/Modals/ExtensionsModal.vue'
+// import ExtensionsModal from '../../custom-components/Modals/ExtensionsModal.vue'
 import moment from "moment";
 
 export default {
@@ -133,12 +131,15 @@ export default {
        TextInput,
        Button,
        ModalOpener,
-       ExtensionsModal
+    //    ExtensionsModal
     },
     methods: {
        formatDate(d) {
         return moment(d).format("ll");
         },
+        emitClick() {
+            this.$emit('openExtensions', this.certificate.extensions)
+        }
     }
 }
 </script>
