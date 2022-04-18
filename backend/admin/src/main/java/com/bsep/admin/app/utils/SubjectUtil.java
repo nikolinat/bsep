@@ -7,11 +7,11 @@ import java.util.HashMap;
 public class SubjectUtil {
 
 
-    private static String[] splitSubject(String subjectToSplit){
+    public static String[] splitSubject(String subjectToSplit){
         return subjectToSplit.split(",");
     }
 
-    private static HashMap<String, String> convertToMap(String[] splitSubject){
+    public static HashMap<String, String> convertToMap(String[] splitSubject){
         HashMap<String, String> map = new HashMap<>();
         for(String s: splitSubject){
             String[] subjectField = s.split("=");

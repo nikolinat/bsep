@@ -225,7 +225,6 @@ export default {
             if (label === "accept") {
                 if (ok) {
                 toastr.success(message);
-                this.fetchValidCertificates();
                 } else {
                 toastr.error(message);
                 }
