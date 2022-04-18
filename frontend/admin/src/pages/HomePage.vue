@@ -1,7 +1,6 @@
 <template>
   <div class="content">
     <div class="container-fluid">
-        CAOOOOOOO
     </div>
   </div>
 </template>

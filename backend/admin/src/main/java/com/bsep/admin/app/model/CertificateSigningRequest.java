@@ -1,8 +1,13 @@
 package com.bsep.admin.app.model;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 
 @Entity
+@SQLDelete(sql = "UPDATE certificate_signing_request SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class CertificateSigningRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +23,7 @@ public class CertificateSigningRequest {
     private String userId;
     private boolean isAccepted;
     private String reasonForDeclining;
+    private boolean deleted = Boolean.FALSE;
 
     public CertificateSigningRequest(String email, String commonName, String organization,
                                      String organizationUnit, String givenName, String surname, String country, String userId) {
@@ -121,5 +127,13 @@ public class CertificateSigningRequest {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
