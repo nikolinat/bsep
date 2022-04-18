@@ -40,9 +40,11 @@
 
     <Modal modalBoxId="moreDetailsModalOpener" title="More details" :sizeClass="'modal-lg'">
       <div slot="body" v-if="selectedCertificate !== null">
-        <CertificateDetailsForm :certificate="selectedCertificate"></CertificateDetailsForm>
+        <CertificateDetailsForm :certificate="selectedCertificate" @openExtensions="openExtensionsOfCertificate"></CertificateDetailsForm>
       </div>
     </Modal>
+
+    <ExtensionsModal :modalBoxId="'extensionsModalOpener'" :extensions="extensions"></ExtensionsModal>
 
   </div>
 
@@ -65,6 +67,9 @@ import CertificateDetailsForm from "../../custom-components/Forms/CertificateDet
 import toastr from "toastr";
 import { mapActions, mapGetters } from "vuex";
 import moment from "moment";
+import ExtensionsModal from '../../custom-components/Modals/ExtensionsModal.vue'
+
+const $ = window.$;
 
 const reasons = [
   { value: 0, label: "Improperly issued a certificate" },
@@ -94,6 +99,7 @@ export default {
       reasons: reasons,
       reason: "",
       other: null,
+      extensions: null
     };
   },
   mounted() {},
@@ -111,6 +117,7 @@ export default {
     TextInput,
     ModalCloser,
     CertificateDetailsForm,
+    ExtensionsModal
   },
   computed: {
     ...mapGetters({
@@ -157,6 +164,13 @@ export default {
     formatDate(d) {
       return moment(d).format("ll");
     },
+
+    openExtensionsOfCertificate(arg) {
+      this.extensions = arg;
+      setTimeout(() => {
+                $('.modal-dialog').selectpicker('refresh');
+            }, 100);
+    }
   },
 };
 </script>

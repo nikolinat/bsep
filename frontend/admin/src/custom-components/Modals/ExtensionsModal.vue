@@ -18,7 +18,7 @@
                 </TableBody>
             </Table>
 
-            <div v-if="selectedExtensions != null">
+            <div v-if="selectedExtensions !== null">
                 <TextArea :value="selectedExtensions.value" :disabled="true" :label="'Extension value:'"></TextArea>
             </div>
         </div>
@@ -60,6 +60,10 @@ export default {
   computed: {
   },
   watch: {
+    extensions(e) {
+      this.extensions = e;
+      this.selectedExtensions = null;
+    }
   },
   methods: {
   },
