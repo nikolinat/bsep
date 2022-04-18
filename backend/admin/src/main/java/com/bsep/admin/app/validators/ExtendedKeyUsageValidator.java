@@ -16,13 +16,14 @@ public class ExtendedKeyUsageValidator implements
 
     @Override
     public boolean isValid(List<String> value, ConstraintValidatorContext context) {
-
-        for (String keyUsage : value) {
-            if (ExtensionsUtil.extendedKeyName(keyUsage).equals("")) {
-                return false;
+        if (value.size() !=0 ) {
+            for (String keyUsage : value) {
+                if (!ExtensionsUtil.extendedKeyName(keyUsage).equals("")) {
+                    return true;
+                }
             }
-        }
-        return true;
-    }
 
+        }
+        return false;
+    }
 }

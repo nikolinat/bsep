@@ -1,5 +1,6 @@
 package com.bsep.admin.app.dto;
 
+
 import com.bsep.admin.app.validators.constraints.DirectoryNameConstraint;
 import com.bsep.admin.crypto.pki.enums.SubjectAlternativeName;
 
@@ -95,27 +96,27 @@ public class GeneralNames {
     public Map<SubjectAlternativeName, String> getMapFromObject() {
         Map<SubjectAlternativeName, String> map = new HashMap<>();
 
-        if (this.directoryName != null) {
+        if(this.directoryName != null) {
             map.put(SubjectAlternativeName.DirectoryName, this.directoryName);
         }
 
-        if (this.dnsName != null) {
+        if(this.dnsName != null) {
             map.put(SubjectAlternativeName.DNSName, this.dnsName);
         }
 
-        if (this.ipAddress != null) {
+        if(this.ipAddress != null) {
             map.put(SubjectAlternativeName.IPAddress, this.ipAddress);
         }
 
-        if (this.rfc822Name != null) {
+        if(this.rfc822Name != null) {
             map.put(SubjectAlternativeName.Rfc822Name, this.rfc822Name);
         }
 
-        if (this.registeredId != null) {
+        if(this.registeredId != null) {
             map.put(SubjectAlternativeName.RegisteredID, this.registeredId);
         }
 
-        if (this.uri != null) {
+        if(this.uri != null){
             map.put(SubjectAlternativeName.UniformResourceIdentifier, this.uri);
         }
 

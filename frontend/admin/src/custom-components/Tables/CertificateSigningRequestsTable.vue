@@ -2,17 +2,36 @@
   <div>
     <Table>
       <TableHead
-        :columnNames="['Email', 'Common Name', 'Organization', 'Organization Unit','Given Name', 'Surname', 'Country', 'User Id','',]"
+        :columnNames="[
+          'Email',
+          'Common Name',
+          'Organization',
+          'Organization Unit',
+          'Given Name',
+          'Surname',
+          'Country',
+          'User Id',
+          '',
+        ]"
       ></TableHead>
       <TableBody>
         <TableRow
-         v-for="(csr, i) in certificateSigningRequests"
+          v-for="(csr, i) in certificateSigningRequests"
           :key="i"
-          :values="[csr.email, csr.commonName, csr.organization, csr.organizationUnit, csr.givenName,
-            csr.surname, csr.country, csr.userId,]">
-             <div class="pull-right text-gray">
+          :values="[
+            csr.email,
+            csr.commonName,
+            csr.organization,
+            csr.organizationUnit,
+            csr.givenName,
+            csr.surname,
+            csr.country,
+            csr.userId,
+          ]"
+        >
+          <div class="pull-right text-gray">
             <DropDownMenu>
-                <DropDownItem @click="onAcceptSubmit(csr)">Accept</DropDownItem>
+              <DropDownItem @click="onAcceptSubmit(csr)">Accept</DropDownItem>
               <ModalOpener :modalBoxId="'declineCSR'">
                 <DropDownItem @click="selectedCSR = csr">Decline</DropDownItem>
               </ModalOpener>
@@ -55,15 +74,27 @@ import { mapActions, mapGetters } from "vuex";
 
 export default {
   props: { certificateSigningRequests: {} },
-  components: { Table, TableBody, TableHead, TableRow, Modal, ModalOpener, ModalCloser, DropDownMenu, DropDownItem, TextInput, Button },
-    data: () => {
+  components: {
+    Table,
+    TableBody,
+    TableHead,
+    TableRow,
+    Modal,
+    ModalOpener,
+    ModalCloser,
+    DropDownMenu,
+    DropDownItem,
+    TextInput,
+    Button,
+  },
+  data: () => {
     return {
       selectedCSR: null,
-      reason: ''
+      reason: "",
     };
   },
 
-   computed: {
+  computed: {
     ...mapGetters({
       result: "csr/getResult",
     }),
@@ -80,23 +111,23 @@ export default {
       }
     },
   },
-   methods: {
+  methods: {
     ...mapActions({
       declineCsr: "csr/declineCsr",
-      fetchCsr: "csr/fetchCsr"
+      fetchCsr: "csr/fetchCsr",
     }),
     onDeclineSubmit() {
       this.declineCsr({
         id: this.selectedCSR.id,
-        reason: {"reasonForDeclining": this.reason},
+        reason: { reasonForDeclining: this.reason },
       });
       document.getElementById("declineCSRModalCloser").click();
-      },
+    },
 
-    onAcceptSubmit(csr){
-      this.selectedCSR  = csr;
+    onAcceptSubmit(csr) {
+      this.selectedCSR = csr;
       this.$router.push(`/create-certificate/${this.selectedCSR.id}`);
-    }
-   }
+    },
+  },
 };
 </script>

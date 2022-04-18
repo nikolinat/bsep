@@ -26,7 +26,7 @@ const actions = {
     axios
       .post(`/csr`, csr)
       .then((resp) => {
-        console.log(resp)
+        console.log(resp);
         context.commit("setResult", {
           label: "create",
           ok: true,
@@ -41,16 +41,17 @@ const actions = {
         });
       });
   },
-  acceptCsr: (context, { csrId, certificate}) => {
-    console.log(certificate)
-      axios.put(`/csr/accept/` + csrId, certificate)
+  acceptCsr: (context, { csrId, certificate }) => {
+    console.log(certificate);
+    axios
+      .put(`/csr/accept/` + csrId, certificate)
       .then((resp) => {
-        console.log(resp)
+        console.log(resp);
         context.commit("setResult", {
           label: "accept",
           ok: true,
-          message: "Successfuly created certificate."
-        })
+          message: "Successfuly created certificate.",
+        });
       })
       .catch((err) => {
         context.commit("setResult", {
@@ -58,17 +59,18 @@ const actions = {
           ok: false,
           message: err.response.data.errorMessage,
         });
-      })
+      });
   },
 
   declineCsr: (context, csr) => {
-      axios.put(`/csr/decline/${csr.id}`,csr.reason)
+    axios
+      .put(`/csr/decline/${csr.id}`, csr.reason)
       .then(() => {
         context.commit("setResult", {
           label: "decline",
           ok: true,
-          message: "Successfuly decline certificate."
-        })
+          message: "Successfuly decline certificate.",
+        });
       })
       .catch((err) => {
         context.commit("setResult", {
@@ -76,8 +78,8 @@ const actions = {
           ok: false,
           message: err.response.data.ErrorMessage,
         });
-      })
-  }
+      });
+  },
 };
 
 const mutations = {
