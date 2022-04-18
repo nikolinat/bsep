@@ -128,6 +128,7 @@
         <PolicyConstraint
           :addedOptions="policyConstraint.addedOptions"
           modalBoxId="policyConstraint"
+          @addPolicyConstraint="setPolicy"
         />
       </form-row>
     </form-group>
@@ -336,6 +337,9 @@ export default {
     setKey(arg) {
       this.keyUsageExtension.defaultChecked = arg;
     },
+    setPolicy(arg) {
+      this.policyConstraint.addedOptions = arg;
+    },
     onSubmit(e) {
       e.preventDefault();
       const certificate = {
@@ -384,6 +388,15 @@ export default {
           map.set(option.value, option.enteredValue)
         );
         certificate.issuerAlternativeNames = Object.fromEntries(map);
+      }
+      if (
+        this.policyConstraint.display &&
+        this.policyConstraint.addedOptions.length > 0
+      ) {
+        certificate.requireExplicitPolicy =
+          this.policyConstraint.addedOptions[0];
+        certificate.inhabitPolicyMapping =
+          this.policyConstraint.addedOptions[1];
       }
       console.log(certificate);
       const csrId = this.csrId;

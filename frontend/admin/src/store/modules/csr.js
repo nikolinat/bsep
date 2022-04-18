@@ -59,17 +59,18 @@ const actions = {
           ok: false,
           message: err.response.data.errorMessage,
         });
-      })
+      });
   },
 
   declineCsr: (context, csr) => {
-      axios.put(`/csr/decline/${csr.id}`,csr.reason)
+    axios
+      .put(`/csr/decline/${csr.id}`, csr.reason)
       .then(() => {
         context.commit("setResult", {
           label: "decline",
           ok: true,
-          message: "Successfuly decline certificate."
-        })
+          message: "Successfuly decline certificate.",
+        });
       })
       .catch((err) => {
         context.commit("setResult", {
