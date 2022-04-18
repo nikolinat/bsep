@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const state = {
-  csr: [],
+  allCsr: [],
   result: null,
 };
 
@@ -15,7 +15,7 @@ const actions = {
     axios
       .get(`/csr`)
       .then((response) => {
-        context.commit("setCsr", response.data);
+        context.commit("setAllCsr", response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -57,6 +57,24 @@ const actions = {
           label: "accept",
           ok: false,
           message: err.response.data.errorMessage,
+        });
+      })
+  },
+
+  declineCsr: (context, csr) => {
+      axios.put(`/csr/decline/${csr.id}`,csr.reason)
+      .then(() => {
+        context.commit("setResult", {
+          label: "decline",
+          ok: true,
+          message: "Successfuly decline certificate."
+        })
+      })
+      .catch((err) => {
+        context.commit("setResult", {
+          label: "decline",
+          ok: false,
+          message: err.response.data.ErrorMessage,
         });
       })
   }

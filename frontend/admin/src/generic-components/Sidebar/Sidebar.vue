@@ -6,6 +6,8 @@
           <sidebar-item name="Home" icon="dashboard" to="/"></sidebar-item>
           <sidebar-item name="Valid certificates" icon="assignment" to="/valid-certificates"></sidebar-item>
           <sidebar-item name="Revoked certificates" icon="assignment" to="/revoked-certificates"></sidebar-item>
+          <sidebar-item name="CSR" icon="assignment" to="/csr-preview"></sidebar-item>
+          <sidebar-item name="Create CSR" icon="assignment" to="/csr"></sidebar-item>
         </ul>
       </div>
   </div>

@@ -43,11 +43,6 @@ public class CertificateService implements ICertificateService {
     }
 
     @Override
-    public List<RevokedCertificate> findAll() {
-        return certificateRepository.findAll();
-    }
-
-    @Override
     public RevokedCertificate findByAlias(String alias) {
         return certificateRepository.findByAlias(alias);
     }
@@ -139,6 +134,7 @@ public class CertificateService implements ICertificateService {
         for (String a : aliases) {
             Certificate[] certificate = keyStoreReader.readCertificate(CertificateUtil.makeFilePath(), CertificateUtil.getKeyStorePassword(), a);
             for (Certificate c : certificate) {
+                c.getPublicKey().getEncoded();
                 BigInteger serialNumber = new X509CertificateHolder(c.getEncoded()).getSerialNumber();
                 String certificateAlias = new String(serialNumber.toByteArray(), StandardCharsets.UTF_8);
                 String subjectString = new X509CertificateHolder(c.getEncoded()).getSubject().toString();
@@ -148,17 +144,19 @@ public class CertificateService implements ICertificateService {
                     Date startDate = new X509CertificateHolder(c.getEncoded()).getNotBefore();
                     Date endDate = new X509CertificateHolder(c.getEncoded()).getNotAfter();
                     if ((!valid && findByAlias(certificateAlias) != null) || (valid && findByAlias(certificateAlias) == null)) {
-                        if (serialNumber.equals(new BigInteger(root.getAlias().getBytes()))) {
-                            CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, true, false);
-                            certificateDtos.add(certificateDto);
-                        } else if (serialNumber.equals(new BigInteger(intermediate.getAlias().getBytes()))) {
-                            CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, false, true);
-                            certificateDtos.add(certificateDto);
-                        } else {
-                            CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, false, false);
-                            certificateDtos.add(certificateDto);
-                        }
+                        if (verifyIssuerCertificate(certificateAlias, endDate)) {
+                            if (serialNumber.equals(new BigInteger(root.getAlias().getBytes()))) {
+                                CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, true, false);
+                                certificateDtos.add(certificateDto);
+                            } else if (serialNumber.equals(new BigInteger(intermediate.getAlias().getBytes()))) {
+                                CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, false, true);
+                                certificateDtos.add(certificateDto);
+                            } else {
+                                CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, false, false);
+                                certificateDtos.add(certificateDto);
+                            }
 
+                        }
                     }
                 }
             }
@@ -179,12 +177,12 @@ public class CertificateService implements ICertificateService {
 
     }
 
-    //return null when certificate is invalid or return certificate
-    public CertificateDto verifyIssuerCertificate (CertificateDto issuerCertificate) throws Exception {
-        RevokedCertificate certificate = certificateRepository.findByAlias(issuerCertificate.getAlias());
-        if (certificate != null || issuerCertificate.getEndDate().compareTo(new Date()) < 0)
-            return null;
-        return issuerCertificate;
+    @Override
+    public boolean verifyIssuerCertificate (String alias, Date endDate) {
+        RevokedCertificate certificate = findByAlias(alias);
+        if (certificate != null || endDate.compareTo(new Date()) < 0)
+            return false;
+        return true;
     }
 
 }

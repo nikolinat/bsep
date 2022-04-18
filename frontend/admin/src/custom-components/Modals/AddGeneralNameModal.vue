@@ -19,7 +19,7 @@
                         label="Common Name"
                     />
                     <text-input 
-                        style="margin-left: 15%;"
+                        style="margin-left: 2em;"
                         v-model="directoryName.OU"
                         type="text"
                         label="Organization Unit"
@@ -32,7 +32,7 @@
                         label="Organization Name"
                     />
                     <text-input 
-                        style="margin-left: 15%;"
+                        style="margin-left: 2em;"
                         v-model="directoryName.L"
                         type="text"
                         label="Locality Name"
@@ -45,7 +45,7 @@
                         label="State Name"
                     />
                     <text-input 
-                        style="margin-left: 15%;"
+                        style="margin-left: 2em;"
                         v-model="directoryName.C"
                         type="text"
                         label="Country"
@@ -58,7 +58,7 @@
                         label="Email"
                     />
                     <text-input 
-                        style="margin-left: 15%;"
+                        style="margin-left: 2em;"
                         v-model="directoryName.SN"
                         type="text"
                         label="Serial Number"
@@ -71,7 +71,7 @@
                         label="Given Name"
                     />
                     <text-input 
-                        style="margin-left: 15%;"
+                        style="margin-left: 2em;"
                         v-model="directoryName.SURNAME"
                         type="text"
                         label="Surname"
@@ -84,7 +84,7 @@
                         label="Domain Component"
                     />
                     <text-input 
-                        style="margin-left: 15%;"
+                        style="margin-left: 2em;"
                         v-model="directoryName.UID"
                         type="text"
                         label="User ID"
@@ -97,7 +97,7 @@
                         label="Name"
                     />
                     <text-input 
-                        style="margin-left: 15%;"
+                        style="margin-left: 2em;"
                         v-model="directoryName.STREET"
                         type="text"
                         label="Street"
@@ -110,7 +110,7 @@
                         label="Title"
                     />
                     <text-input 
-                        style="margin-left: 15%;"
+                        style="margin-left: 2em;"
                         v-model="directoryName.INITIALS"
                         type="text"
                         label="Initials"
@@ -123,7 +123,7 @@
                         label="Pseudonym"
                     />
                     <text-input 
-                        style="margin-left: 15%;"
+                        style="margin-left: 2em;"
                         v-model="directoryName.DN_QUALIFIER"
                         type="text"
                         label="DN Qualifier"
