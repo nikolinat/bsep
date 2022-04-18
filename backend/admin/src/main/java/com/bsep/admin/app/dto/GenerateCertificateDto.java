@@ -19,10 +19,7 @@ public class GenerateCertificateDto {
     private GeneralNames generalNamesForAuthorityKeyIdentifier;
     @Valid
     private GeneralNames subjectAlternativeNames;
-<<<<<<< HEAD
-=======
     @ExtendedKeyUsageConstraint
->>>>>>> f7ddb8c3bdad9e8630f940c296305357f8049a8c
     private List<String> extendedKeyUsages;
     private BigInteger requireExplicitPolicy;
     private BigInteger inhibitPolicyMapping;

@@ -50,8 +50,8 @@ export default {
   data: function () {
     return {
       pce: {
-        requireExplicitPolicy: null,
-        inhabitPolicyMapping: null,
+        requireExplicitPolicy: 0,
+        inhabitPolicyMapping: 0,
       },
 
       showErrorMessage: false,

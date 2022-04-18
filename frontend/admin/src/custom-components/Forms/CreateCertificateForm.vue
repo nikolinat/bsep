@@ -267,6 +267,12 @@ export default {
     checkedExtensions(checked) {
       this.checkedExtensions = checked;
       this.checkedExtensions.forEach((option) => {
+        if (option === 0) {
+            this.policyConstraint.display = true;
+        }
+        if (option === 1) {
+          this.nameConstraint.display = true;
+        }
         if (option === 2) {
           this.issuerAlternativeNames.display = true;
         }
@@ -322,12 +328,18 @@ export default {
       this.authorityKeyIdentifier.addedOptions = [];
       this.subjectAlternativeNamese.display = false;
       this.subjectAlternativeNamese.addedOptions = [];
+      this.policyConstraint.display = false;
+      this.policyConstraint.addedOptions = [];
+      
     },
     setExtendedKey(arg) {
       this.extendedKeyUsages.defaultChecked = arg;
     },
     setKey(arg) {
       this.keyUsageExtension.defaultChecked = arg;
+    },
+    setPolicy(arg) {
+      this.policyConstraint.addedOptions = arg;
     },
     onSubmit(e) {
       e.preventDefault();
