@@ -25,5 +25,5 @@ public interface ICertificateService {
 
     List<CertificateDto> findAllRevokedCertificates() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, NoSuchProviderException;
 
-    boolean verifyIssuerCertificate(String alias, Date endDate) throws Exception;
+    boolean verifyIssuerCertificate(Date endDate) throws Exception;
 }

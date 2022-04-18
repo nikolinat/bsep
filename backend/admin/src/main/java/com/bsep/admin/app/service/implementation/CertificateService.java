@@ -144,7 +144,7 @@ public class CertificateService implements ICertificateService {
                     Date startDate = new X509CertificateHolder(c.getEncoded()).getNotBefore();
                     Date endDate = new X509CertificateHolder(c.getEncoded()).getNotAfter();
                     if ((!valid && findByAlias(certificateAlias) != null) || (valid && findByAlias(certificateAlias) == null)) {
-                        if (verifyIssuerCertificate(certificateAlias, endDate)) {
+                        if (verifyIssuerCertificate(endDate)) {
                             if (serialNumber.equals(new BigInteger(root.getAlias().getBytes()))) {
                                 CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, true, false);
                                 certificateDtos.add(certificateDto);
@@ -178,9 +178,8 @@ public class CertificateService implements ICertificateService {
     }
 
     @Override
-    public boolean verifyIssuerCertificate (String alias, Date endDate) {
-        RevokedCertificate certificate = findByAlias(alias);
-        if (certificate != null || endDate.compareTo(new Date()) < 0)
+    public boolean verifyIssuerCertificate (Date endDate) {
+        if (endDate.compareTo(new Date()) < 0)
             return false;
         return true;
     }

@@ -6,7 +6,7 @@
         <TableRow
           v-for="(certificate, i) in certificates"
           :key="i"
-          :values="[certificate.alias, formatDate(certificate.endDate), 'RSA', '','',]">
+          :values="[certificate.alias, formatDate(certificate.endDate), 'RSA', '2048','',]">
           <div class="pull-right text-gray">
             <DropDownMenu>
               <ModalOpener :modalBoxId="'revokeCertificate'">

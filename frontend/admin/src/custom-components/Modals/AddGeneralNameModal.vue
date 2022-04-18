@@ -258,22 +258,20 @@ export default {
     },
 
     onSubmitDirectoryName(e) {
-      e.preventDefault();
-      this.option.value = "DirectoryName";
-      this.option.label = "Directory Name";
-      let enteredValue = "";
-      let directoryNameMap = new Map(Object.entries(this.directoryName));
-      directoryNameMap.forEach((value, key) => {
-        if (value !== "") {
-          enteredValue += key + "=" + value + ",";
-        }
-      });
-      this.option.enteredValue = enteredValue.substring(
-        0,
-        enteredValue.length - 1
-      );
+        e.preventDefault();
+        this.option.value = "directoryName";
+        this.option.label = "Directory Name";
+        let enteredValue = "";
+        let directoryNameMap = new Map(Object.entries(this.directoryName));
+        directoryNameMap.forEach((value, key) => {
+            if(value !== '') {
+                enteredValue += key + "=" + value + ",";
+                }
+            })
+            this.option.enteredValue = enteredValue.substring(0, enteredValue.length - 1);
 
       this.$emit("newGeneralName", this.option);
+    
     },
 
     validateEnteredValue(option) {
