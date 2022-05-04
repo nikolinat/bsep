@@ -24,6 +24,7 @@ public class CertificateSigningRequest {
     private boolean isAccepted;
     private String reasonForDeclining;
     private boolean deleted = Boolean.FALSE;
+    private boolean isEmailVerified = Boolean.FALSE;
 
     public CertificateSigningRequest(String email, String commonName, String organization,
                                      String organizationUnit, String givenName, String surname, String country, String userId) {
@@ -135,5 +136,13 @@ public class CertificateSigningRequest {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean isEmailVerified() {
+        return isEmailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        isEmailVerified = emailVerified;
     }
 }

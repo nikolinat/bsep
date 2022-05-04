@@ -62,6 +62,14 @@ const routes = [
       layout: "AppLayoutMain",
     },
   },
+  {
+    path: "/email-verification/:token",
+    name: "EmailVerificationPage",
+    component: () => import("@/pages/EmailVerificationPage.vue"),
+    meta: {
+      layout: "AuthLayout",
+    },
+  },
 ];
 
 const router = new VueRouter({

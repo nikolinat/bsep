@@ -15,4 +15,6 @@ public interface ICertificateSigningRequestService {
     void declineCertificateSigningRequest(Integer id, String reason) throws Exception;
 
     void acceptCertificateSigningRequest(Integer id, GenerateCertificateDto generateCertificateDto) throws Exception;
+
+    void verifyEmail(String token);
 }

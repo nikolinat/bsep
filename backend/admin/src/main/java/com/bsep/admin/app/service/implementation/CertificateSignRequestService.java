@@ -5,7 +5,10 @@ import com.bsep.admin.app.exception.BadLogicException;
 import com.bsep.admin.app.exception.MissingEntityException;
 import com.bsep.admin.app.model.CACertificateAlias;
 import com.bsep.admin.app.model.CertificateSigningRequest;
+import com.bsep.admin.app.model.ConfirmationToken;
 import com.bsep.admin.app.repository.CertificateSigningRequestRepository;
+import com.bsep.admin.app.repository.ConfirmationTokenRepository;
+import com.bsep.admin.app.service.EmailService;
 import com.bsep.admin.app.service.contract.ICertificateSigningRequestService;
 import com.bsep.admin.crypto.pki.certificates.CertificateGenerator;
 import com.bsep.admin.crypto.pki.certificates.CertificateUtil;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.KeyPair;
 import java.security.cert.Certificate;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,16 +32,22 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
     private CertificateGenerator certificateGenerator;
     private KeyStoreWriter keyStoreWriter;
     private CaCertificateAliasService caCertificateAliasService;
+    private EmailService emailService;
+    private ConfirmationTokenRepository confirmationTokenRepository;
 
     @Autowired
     public CertificateSignRequestService(CertificateSigningRequestRepository certificateSigningRequestRepository,
                                          CertificateGenerator certificateGenerator,
                                          KeyStoreWriter keyStoreWriter,
-                                         CaCertificateAliasService caCertificateAliasService) {
+                                         CaCertificateAliasService caCertificateAliasService,
+                                         EmailService emailService,
+                                         ConfirmationTokenRepository confirmationTokenRepository) {
         this.certificateSigningRequestRepository = certificateSigningRequestRepository;
         this.certificateGenerator = certificateGenerator;
         this.keyStoreWriter = keyStoreWriter;
         this.caCertificateAliasService = caCertificateAliasService;
+        this.emailService = emailService;
+        this.confirmationTokenRepository = confirmationTokenRepository;
     }
 
     @Override
@@ -59,7 +69,13 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
     @Override
     public CertificateSigningRequest create(CertificateSigningRequest entity) throws Exception {
         entity.setAccepted(false);
-        return certificateSigningRequestRepository.save(entity);
+        CertificateSigningRequest certificateSigningRequest = certificateSigningRequestRepository.save(entity);
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(certificateSigningRequest);
+        confirmationTokenRepository.save(confirmationToken);
+        emailService.sendEmailVerificationMail(certificateSigningRequest.getEmail(), confirmationToken.getConfirmationToken());
+
+        return certificateSigningRequest;
     }
 
     @Override
@@ -80,6 +96,10 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
     @Override
     public void acceptCertificateSigningRequest(Integer id, GenerateCertificateDto generateCertificateDto) throws Exception {
         CertificateSigningRequest csr = this.findById(id);
+
+        if(!csr.isEmailVerified()) {
+            throw new BadLogicException("You cannot accept csr because email is not verified.");
+        }
 
         CACertificateAlias caCertificateAlias = caCertificateAliasService.getActiveIntermediate();
         IssuerData issuerData = CertificateUtil.getIntermediateCertificateDetails(caCertificateAlias.getAlias());
@@ -112,6 +132,22 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
 
         csr.setAccepted(true);
         csr.setDeleted(true);
+        certificateSigningRequestRepository.save(csr);
+    }
+
+    @Override
+    public void verifyEmail(String token) {
+        ConfirmationToken confirmationToken = confirmationTokenRepository.findByConfirmationToken(token);
+        if(confirmationToken == null) {
+            throw new MissingEntityException("Token not exist in the system.");
+        }
+        long differenceInTime = (new Date().getTime() - confirmationToken.getCreatedDate().getTime())/(1000*60*60);
+        if(differenceInTime > 7) {
+            throw new BadLogicException("Token expired");
+        }
+        confirmationTokenRepository.delete(confirmationToken);
+        CertificateSigningRequest csr = certificateSigningRequestRepository.findById(confirmationToken.getCertificateSigningRequest().getId()).orElse(null);
+        csr.setEmailVerified(true);
         certificateSigningRequestRepository.save(csr);
     }
 }

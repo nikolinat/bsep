@@ -45,4 +45,10 @@ public class CertificateSigningRequestController {
         certificateSigningRequestService.acceptCertificateSigningRequest(id, generateCertificateDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PutMapping("/verify-email/{token}")
+    public ResponseEntity<?> verifyEmail(@PathVariable String token) {
+        certificateSigningRequestService.verifyEmail(token);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
