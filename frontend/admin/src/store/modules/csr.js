@@ -80,6 +80,25 @@ const actions = {
         });
       });
   },
+
+  verifyEmail: (context, token) => {
+    axios
+      .put(`/csr/verify-email/${token}`)
+      .then(() => {
+        context.commit("setResult", {
+          label: "verify-email",
+          ok: true,
+          message: "Successfuly verify email.",
+        });
+      })
+      .catch((err) => {
+        context.commit("setResult", {
+          label: "verify-email",
+          ok: false,
+          message: err.response.data.ErrorMessage,
+        });
+      });
+  }
 };
 
 const mutations = {
