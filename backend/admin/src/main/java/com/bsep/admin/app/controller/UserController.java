@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping("/search-filter")
-    public ResponseEntity<List<UserDto>> searchAndFilterUsers(@RequestBody SearchFilterUserDto searchFilterUserDto) {
+    public ResponseEntity<List<UserDto>> searchAndFilterUsers(SearchFilterUserDto searchFilterUserDto) {
         List<User> users = userService.searchAndFilterUsers(searchFilterUserDto);
         List<UserDto> usersDto = users.stream().map(user -> userMapper.userToUserDto(user)).collect(Collectors.toList());
         return new ResponseEntity<>(usersDto, HttpStatus.OK);

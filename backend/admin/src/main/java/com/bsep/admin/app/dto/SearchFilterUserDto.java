@@ -7,13 +7,13 @@ public class SearchFilterUserDto {
     private String lastName;
     private String username;
     private String email;
-    List<String> roles;
+    List<Integer> roles;
 
     public SearchFilterUserDto() {
 
     }
 
-    public SearchFilterUserDto(String name, String lastName, String username, String email, List<String> roles) {
+    public SearchFilterUserDto(String name, String lastName, String username, String email, List<Integer> roles) {
         this.name = name;
         this.lastName = lastName;
         this.username = username;
@@ -53,11 +53,11 @@ public class SearchFilterUserDto {
         this.email = email;
     }
 
-    public List<String> getRoles() {
+    public List<Integer> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<String> roles) {
+    public void setRoles(List<Integer> roles) {
         this.roles = roles;
     }
 }

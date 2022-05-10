@@ -79,12 +79,12 @@ public class UserService implements UserDetailsService, IService<User> {
         List<User> users = userRepository.findAll();
 
         List<Role> roles = new ArrayList<>();
-        searchFilterUserDto.getRoles().forEach(role -> roles.add(roleRepository.findByName(role)));
+        searchFilterUserDto.getRoles().forEach(role -> roles.add(roleRepository.findById(Long.valueOf(role)).orElse(null)));
 
-        return users.stream().filter(user -> (searchFilterUserDto.getUsername().isEmpty() || user.getUsername().equals(searchFilterUserDto.getUsername())) &&
-                (searchFilterUserDto.getEmail().isEmpty() || user.getEmailAddress().equals(searchFilterUserDto.getEmail())) &&
-                (searchFilterUserDto.getName().isEmpty() || user.getName().equals(searchFilterUserDto.getName())) &&
-                (searchFilterUserDto.getLastName().isEmpty() || user.getLastName().equals(searchFilterUserDto.getLastName())) &&
+        return users.stream().filter(user -> (searchFilterUserDto.getUsername().isEmpty() || user.getUsername().contains(searchFilterUserDto.getUsername())) &&
+                (searchFilterUserDto.getEmail().isEmpty() || user.getEmailAddress().contains(searchFilterUserDto.getEmail())) &&
+                (searchFilterUserDto.getName().isEmpty() || user.getName().contains(searchFilterUserDto.getName())) &&
+                (searchFilterUserDto.getLastName().isEmpty() || user.getLastName().contains(searchFilterUserDto.getLastName())) &&
                 (roles.isEmpty() || roles.containsAll(user.getRoles()))).collect(Collectors.toList());
     }
 }

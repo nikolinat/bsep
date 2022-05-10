@@ -70,6 +70,14 @@ const routes = [
       layout: "AuthLayout",
     },
   },
+  {
+    path: "/users",
+    name: "UsersPage",
+    component: () => import("@/pages/UsersPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    },
+  },
 ];
 
 const router = new VueRouter({
