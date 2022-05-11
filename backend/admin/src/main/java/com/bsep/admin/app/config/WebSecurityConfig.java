@@ -31,8 +31,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
-                .authorizeRequests().antMatchers("/auth/csr").permitAll().and()
-                .authorizeRequests().antMatchers("/auth/certificate").permitAll()
+                .authorizeRequests().antMatchers("/api/v1/csr").permitAll().and()
+                .authorizeRequests().antMatchers("/api/v1/certificate").permitAll().and()
+                .authorizeRequests().antMatchers("/api/v1/users").permitAll()
                 .anyRequest().authenticated().and()
                 .cors().and();
 
@@ -48,6 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/certificate");
         web.ignoring().antMatchers(HttpMethod.PUT, "/api/v1/certificate/**");
         web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/certificate/**");
+        web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/users/search-filter");
         web.ignoring().antMatchers(HttpMethod.GET,"/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html",
                 "/**/*.css", "/**/*.js");
     }

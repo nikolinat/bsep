@@ -15,7 +15,7 @@ import java.util.List;
 @Inheritance(strategy= InheritanceType.JOINED)
 @SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=? AND version = ?")
 @Where(clause = "deleted=false")
-public abstract class User implements UserDetails {
+public class User implements UserDetails {
     @Version
     @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
     private Long version;
@@ -34,7 +34,12 @@ public abstract class User implements UserDetails {
 
     private String password;
 
+    @Column(unique = true, nullable = false)
+    private String username;
+
     private byte[] salt;
+
+    private Boolean deleted = Boolean.FALSE;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
@@ -48,7 +53,8 @@ public abstract class User implements UserDetails {
         return this.roles;
     }
 
-    public User(Long version, Integer id, String lastName, String name, String emailAddress, String password, List<Role> roles, byte[] salt) {
+    public User(Long version, Integer id, String lastName, String name, String emailAddress, String password, List<Role> roles, byte[] salt,
+                String username) {
         this.version = version;
         this.id = id;
         this.lastName = lastName;
@@ -57,15 +63,17 @@ public abstract class User implements UserDetails {
         this.password = password;
         this.roles = roles;
         this.salt = salt;
+        this.username = username;
     }
 
-    public User(String lastName, String name, String emailAddress, String password, List<Role> roles, byte[] salt) {
+    public User(String lastName, String name, String emailAddress, String password, List<Role> roles, byte[] salt, String username) {
         this.lastName = lastName;
         this.name = name;
         this.emailAddress = emailAddress;
         this.password = password;
         this.roles = roles;
         this.salt = salt;
+        this.username = username;
     }
 
     public User() {
@@ -160,6 +168,18 @@ public abstract class User implements UserDetails {
     }
 
     public String getUsername() {
-        return emailAddress;
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }
