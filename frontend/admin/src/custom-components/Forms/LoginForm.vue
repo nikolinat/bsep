@@ -36,6 +36,8 @@ import Button from '../../generic-components/Form/Button.vue'
 import Form from '../../generic-components/Form/Form.vue'
 import FormRow from '../../generic-components/Form/FormRow.vue'
 import TextInput from '../../generic-components/Form/TextInput.vue'
+import toastr from 'toastr'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
    components: {
@@ -53,16 +55,32 @@ export default {
     },
 
     computed: {
-
+        ...mapGetters({result: 'authentication/getResult'})
     },
 
     watch: {
+        result({ok, message, label}) {
+            if(label !== 'authenticate') 
+                return;
 
+            if(ok) {
+                this.$router.push('/');
+            } else {
+                toastr.error(message)
+            }
+        }
     },
 
     methods: {
-        handleLoginClick() {
+        ...mapActions({authenticate: 'authentication/authenticate'}),
 
+        handleLoginClick() {
+            const authenticateObject = {
+                username: this.username,
+                password: this.password
+            };
+
+            this.authenticate(authenticateObject);
         }
     }
 }
