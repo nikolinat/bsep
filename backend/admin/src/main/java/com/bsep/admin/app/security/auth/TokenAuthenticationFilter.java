@@ -11,20 +11,22 @@ import com.bsep.admin.app.utils.TokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
-    @Autowired
     private TokenUtils tokenUtils;
 
-    @Autowired
     private UserDetailsService userDetailsService;
 
     protected final Log LOGGER = LogFactory.getLog(getClass());
+
+    public TokenAuthenticationFilter(TokenUtils tokenHelper, UserDetailsService userDetailsService) {
+        this.tokenUtils = tokenHelper;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

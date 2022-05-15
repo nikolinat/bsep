@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
 
@@ -26,14 +26,6 @@ public class UserService implements UserDetailsService {
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails userDetails = userRepository.findByUsername(username);
-        if(userDetails == null)
-            throw new UsernameNotFoundException(username);
-        return userDetails;
     }
 
     public List<User> findAll() {

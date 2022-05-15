@@ -31,7 +31,7 @@ public class TokenUtils {
     private static final String AUDIENCE_MOBILE = "mobile";
     private static final String AUDIENCE_TABLET = "tablet";
 
-    private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.ES256;
+    private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
     public String generateToken(String username,String role, Integer id) {
         return Jwts.builder()
@@ -43,7 +43,6 @@ public class TokenUtils {
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
                 .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
-
     }
 
     private String generateAudience() {
@@ -55,12 +54,10 @@ public class TokenUtils {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        String signature = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getSignature();
-        System.out.println("OVOVOVOVOVOVOOVOVOVOVOVO");
-        System.out.println(signature);
+        String algorithm = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getHeader().getAlgorithm();
         final String username = getUsernameFromToken(token);
 
-        return (username != null && username.equals(userDetails.getUsername()));
+        return (username != null && username.equals(userDetails.getUsername()) && algorithm.equals("HS256"));
     }
 
     public String getUsernameFromToken(String token) {
