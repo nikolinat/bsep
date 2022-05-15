@@ -123,7 +123,7 @@ public class CertificateService implements ICertificateService {
         certificateAliasService.create(intermediateCertificate);
         CertificateUtil.createNewIssuedCertificate(Intermediate);
 
-        //CertificateUtil.createRoot();
+        CertificateUtil.createRoot();
     }
 
     public List<CertificateDto> findCertificates(boolean valid) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, NoSuchProviderException {

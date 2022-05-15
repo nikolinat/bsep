@@ -2,7 +2,9 @@ package com.bsep.admin.app.controller;
 
 import com.bsep.admin.app.dto.CertificateDto;
 import com.bsep.admin.app.model.RevokedCertificate;
+import com.bsep.admin.app.service.EmailService;
 import com.bsep.admin.app.service.contract.ICertificateService;
+import com.bsep.admin.crypto.pki.certificates.CertificateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +24,14 @@ import java.util.List;
 @RequestMapping(value="/api/v1/certificate")
 public class CertificateController {
     private ICertificateService certificateService;
+    private EmailService emailService;
 
     @Autowired
-    public CertificateController(ICertificateService certificateService){
+    public CertificateController(ICertificateService certificateService, EmailService emailService){
         this.certificateService = certificateService;
+        this.emailService = emailService;
     }
 
-    @PostAuthorize("hasPermission(returnObject, 'write')")
     @PutMapping("/{reason}")
     public ResponseEntity<?> revokeCertificate(@RequestBody CertificateDto certificate, @PathVariable String reason) throws Exception {
         certificateService.revoke(certificate, reason);

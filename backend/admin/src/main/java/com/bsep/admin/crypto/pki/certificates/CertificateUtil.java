@@ -147,11 +147,11 @@ public class CertificateUtil {
 
         SubjectData subjectData = new SubjectData(keyPair.getPublic(), builder.build(), sn, startDate, endDate);
 
-        IssuerData issuerData = keyStoreReader.readIssuerFromStore(makeFilePath(), issuerAlias,getKeyStorePassword().toCharArray(), getKeyStorePassword().toCharArray(), false);
-        Certificate certificate = certificateGenerator.generateCertificate(subjectData,issuerData, new GenerateCertificateDto());
+        IssuerData issuerData = keyStoreReader.readIssuerFromStore(makeFilePath(), issuerAlias, getKeyStorePassword().toCharArray(), getKeyStorePassword().toCharArray(), false);
+        Certificate certificate = certificateGenerator.generateCertificate(subjectData, issuerData, new GenerateCertificateDto());
         String keystoreFileName = makeFilePath();
         keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
-        keyStoreWriter.write(sn,issuerAlias, keyPair.getPrivate(), password.toCharArray(), certificate);
+        keyStoreWriter.write(sn, issuerAlias, keyPair.getPrivate(), password.toCharArray(), certificate);
         keyStoreWriter.saveKeyStore(keystoreFileName, password.toCharArray());
 
     }
@@ -178,4 +178,5 @@ public class CertificateUtil {
         keyStoreWriter.saveKeyStore(keystoreFileName, password.toCharArray());
         return serialNumber;
     }
+
 }

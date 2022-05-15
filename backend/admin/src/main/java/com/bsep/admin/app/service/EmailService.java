@@ -7,7 +7,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.io.IOException;
 
 @Service
 public class EmailService {
@@ -37,4 +41,5 @@ public class EmailService {
             System.out.println("Error while sending email");
         }
     }
+
 }

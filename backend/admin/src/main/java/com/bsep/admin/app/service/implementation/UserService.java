@@ -2,20 +2,23 @@ package com.bsep.admin.app.service.implementation;
 
 import com.bsep.admin.app.dto.SearchFilterUserDto;
 import com.bsep.admin.app.exception.MissingEntityException;
+import com.bsep.admin.app.model.Privilege;
 import com.bsep.admin.app.model.Role;
 import com.bsep.admin.app.model.User;
 import com.bsep.admin.app.repository.RoleRepository;
 import com.bsep.admin.app.repository.UserRepository;
 import com.bsep.admin.app.service.contract.IService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +35,7 @@ public class UserService implements UserDetailsService, IService<User> {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDetails userDetails = userRepository.findByUsername(username);
-        if(userDetails == null)
+        if (userDetails == null)
             throw new UsernameNotFoundException(username);
         return userDetails;
     }
@@ -86,5 +89,31 @@ public class UserService implements UserDetailsService, IService<User> {
                 (searchFilterUserDto.getName().isEmpty() || user.getName().contains(searchFilterUserDto.getName())) &&
                 (searchFilterUserDto.getLastName().isEmpty() || user.getLastName().contains(searchFilterUserDto.getLastName())) &&
                 (roles.isEmpty() || roles.containsAll(user.getRoles()))).collect(Collectors.toList());
+    }
+
+    private Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
+        return getGrantedAuthorities(getPrivileges(roles));
+    }
+
+    private List<String> getPrivileges(Collection<Role> roles) {
+
+        List<String> privileges = new ArrayList<>();
+        List<Privilege> collection = new ArrayList<>();
+        for (Role role : roles) {
+            privileges.add(role.getName());
+            collection.addAll(role.getPrivileges());
+        }
+        for (Privilege item : collection) {
+            privileges.add(item.getName());
+        }
+        return privileges;
+    }
+
+    private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String privilege : privileges) {
+            authorities.add(new SimpleGrantedAuthority(privilege));
+        }
+        return authorities;
     }
 }
