@@ -6,6 +6,7 @@ import com.bsep.admin.app.service.contract.ICertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -27,9 +28,9 @@ public class CertificateController {
         this.certificateService = certificateService;
     }
 
+    @PostAuthorize("hasPermission(returnObject, 'write')")
     @PutMapping("/{reason}")
     public ResponseEntity<?> revokeCertificate(@RequestBody CertificateDto certificate, @PathVariable String reason) throws Exception {
-        System.out.println(certificate.getSerialNumber());
         certificateService.revoke(certificate, reason);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -122,6 +122,8 @@ public class CertificateService implements ICertificateService {
         CACertificateAlias intermediateCertificate = new CACertificateAlias(Intermediate, false, true, true);
         certificateAliasService.create(intermediateCertificate);
         CertificateUtil.createNewIssuedCertificate(Intermediate);
+
+        //CertificateUtil.createRoot();
     }
 
     public List<CertificateDto> findCertificates(boolean valid) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, NoSuchProviderException {
@@ -132,30 +134,32 @@ public class CertificateService implements ICertificateService {
 
         List<String> aliases = keyStoreReader.getAllAliases(CertificateUtil.makeFilePath(), CertificateUtil.getKeyStorePassword());
         for (String a : aliases) {
-            Certificate[] certificate = keyStoreReader.readCertificate(CertificateUtil.makeFilePath(), CertificateUtil.getKeyStorePassword(), a);
-            for (Certificate c : certificate) {
-                c.getPublicKey().getEncoded();
-                BigInteger serialNumber = new X509CertificateHolder(c.getEncoded()).getSerialNumber();
-                String certificateAlias = new String(serialNumber.toByteArray(), StandardCharsets.UTF_8);
-                String subjectString = new X509CertificateHolder(c.getEncoded()).getSubject().toString();
-                SubjectDto subject = SubjectUtil.extractSubject(subjectString);
-                if (!check(certificateDtos, certificateAlias)) {
-                    List<ExtensionDto> extensions = ExtensionsUtil.convertToMap(new X509CertificateHolder(c.getEncoded()).getExtensions());
-                    Date startDate = new X509CertificateHolder(c.getEncoded()).getNotBefore();
-                    Date endDate = new X509CertificateHolder(c.getEncoded()).getNotAfter();
-                    if ((!valid && findByAlias(certificateAlias) != null) || (valid && findByAlias(certificateAlias) == null)) {
-                        if (verifyIssuerCertificate(endDate)) {
-                            if (serialNumber.equals(new BigInteger(root.getAlias().getBytes()))) {
-                                CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, true, false);
-                                certificateDtos.add(certificateDto);
-                            } else if (serialNumber.equals(new BigInteger(intermediate.getAlias().getBytes()))) {
-                                CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, false, true);
-                                certificateDtos.add(certificateDto);
-                            } else {
-                                CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, false, false);
-                                certificateDtos.add(certificateDto);
-                            }
+            if (!a.equals("root")) {
+                Certificate[] certificate = keyStoreReader.readCertificate(CertificateUtil.makeFilePath(), CertificateUtil.getKeyStorePassword(), a);
+                for (Certificate c : certificate) {
+                    c.getPublicKey().getEncoded();
+                    BigInteger serialNumber = new X509CertificateHolder(c.getEncoded()).getSerialNumber();
+                    String certificateAlias = new String(serialNumber.toByteArray(), StandardCharsets.UTF_8);
+                    String subjectString = new X509CertificateHolder(c.getEncoded()).getSubject().toString();
+                    SubjectDto subject = SubjectUtil.extractSubject(subjectString);
+                    if (!check(certificateDtos, certificateAlias)) {
+                        List<ExtensionDto> extensions = ExtensionsUtil.convertToMap(new X509CertificateHolder(c.getEncoded()).getExtensions());
+                        Date startDate = new X509CertificateHolder(c.getEncoded()).getNotBefore();
+                        Date endDate = new X509CertificateHolder(c.getEncoded()).getNotAfter();
+                        if ((!valid && findByAlias(certificateAlias) != null) || (valid && findByAlias(certificateAlias) == null)) {
+                            if (verifyIssuerCertificate(endDate)) {
+                                if (serialNumber.equals(new BigInteger(root.getAlias().getBytes()))) {
+                                    CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, true, false);
+                                    certificateDtos.add(certificateDto);
+                                } else if (serialNumber.equals(new BigInteger(intermediate.getAlias().getBytes()))) {
+                                    CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, false, true);
+                                    certificateDtos.add(certificateDto);
+                                } else {
+                                    CertificateDto certificateDto = new CertificateDto(serialNumber, certificateAlias, startDate, endDate, subject, extensions, false, false);
+                                    certificateDtos.add(certificateDto);
+                                }
 
+                            }
                         }
                     }
                 }

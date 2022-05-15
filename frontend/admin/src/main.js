@@ -6,7 +6,7 @@ import toastr from 'toastr'
 import axios from 'axios';
 import store from './store'
 
-axios.defaults.baseURL = "http://localhost:8081/api/v1";
+axios.defaults.baseURL = "https://localhost:8443/api/v1";
 
 Vue.component("AppLayout", AppLayout);
 

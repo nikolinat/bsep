@@ -199,8 +199,8 @@ public class CertificateGenerator {
             certificateGenerator.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
 
             List<Integer> keyUsages = new ArrayList<>();
-            keyUsages.add(KeyUsage.keyCertSign);
-            keyUsages.add(KeyUsage.cRLSign);
+            keyUsages.add(KeyUsage.digitalSignature);
+            keyUsages.add(KeyUsage.keyEncipherment);
             addKeyUsage(keyUsages);
 
             Map<SubjectAlternativeName, String> generalNames = new HashMap<>();

@@ -155,4 +155,27 @@ public class CertificateUtil {
         keyStoreWriter.saveKeyStore(keystoreFileName, password.toCharArray());
 
     }
+
+    public static String createRoot() throws NoSuchAlgorithmException, NoSuchProviderException {
+        KeyPair issuerPair = generateKeyPair();
+
+        LocalDate localStartDate = LocalDate.now();
+
+        Date startDate = Date.from(localStartDate.atStartOfDay(defaultZoneId).toInstant());
+        LocalDate localEndDate = localStartDate.plusYears(1);
+        Date endDate = Date.from(localEndDate.atStartOfDay(defaultZoneId).toInstant());
+
+        String serialNumber = "root";
+        X500NameBuilder builder = generateBuilder();
+        SubjectData subjectData = new SubjectData(issuerPair.getPublic(), builder.build(), serialNumber, startDate, endDate);
+        IssuerData issuerData = new IssuerData(issuerPair.getPrivate(), builder.build());
+
+        Certificate certificate = certificateGenerator.generateCACertificate(subjectData, issuerData);
+
+        String keystoreFileName = makeFilePath();
+        keyStoreWriter.loadKeyStore(keystoreFileName, password.toCharArray());
+        keyStoreWriter.writeRoot(serialNumber, issuerPair.getPrivate(), password.toCharArray(), certificate);
+        keyStoreWriter.saveKeyStore(keystoreFileName, password.toCharArray());
+        return serialNumber;
+    }
 }
