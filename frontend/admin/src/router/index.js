@@ -78,6 +78,14 @@ const routes = [
       layout: "AppLayoutMain",
     },
   },
+  {
+    path: "/new-user",
+    name: "CreateUsersPage",
+    component: () => import("@/pages/CreateUserPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    },
+  },
 ];
 
 const router = new VueRouter({

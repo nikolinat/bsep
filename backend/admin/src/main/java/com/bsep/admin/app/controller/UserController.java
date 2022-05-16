@@ -1,5 +1,6 @@
 package com.bsep.admin.app.controller;
 
+import com.bsep.admin.app.dto.CreateUserDto;
 import com.bsep.admin.app.dto.SearchFilterUserDto;
 import com.bsep.admin.app.dto.UserDto;
 import com.bsep.admin.app.mapper.UserMapper;
@@ -32,5 +33,10 @@ public class UserController {
         List<User> users = userService.searchAndFilterUsers(searchFilterUserDto);
         List<UserDto> usersDto = users.stream().map(user -> userMapper.userToUserDto(user)).collect(Collectors.toList());
         return new ResponseEntity<>(usersDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/new-user")
+    public ResponseEntity<?> createUser(@RequestBody CreateUserDto userDTO) throws Exception {
+        return new ResponseEntity<>(this.userService.create(userDTO),HttpStatus.OK);
     }
 }
