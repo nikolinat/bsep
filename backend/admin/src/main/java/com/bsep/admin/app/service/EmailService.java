@@ -41,5 +41,29 @@ public class EmailService {
             System.out.println("Error while sending email");
         }
     }
+    public void sendCertificate(String toEmail, String path) {
+        try {
+            MimeMessage msg = javaMailSender.createMimeMessage();
+            msg.setSubject("Kucni sigurnosni sistem - sertifikat");
+            MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+            helper.setTo(toEmail);
+            helper.setFrom("bezbednost");
+            helper.setSubject("Kucni sigurnosni sistem - sertifikat");
+            Multipart emailContent = new MimeMultipart();
+            MimeBodyPart textBodyPart = new MimeBodyPart();
+            textBodyPart.setText("U prilogu se nalazi Vaš sertifikat!");
+            MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+            attachmentBodyPart.attachFile(path);
 
+            emailContent.addBodyPart(textBodyPart);
+            emailContent.addBodyPart(attachmentBodyPart);
+
+            msg.setContent(emailContent);
+
+            javaMailSender.send(msg);
+
+        } catch (MessagingException | IOException ex) {
+            System.out.println("Greška prilikom slanja!");
+        }
+    }
 }

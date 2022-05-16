@@ -7,14 +7,24 @@ import com.bsep.admin.crypto.pki.keystores.KeyStoreReader;
 import com.bsep.admin.crypto.pki.keystores.KeyStoreWriter;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.jcajce.JcaMiscPEMGenerator;
+import org.bouncycastle.util.io.pem.PemObjectGenerator;
+import org.bouncycastle.util.io.pem.PemWriter;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class CertificateUtil {
@@ -179,4 +189,33 @@ public class CertificateUtil {
         return serialNumber;
     }
 
+    public static Certificate findCertificate(String alias) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, NoSuchProviderException {
+        List<String> aliases = keyStoreReader.getAllAliases(CertificateUtil.makeFilePath(), CertificateUtil.getKeyStorePassword());
+        for (String a : aliases) {
+            Certificate[] certificates = keyStoreReader.readCertificate(CertificateUtil.makeFilePath(), CertificateUtil.getKeyStorePassword(), a);
+            for (Certificate certificate : certificates) {
+                BigInteger serialNumber = new X509CertificateHolder(certificate.getEncoded()).getSerialNumber();
+                if (new String(serialNumber.toByteArray(), StandardCharsets.UTF_8).equals(alias)) {
+                    return certificate;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static String writeToFile(String alias) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, NoSuchProviderException {
+        Certificate certificate = findCertificate(alias);
+        StringWriter sw = new StringWriter();
+        try (PemWriter pw = new PemWriter(sw)) {
+            PemObjectGenerator gen = new JcaMiscPEMGenerator(certificate);
+            pw.writeObject(gen);
+        }
+
+        String fileName = "src/main/java/files/keystores/" + alias + ".cer";
+        FileWriter fw = new FileWriter(fileName);
+        fw.write(sw.toString());
+        fw.close();
+
+        return fileName;
+    }
 }

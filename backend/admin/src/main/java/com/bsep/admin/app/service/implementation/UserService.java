@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserDetailsService, IService<User> {
+public class UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
 
@@ -32,20 +32,10 @@ public class UserService implements UserDetailsService, IService<User> {
         this.roleRepository = roleRepository;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails userDetails = userRepository.findByUsername(username);
-        if (userDetails == null)
-            throw new UsernameNotFoundException(username);
-        return userDetails;
-    }
-
-    @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    @Override
     public User findById(Integer id) throws Exception {
         User user = userRepository.findById(id).orElse(null);
         if (user == null)
@@ -53,17 +43,14 @@ public class UserService implements UserDetailsService, IService<User> {
         return user;
     }
 
-    @Override
     public User create(User entity) throws Exception {
         return null;
     }
 
-    @Override
     public User update(User entity, Integer id) throws Exception {
         return null;
     }
 
-    @Override
     public void delete(Integer id) throws Exception {
 
     }
