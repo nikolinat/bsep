@@ -30,8 +30,24 @@ const actions = {
         });        
     },
 
-    logOut: () => {
-        removeToken();
+    logOut: (context) => {
+        const token = sessionStorage.getItem('token');
+        axios.post("/auth/logout", token)
+        .then(response => {
+            removeToken(token);
+            context.commit('setResult', {
+                label: 'logout',
+                ok: true,
+                message: response
+            });
+        })
+        .catch(error => {
+            context.commit('setResult', {
+                label: 'logout',
+                ok: false,
+                message: error.response.data.ErrorMessage
+            });
+        })
     }
 };
 

@@ -7,6 +7,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bsep.admin.app.exception.InvalidTokenException;
+import com.bsep.admin.app.repository.InvalidTokenRepository;
+import com.bsep.admin.app.service.contract.IInvalidTokenService;
 import com.bsep.admin.app.utils.TokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.logging.Log;
@@ -21,11 +24,15 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private UserDetailsService userDetailsService;
 
+    private IInvalidTokenService invalidTokenService;
+
     protected final Log LOGGER = LogFactory.getLog(getClass());
 
-    public TokenAuthenticationFilter(TokenUtils tokenHelper, UserDetailsService userDetailsService) {
+    public TokenAuthenticationFilter(TokenUtils tokenHelper, UserDetailsService userDetailsService,
+                                     IInvalidTokenService invalidTokenService) {
         this.tokenUtils = tokenHelper;
         this.userDetailsService = userDetailsService;
+        this.invalidTokenService = invalidTokenService;
     }
 
     @Override
@@ -35,6 +42,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String authToken = tokenUtils.getToken(request);
         try {
             if (authToken != null) {
+                invalidTokenService.findByToken(authToken);
                 username = tokenUtils.getUsernameFromToken(authToken);
                 if (username != null) {
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -47,6 +55,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (ExpiredJwtException ex) {
             LOGGER.debug("Token expired!");
+        } catch (Exception e) {
+            LOGGER.debug(e.getMessage());
         }
         chain.doFilter(request, response);
     }
