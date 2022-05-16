@@ -1,7 +1,9 @@
 package com.bsep.admin.app.config;
 
+import com.bsep.admin.app.repository.InvalidTokenRepository;
 import com.bsep.admin.app.security.auth.RestAutheticationEntryPoint;
 import com.bsep.admin.app.security.auth.TokenAuthenticationFilter;
+import com.bsep.admin.app.service.contract.IInvalidTokenService;
 import com.bsep.admin.app.service.implementation.UserDetailServiceCustom;
 import com.bsep.admin.app.service.implementation.UserService;
 import com.bsep.admin.app.utils.TokenUtils;
@@ -51,6 +53,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private TokenUtils tokenUtils;
 
+    @Autowired
+    private IInvalidTokenService invalidTokenService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -62,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/auth/login").permitAll()
                 .anyRequest().authenticated().and()
                 .cors().and()
-                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
+                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService, invalidTokenService),
                                 BasicAuthenticationFilter.class);
         http.csrf().disable();
     }
