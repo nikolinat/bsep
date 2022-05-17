@@ -97,11 +97,21 @@ export default {
 
   computed: {
     ...mapGetters({
-      result: "users/getUsers",
+      result: "users/getResult",
     }),
   },
 
-  watch: {},
+  watch: {
+    result({ message, ok, label }) {
+      if (label === "create") {
+          if (ok) {
+            toastr.success("User created");
+          } else {
+            toastr.error(message);
+        }
+      }
+    },
+  },
 
   methods: {
     ...mapActions({
@@ -111,7 +121,6 @@ export default {
     handleCreateBtn() {
       if (this.newUser.password == this.password2) {
         this.createUser(this.newUser);
-        toastr.success("User created");
       } else {
         toastr.error("Invalid password");
       }

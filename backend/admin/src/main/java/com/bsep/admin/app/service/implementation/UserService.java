@@ -2,19 +2,18 @@ package com.bsep.admin.app.service.implementation;
 
 import com.bsep.admin.app.dto.CreateUserDto;
 import com.bsep.admin.app.dto.SearchFilterUserDto;
-import com.bsep.admin.app.dto.UserDto;
 import com.bsep.admin.app.exception.DuplicateEntityException;
 import com.bsep.admin.app.exception.MissingEntityException;
 import com.bsep.admin.app.model.Role;
 import com.bsep.admin.app.model.User;
 import com.bsep.admin.app.repository.RoleRepository;
 import com.bsep.admin.app.repository.UserRepository;
-import com.bsep.admin.app.service.contract.IService;
 import com.bsep.admin.app.utils.Base64Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKeyFactory;
@@ -24,18 +23,20 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserDetailsService, IService<User> {
+public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -46,12 +47,10 @@ public class UserService implements UserDetailsService, IService<User> {
         return userDetails;
     }
 
-    @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    @Override
     public User findById(Integer id) throws Exception {
         User user = userRepository.findById(id).orElse(null);
         if (user == null)
@@ -59,25 +58,24 @@ public class UserService implements UserDetailsService, IService<User> {
         return user;
     }
 
-    private byte[] generateSalt() throws NoSuchAlgorithmException {
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        byte[] salt = new byte[16];
-        sr.nextBytes(salt);
-        return salt;
-    }
+//    private byte[] generateSalt() throws NoSuchAlgorithmException {
+//        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+//        byte[] salt = new byte[16];
+//        sr.nextBytes(salt);
+//        return salt;
+//    }
+//
+//    private byte[] hashPassword(String password, byte[] salt) throws InvalidKeySpecException, NoSuchAlgorithmException {
+//        int iterations = 1000;
+//        char[] chars = password.toCharArray();
+//
+//        PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
+//        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+//
+//        byte[] hash = skf.generateSecret(spec).getEncoded();
+//        return hash;
+//    }
 
-    private byte[] hashPassword(String password, byte[] salt) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        int iterations = 1000;
-        char[] chars = password.toCharArray();
-
-        PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-
-        byte[] hash = skf.generateSecret(spec).getEncoded();
-        return hash;
-    }
-
-    @Override
     public User create(CreateUserDto entity) throws Exception {
         if (userRepository.findByUsername(entity.getUsername()) != null)
             throw new DuplicateEntityException("User with given username already exists.");
@@ -95,10 +93,7 @@ public class UserService implements UserDetailsService, IService<User> {
         }
         user.setRoles(listOfRoles);
 
-        byte[] salt = generateSalt();
-        byte[] hashedPassword = hashPassword(entity.getPassword(), salt);
-
-        user.setPassword(Base64Utility.encode(hashedPassword));
+        user.setPassword(passwordEncoder.encode(entity.getPassword()));
         userRepository.save(user);
 
         return user;
@@ -127,12 +122,10 @@ public class UserService implements UserDetailsService, IService<User> {
         return this.userRepository.save(entity);
     }
 
-    @Override
     public User update(User entity, Integer id) throws Exception {
         return null;
     }
 
-    @Override
     public void delete(Integer id) throws Exception {
 
     }

@@ -1,21 +1,26 @@
 package com.bsep.admin.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class UserTokenState {
     private String accessToken;
     private Long expiresIn;
     private String role;
     private Integer id;
+    @JsonIgnore
+    private String cookieSecureContent;
 
     public UserTokenState() {
         this.accessToken = null;
         this.expiresIn = null;
     }
 
-    public UserTokenState(String accessToken, long expiresIn,String role, Integer id) {
+    public UserTokenState(String accessToken, long expiresIn,String role, Integer id, String cookieSecureContent) {
         this.accessToken = accessToken;
         this.expiresIn = expiresIn;
         this.role = role;
         this.id = id;
+        this.cookieSecureContent = cookieSecureContent;
     }
 
     public String getAccessToken() {
@@ -50,4 +55,11 @@ public class UserTokenState {
         this.id = id;
     }
 
+    public String getCookieSecureContent() {
+        return cookieSecureContent;
+    }
+
+    public void setCookieSecureContent(String cookieSecureContent) {
+        this.cookieSecureContent = cookieSecureContent;
+    }
 }

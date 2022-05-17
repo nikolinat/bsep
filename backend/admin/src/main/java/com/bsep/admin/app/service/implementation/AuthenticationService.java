@@ -32,8 +32,9 @@ public class AuthenticationService implements IAuthenticationService {
         User user = (User) authentication.getPrincipal();
         String role = user.getRoles().get(0).getName();
         Integer id = user.getId();
-        String jwt = tokenUtils.generateToken(user.getUsername(),role, id);
+        String cookieContent = tokenUtils.generateCookieContent();
+        String jwt = tokenUtils.generateToken(user.getUsername(), role, id, cookieContent);
         int expiresIn = tokenUtils.getExpiredIn();
-        return new UserTokenState(jwt, expiresIn,role, id);
+        return new UserTokenState(jwt, expiresIn, role, id, cookieContent);
     }
 }

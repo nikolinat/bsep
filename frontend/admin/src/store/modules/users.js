@@ -20,21 +20,20 @@ const actions = {
         context.commit("setUsers", response.data);
       })
       .catch((error) => {
-        console.log(error);
-        context.commit("setResult", { label: "fetch", ok: false });
+        context.commit("setResult", { label: "fetch", ok: false, message: error });
       });
   },
   createUser: (context, CreateUserDto) => {
     const queryParam = { ...CreateUserDto };
     queryParam.roles = CreateUserDto.roles.reduce((f, s) => `${f},${s}`);
     axios
-      .post(`/users/new-user`, CreateUserDto)
+      .post(`/users/new-user`, CreateUserDto, { withCredentials: true })
       .then((response) => {
         context.commit("setUsers", response.data);
+        context.commit("setResult", { label: "create", ok: true, message: "User created." });
       })
       .catch((error) => {
-        console.log(error);
-        context.commit("setResult", { label: "create", ok: false });
+        context.commit("setResult", { label: "create", ok: false, message: error });
       });
   },
 };

@@ -6,6 +6,7 @@ import com.bsep.admin.app.model.UserTokenState;
 import com.bsep.admin.app.service.contract.IAuthenticationService;
 import com.bsep.admin.app.service.contract.IInvalidTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,14 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(
             @RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
-        return new ResponseEntity<UserTokenState>(this.authenticationService.authenticate(authenticationRequest), HttpStatus.OK);
+        UserTokenState userTokenState = this.authenticationService.authenticate(authenticationRequest);
+
+        String cookie = "SecureContent=" + userTokenState.getCookieSecureContent() + "; HttpOnly; Path=/";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", cookie);
+
+        return ResponseEntity.ok().headers(headers).body(userTokenState);
     }
 
     @PostMapping("/logout")
