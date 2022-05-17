@@ -50,6 +50,17 @@ const actions = {
         context.commit("setResult", { label: "update", ok: false });
       });
   },
+  deleteUser: (context, username) => {
+    axios
+      .delete(`/users/delete-user`, username)
+      .then((response) => {
+        context.commit("setUsers", response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        context.commit("setResult", { label: "delete", ok: false });
+      });
+  },
 };
 
 const mutations = {

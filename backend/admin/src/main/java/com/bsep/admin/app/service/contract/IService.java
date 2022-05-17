@@ -11,5 +11,5 @@ public interface IService<T> {
     T findById(Integer id) throws Exception;
     User create(CreateUserDto entity) throws Exception;
     User update(UpdateUserDto entity) throws Exception;
-    void delete(Integer id) throws Exception;
+    User delete(String username) throws Exception;
 }

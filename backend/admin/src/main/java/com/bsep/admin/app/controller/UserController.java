@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,11 @@ public class UserController {
 
     @PutMapping(value = "/update-user")
     public ResponseEntity<?> updateUser(@RequestBody UpdateUserDto userDTO) throws Exception {
-        System.out.println(userDTO);
         return new ResponseEntity<>(this.userService.update(userDTO),HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/delete-user", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteUser(@RequestBody String username) throws Exception {
+        return new ResponseEntity<>(this.userService.delete(username),HttpStatus.OK);
     }
 }

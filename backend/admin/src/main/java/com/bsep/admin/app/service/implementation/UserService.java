@@ -134,8 +134,13 @@ public class UserService implements UserDetailsService, IService<User> {
     }
 
     @Override
-    public void delete(Integer id) throws Exception {
+    public User delete(String username) throws Exception {
+        User user = userRepository.findByUsername(username);
+        if (user == null)
+            throw new UsernameNotFoundException("User with given username doesn't exists.");
 
+        userRepository.delete(user);
+        return user;
     }
 
     public List<User> findAllAdmins() {
