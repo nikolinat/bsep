@@ -1,11 +1,9 @@
 package com.bsep.admin.app.config;
 
-import com.bsep.admin.app.repository.InvalidTokenRepository;
 import com.bsep.admin.app.security.auth.RestAutheticationEntryPoint;
 import com.bsep.admin.app.security.auth.TokenAuthenticationFilter;
 import com.bsep.admin.app.service.contract.IInvalidTokenService;
 import com.bsep.admin.app.service.implementation.UserDetailServiceCustom;
-import com.bsep.admin.app.service.implementation.UserService;
 import com.bsep.admin.app.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -61,9 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
-                .authorizeRequests().antMatchers("/api/v1/csr").permitAll().and()
-                //.authorizeRequests().antMatchers("/api/v1/certificate").permitAll().and()
-                .authorizeRequests().antMatchers("/api/v1/users").permitAll()
+                .authorizeRequests()
                 .antMatchers("/api/v1/auth/login").permitAll()
                 .anyRequest().authenticated().and()
                 .cors().and()
@@ -73,16 +69,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/auth/login");
-//        web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/csr");
-//        web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/csr");
-//        web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/csr/**");
-//        web.ignoring().antMatchers(HttpMethod.PUT, "/api/v1/csr/**");
-//        web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/certificate");
-//        web.ignoring().antMatchers(HttpMethod.PUT, "/api/v1/certificate/**");
-//        web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/certificate/**");
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/users/search-filter");
         web.ignoring().antMatchers(HttpMethod.GET,"/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html",
                 "/**/*.css", "/**/*.js");
     }
