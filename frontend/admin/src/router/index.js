@@ -86,6 +86,14 @@ const routes = [
       layout: "AppLayoutMain",
     },
   },
+  {
+    path: "/update-user",
+    name: "UpdateUserPage",
+    component: () => import("@/pages/UpdateUserPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    },
+  },
 ];
 
 const router = new VueRouter({
