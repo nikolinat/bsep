@@ -24,10 +24,11 @@
           icon="assignment"
           to="/csr"
         ></sidebar-item>
+        <sidebar-item name="Users" icon="assignment" to="/users"></sidebar-item>
         <sidebar-item
-          name="Users"
+          name="Create User"
           icon="assignment"
-          to="/users"
+          to="/new-user"
         ></sidebar-item>
       </ul>
     </div>
