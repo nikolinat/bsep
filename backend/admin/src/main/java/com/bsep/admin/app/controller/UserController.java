@@ -2,6 +2,7 @@ package com.bsep.admin.app.controller;
 
 import com.bsep.admin.app.dto.CreateUserDto;
 import com.bsep.admin.app.dto.SearchFilterUserDto;
+import com.bsep.admin.app.dto.UpdateUserDto;
 import com.bsep.admin.app.dto.UserDto;
 import com.bsep.admin.app.mapper.UserMapper;
 import com.bsep.admin.app.model.User;
@@ -38,5 +39,11 @@ public class UserController {
     @PostMapping("/new-user")
     public ResponseEntity<?> createUser(@RequestBody CreateUserDto userDTO) throws Exception {
         return new ResponseEntity<>(this.userService.create(userDTO),HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/update-user")
+    public ResponseEntity<?> updateUser(@RequestBody UpdateUserDto userDTO) throws Exception {
+        System.out.println(userDTO);
+        return new ResponseEntity<>(this.userService.update(userDTO),HttpStatus.OK);
     }
 }
