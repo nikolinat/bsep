@@ -8,6 +8,7 @@ import com.bsep.admin.app.service.implementation.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
+    @PreAuthorize("hasAuthority('READ_USERS')")
     @GetMapping("/search-filter")
     public ResponseEntity<List<UserDto>> searchAndFilterUsers(SearchFilterUserDto searchFilterUserDto) {
         List<User> users = userService.searchAndFilterUsers(searchFilterUserDto);

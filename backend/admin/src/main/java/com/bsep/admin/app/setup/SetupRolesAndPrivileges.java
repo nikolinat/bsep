@@ -13,10 +13,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class SetupRolesAndPrivileges implements
@@ -39,18 +36,19 @@ public class SetupRolesAndPrivileges implements
 
         if (alreadySetup)
             return;
-        Privilege readPrivilege
-                = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        Privilege writePrivilege
-                = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
-        Privilege deletePrivilege
-                = createPrivilegeIfNotFound("DELETE_PRIVILEGE");
+        Privilege readCertificates = createPrivilegeIfNotFound("READ_CERTIFICATES");
+        Privilege editCertificate = createPrivilegeIfNotFound("EDIT_CERTIFICATE");
+        Privilege readUsers = createPrivilegeIfNotFound("READ_USERS");
+        Privilege readCsr = createPrivilegeIfNotFound("READ_CSR");
+        Privilege writeCsr = createPrivilegeIfNotFound("WRITE_CSR");
+        Privilege editCsr = createPrivilegeIfNotFound("EDIT_CSR");
 
-        List<Privilege> adminPrivileges = Arrays.asList(readPrivilege, writePrivilege, deletePrivilege);
-        List<Privilege> ownerPrivileges = Collections.singletonList(readPrivilege);
+        List<Privilege> adminPrivileges = Arrays.asList(readCertificates, editCertificate, readUsers, readCsr, editCsr);
+        List<Privilege> ownerPrivileges = Collections.singletonList(writeCsr);
+        List<Privilege> tenantPrivileges = new ArrayList<>();
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        createRoleIfNotFound("ROLE_OWNER", ownerPrivileges);
-        createRoleIfNotFound("ROLE_TENANT", ownerPrivileges);
+        createRoleIfNotFound("ROLE_HOUSE_OWNER", ownerPrivileges);
+        createRoleIfNotFound("ROLE_TENANT", tenantPrivileges);
 
         addAdmin();
         addOwner();
@@ -98,7 +96,7 @@ public class SetupRolesAndPrivileges implements
     @Transactional
     void addOwner() {
         if(userRepository.findByUsername("pera123") == null) {
-            Role ownerRole = roleRepository.findByName("ROLE_OWNER");
+            Role ownerRole = roleRepository.findByName("ROLE_HOUSE_OWNER");
             User user = new User();
             user.setEmailAddress("peraperic@gmail.com");
             user.setName("pera");

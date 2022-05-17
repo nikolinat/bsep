@@ -19,7 +19,7 @@ public class Role implements GrantedAuthority {
     @Column(name = "name")
     String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "roles_privileges",
             joinColumns = @JoinColumn(

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -32,18 +33,21 @@ public class CertificateController {
         this.emailService = emailService;
     }
 
+    @PreAuthorize("hasAuthority('EDIT_CERTIFICATE')")
     @PutMapping("/{reason}")
     public ResponseEntity<?> revokeCertificate(@RequestBody CertificateDto certificate, @PathVariable String reason) throws Exception {
         certificateService.revoke(certificate, reason);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('READ_CERTIFICATES')")
     @GetMapping("")
     public ResponseEntity<?> getAllValidCertificates() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, ParseException, NoSuchProviderException {
         List<CertificateDto> certificates = certificateService.findAllValidCertificates();
         return new ResponseEntity<>(certificates, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('READ_CERTIFICATES')")
     @GetMapping("/revoked")
     public ResponseEntity<?> getAllRevokedCertificates() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, ParseException, NoSuchProviderException {
         List<CertificateDto> certificates = certificateService.findAllRevokedCertificates();

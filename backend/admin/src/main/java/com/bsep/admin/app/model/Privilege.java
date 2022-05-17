@@ -1,9 +1,13 @@
 package com.bsep.admin.app.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Set;
 
 @Entity
-public class Privilege {
+public class Privilege implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -12,7 +16,7 @@ public class Privilege {
     private String name;
 
     @ManyToMany(mappedBy = "privileges")
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
     public Privilege(){}
     public Privilege(String name) {
@@ -35,11 +39,17 @@ public class Privilege {
         this.name = name;
     }
 
-    public Collection<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    @JsonIgnore
+    @Override
+    public String getAuthority() {
+        return name;
     }
 }

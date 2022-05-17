@@ -15,6 +15,8 @@ public class CertificateDto {
     private boolean isIntermediate;
     private List<ExtensionDto> extensions;
 
+    public CertificateDto() {}
+
     public CertificateDto(BigInteger serialNumber, String alias, Date startDate, Date endDate, SubjectDto subject, List<ExtensionDto> extensions, boolean isRoot, boolean isIntermediate) {
         this.serialNumber = serialNumber;
         this.alias = alias;

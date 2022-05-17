@@ -62,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
                 .authorizeRequests().antMatchers("/api/v1/csr").permitAll().and()
-                .authorizeRequests().antMatchers("/api/v1/certificate").permitAll().and()
+                //.authorizeRequests().antMatchers("/api/v1/certificate").permitAll().and()
                 .authorizeRequests().antMatchers("/api/v1/users").permitAll()
                 .antMatchers("/api/v1/auth/login").permitAll()
                 .anyRequest().authenticated().and()
@@ -79,9 +79,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/csr");
 //        web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/csr/**");
 //        web.ignoring().antMatchers(HttpMethod.PUT, "/api/v1/csr/**");
-        web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/certificate");
-        web.ignoring().antMatchers(HttpMethod.PUT, "/api/v1/certificate/**");
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/certificate/**");
+//        web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/certificate");
+//        web.ignoring().antMatchers(HttpMethod.PUT, "/api/v1/certificate/**");
+//        web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/certificate/**");
         web.ignoring().antMatchers(HttpMethod.GET, "/api/v1/users/search-filter");
         web.ignoring().antMatchers(HttpMethod.GET,"/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html",
                 "/**/*.css", "/**/*.js");
