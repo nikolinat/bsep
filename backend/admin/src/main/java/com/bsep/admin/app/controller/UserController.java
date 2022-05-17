@@ -43,7 +43,6 @@ public class UserController {
 
     @PutMapping(value = "/update-user")
     public ResponseEntity<?> updateUser(@RequestBody UpdateUserDto userDTO) throws Exception {
-        System.out.println(userDTO);
         return new ResponseEntity<>(this.userService.update(userDTO),HttpStatus.OK);
     }
 }
