@@ -47,8 +47,8 @@ public class UserController {
         return new ResponseEntity<>(this.userService.update(userDTO),HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delete-user", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUser(@RequestBody String username) throws Exception {
+    @RequestMapping(value = "/delete-user/{username}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteUser(@PathVariable (value="username") String username) throws Exception {
         return new ResponseEntity<>(this.userService.delete(username),HttpStatus.OK);
     }
 }

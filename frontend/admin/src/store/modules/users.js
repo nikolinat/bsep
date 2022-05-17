@@ -52,7 +52,7 @@ const actions = {
   },
   deleteUser: (context, username) => {
     axios
-      .delete(`/users/delete-user`, username)
+      .delete(`/users/delete-user/${username}`)
       .then((response) => {
         context.commit("setUsers", response.data);
       })

@@ -94,6 +94,7 @@ export default {
     onDelete() {
       this.deleteUser(this.selectedUser.username);
       toastr.success("User updated");
+      location.reload();
     },
   },
 };
