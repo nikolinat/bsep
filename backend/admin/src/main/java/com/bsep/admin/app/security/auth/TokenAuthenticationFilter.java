@@ -48,7 +48,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 if (username != null) {
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                     if (tokenUtils.validateToken(authToken, userDetails, secureContent)) {
-                        System.out.println("TU");
                         TokenBasedAuthentication authentication = new TokenBasedAuthentication(userDetails);
                         authentication.setToken(authToken);
                         SecurityContextHolder.getContext().setAuthentication(authentication);

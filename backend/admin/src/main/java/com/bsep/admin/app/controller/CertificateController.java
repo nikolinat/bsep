@@ -29,7 +29,6 @@ public class CertificateController {
 
     @PutMapping("/{reason}")
     public ResponseEntity<?> revokeCertificate(@RequestBody CertificateDto certificate, @PathVariable String reason) throws Exception {
-        System.out.println(certificate.getSerialNumber());
         certificateService.revoke(certificate, reason);
         return new ResponseEntity<>(HttpStatus.OK);
     }

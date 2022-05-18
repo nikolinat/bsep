@@ -13,10 +13,11 @@ public class CookieUtil {
     public HttpCookie createAccessTokenCookie(String token, Long duration) {
         String encryptedToken = SecurityCipher.encrypt(token);
         return ResponseCookie.from("SecureContent", encryptedToken)
-                .maxAge(duration)
+                .maxAge(3600000)
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")
+                .domain("127.0.0.1")
                 .path("/")
                 .build();
     }

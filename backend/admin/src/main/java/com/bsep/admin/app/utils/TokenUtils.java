@@ -85,7 +85,6 @@ public class TokenUtils {
         if(secureContent != null) {
             isSecureContentValid = validateTokenSecureContent(secureContent, token);
         }
-        System.out.println(isSecureContentValid);
         return isUsernameValid && isAlgorithmValid && isSecureContentValid;
     }
 
@@ -140,7 +139,6 @@ public class TokenUtils {
                 secureContent = cookie.get().getValue();
             }
         }
-        System.out.println(secureContent);
         return secureContent;
     }
 
