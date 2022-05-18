@@ -140,6 +140,7 @@ public class TokenUtils {
                 secureContent = cookie.get().getValue();
             }
         }
+        System.out.println(secureContent);
         return secureContent;
     }
 
