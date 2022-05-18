@@ -11,6 +11,7 @@ import com.bsep.admin.app.repository.RoleRepository;
 import com.bsep.admin.app.repository.UserRepository;
 import com.bsep.admin.app.service.contract.IService;
 import com.bsep.admin.app.utils.Base64Utility;
+import com.bsep.admin.app.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -59,24 +60,6 @@ public class UserService implements UserDetailsService, IService<User> {
         return user;
     }
 
-    private byte[] generateSalt() throws NoSuchAlgorithmException {
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        byte[] salt = new byte[16];
-        sr.nextBytes(salt);
-        return salt;
-    }
-
-    private byte[] hashPassword(String password, byte[] salt) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        int iterations = 1000;
-        char[] chars = password.toCharArray();
-
-        PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-
-        byte[] hash = skf.generateSecret(spec).getEncoded();
-        return hash;
-    }
-
     @Override
     public User create(CreateUserDto entity) throws Exception {
         if (userRepository.findByUsername(entity.getUsername()) != null)
@@ -95,8 +78,8 @@ public class UserService implements UserDetailsService, IService<User> {
         }
         user.setRoles(listOfRoles);
 
-        byte[] salt = generateSalt();
-        byte[] hashedPassword = hashPassword(entity.getPassword(), salt);
+        byte[] salt = PasswordUtil.generateSalt();
+        byte[] hashedPassword = PasswordUtil.hashPassword(entity.getPassword(), salt);
 
         user.setPassword(Base64Utility.encode(hashedPassword));
         userRepository.save(user);

@@ -11,7 +11,7 @@ public class Base64Utility {
     }
 
     // Pomocna funkcija za dekodovanje stringa u bajt niz
-    public static byte[] decode(String base64Data) throws IOException {
+    public static byte[] decode(String base64Data) {
         return Base64.getDecoder().decode(base64Data);
     }
 }
