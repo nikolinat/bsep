@@ -4,20 +4,17 @@ import com.bsep.admin.app.dto.JwtAuthenticationRequest;
 import com.bsep.admin.app.model.LockedAccount;
 import com.bsep.admin.app.model.User;
 import com.bsep.admin.app.model.UserTokenState;
+import com.bsep.admin.app.service.EmailService;
 import com.bsep.admin.app.service.contract.IAuthenticationService;
-import com.bsep.admin.app.utils.Base64Utility;
-import com.bsep.admin.app.utils.PasswordUtil;
 import com.bsep.admin.app.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.naming.NameNotFoundException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
@@ -27,13 +24,17 @@ public class AuthenticationService implements IAuthenticationService {
     private TokenUtils tokenUtils;
     private AuthenticationManager authenticationManager;
     private LockedAccountService lockedAccountService;
+    private EmailService emailService;
+    private UserService userService;
 
     @Autowired
     public AuthenticationService(TokenUtils tokenUtils, LockedAccountService lockedAccountService,
-                                 AuthenticationManager authenticationManager) {
+                                 AuthenticationManager authenticationManager, EmailService emailService, UserService userService) {
         this.tokenUtils = tokenUtils;
         this.authenticationManager = authenticationManager;
         this.lockedAccountService = lockedAccountService;
+        this.emailService = emailService;
+        this.userService = userService;
     }
 
     @Override
@@ -59,6 +60,7 @@ public class AuthenticationService implements IAuthenticationService {
             if (lockedAccountService.findByUsername(username) == null) {
 
                 lockedAccountService.create(new LockedAccount(1, username, LocalDateTime.now()));
+                emailService.sendEmailForBlockedAccount(userService.findUser(username).getEmailAddress());
             } else {
 
                 lockedAccountService.update(username);

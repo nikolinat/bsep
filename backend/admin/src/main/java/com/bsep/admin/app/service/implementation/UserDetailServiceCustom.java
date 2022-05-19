@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UserDetailServiceCustom implements UserDetailsService {
     private UserRepository userRepository;
@@ -24,8 +26,11 @@ public class UserDetailServiceCustom implements UserDetailsService {
         UserDetails userDetails = userRepository.findByUsername(username);
         if (userDetails == null) {
             throw new UsernameNotFoundException(username);
-        }
-        else if(lockedAccountRepository.findByUsername(username) != null && lockedAccountRepository.findByUsername(username).getLoginCounts() >3){
+        } else if (lockedAccountRepository.findByUsername(username) != null && lockedAccountRepository.findByUsername(username).getLoginCounts() == 3
+                && lockedAccountRepository.findByUsername(username).getDateTime().plusMinutes(5).isAfter(LocalDateTime.now())) {
+            throw new UsernameNotFoundException(username);
+        } else if (lockedAccountRepository.findByUsername(username) != null && lockedAccountRepository.findByUsername(username).getLoginCounts() > 3
+                && lockedAccountRepository.findByUsername(username).getDateTime().plusMinutes(15).isAfter(LocalDateTime.now())) {
             throw new UsernameNotFoundException(username);
         }
 

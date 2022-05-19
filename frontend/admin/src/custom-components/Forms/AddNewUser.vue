@@ -30,7 +30,6 @@
                 :showErrorMessage="showErrorMessage"
                 errorMessage="Password must have at least 13 characters, special character and a number."
         />
-        <!-- <pwned-password  placeholder="Password" v-model="newUser.password" @checkcomplete="checkComplete"></pwned-password> -->
       </div>
       <div class="col-6">
         <text-input
@@ -63,7 +62,6 @@ import TextInput from "../../generic-components/Form/TextInput.vue";
 import MultiSelectOptionInput from "../../generic-components/Form/MultiSelectOptionInput.vue";
 import { mapGetters, mapActions } from "vuex";
 import toastr from "toastr";
-//import PwnedPassword from '@codejunkies/vue-pwned-password';
 import { validateEmail, validatePassword,  } from '../../utils/validation'
 
 
@@ -74,16 +72,11 @@ export default {
     TextInput,
     Button,
     MultiSelectOptionInput,
-    //PwnedPassword
   },
 
   data: function () {
     return {
       roles: [
-        {
-          label: "ROLE_ADMIN",
-          value: 1,
-        },
         {
           label: "ROLE_HOUSE_OWNER",
           value: 2,
@@ -138,13 +131,3 @@ export default {
   mounted() {},
 };
 </script>
-<style>
-
-.pwned-password.password-compromised .pwned-password-input {
-  border-color: #900;
-}
-
-.pwned-password.password-uncompromised .pwned-password-input {
-  border-color: #090;
-}
-</style>
