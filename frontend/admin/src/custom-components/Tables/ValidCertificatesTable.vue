@@ -1,19 +1,38 @@
 <template>
   <div>
     <Table>
-      <TableHead :columnNames="['Entry Name','Certificate Expiry','Algorithm','Key Size',' ',]"></TableHead>
+      <TableHead
+        :columnNames="[
+          'Entry Name',
+          'Certificate Expiry',
+          'Algorithm',
+          'Key Size',
+          ' ',
+        ]"
+      ></TableHead>
       <TableBody>
         <TableRow
           v-for="(certificate, i) in certificates"
           :key="i"
-          :values="[certificate.alias, formatDate(certificate.endDate), 'RSA', '2048','',]">
+          :values="[
+            certificate.alias,
+            formatDate(certificate.endDate),
+            'RSA',
+            '2048',
+            '',
+          ]"
+        >
           <div class="pull-right text-gray">
             <DropDownMenu>
               <ModalOpener :modalBoxId="'revokeCertificate'">
-                <DropDownItem @click="selectedCertificate = certificate">Revoke certificate</DropDownItem>
+                <DropDownItem @click="selectedCertificate = certificate"
+                  >Revoke certificate</DropDownItem
+                >
               </ModalOpener>
               <ModalOpener :modalBoxId="'moreDetailsModalOpener'">
-                <DropDownItem @click="selectedCertificate = certificate">More details</DropDownItem>
+                <DropDownItem @click="selectedCertificate = certificate"
+                  >More details</DropDownItem
+                >
               </ModalOpener>
             </DropDownMenu>
           </div>
@@ -38,16 +57,24 @@
       </div>
     </Modal>
 
-    <Modal modalBoxId="moreDetailsModalOpener" title="More details" :sizeClass="'modal-lg'">
+    <Modal
+      modalBoxId="moreDetailsModalOpener"
+      title="More details"
+      :sizeClass="'modal-lg'"
+    >
       <div slot="body" v-if="selectedCertificate !== null">
-        <CertificateDetailsForm :certificate="selectedCertificate" @openExtensions="openExtensionsOfCertificate"></CertificateDetailsForm>
+        <CertificateDetailsForm
+          :certificate="selectedCertificate"
+          @openExtensions="openExtensionsOfCertificate"
+        ></CertificateDetailsForm>
       </div>
     </Modal>
 
-    <ExtensionsModal :modalBoxId="'extensionsModalOpener'" :extensions="extensions"></ExtensionsModal>
-
+    <ExtensionsModal
+      :modalBoxId="'extensionsModalOpener'"
+      :extensions="extensions"
+    ></ExtensionsModal>
   </div>
-
 </template>
 
 <script>
@@ -67,7 +94,7 @@ import CertificateDetailsForm from "../../custom-components/Forms/CertificateDet
 import toastr from "toastr";
 import { mapActions, mapGetters } from "vuex";
 import moment from "moment";
-import ExtensionsModal from '../../custom-components/Modals/ExtensionsModal.vue'
+import ExtensionsModal from "../../custom-components/Modals/ExtensionsModal.vue";
 
 const $ = window.$;
 
@@ -76,7 +103,9 @@ const reasons = [
   { value: 1, label: "Certificate is counterfeit" },
   { value: 2, label: "Private key has been compromised" },
   { value: 3, label: "The issuing CA has been compromised" },
-  {value: 4,label:
+  {
+    value: 4,
+    label:
       "The certificate owner no longer owns the domain for which it was issued",
   },
   { value: 5, label: "The certificate owner has ceased operations entirely" },
@@ -97,7 +126,7 @@ export default {
       reasons: reasons,
       reason: "",
       other: null,
-      extensions: null
+      extensions: null,
     };
   },
   mounted() {},
@@ -115,7 +144,7 @@ export default {
     TextInput,
     ModalCloser,
     CertificateDetailsForm,
-    ExtensionsModal
+    ExtensionsModal,
   },
   computed: {
     ...mapGetters({
@@ -137,7 +166,7 @@ export default {
   methods: {
     ...mapActions({
       revokeCertificate: "certificates/revokeCertificate",
-      fetchValidCertificates: "certificates/fetchValidCertificates"
+      fetchValidCertificates: "certificates/fetchValidCertificates",
     }),
 
     getReasonOption() {
@@ -166,9 +195,9 @@ export default {
     openExtensionsOfCertificate(arg) {
       this.extensions = arg;
       setTimeout(() => {
-                $('.modal-dialog').selectpicker('refresh');
-            }, 100);
-    }
+        $(".modal-dialog").selectpicker("refresh");
+      }, 100);
+    },
   },
 };
 </script>

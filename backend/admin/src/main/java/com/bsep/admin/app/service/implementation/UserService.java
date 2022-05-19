@@ -2,6 +2,7 @@ package com.bsep.admin.app.service.implementation;
 
 import com.bsep.admin.app.dto.CreateUserDto;
 import com.bsep.admin.app.dto.SearchFilterUserDto;
+import com.bsep.admin.app.dto.UpdateUserDto;
 import com.bsep.admin.app.exception.BadLogicException;
 import com.bsep.admin.app.exception.DuplicateEntityException;
 import com.bsep.admin.app.exception.MissingEntityException;
@@ -83,25 +84,6 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public User updateRole(CreateUserDto entity) throws Exception {
-        User user = userRepository.findByUsername(entity.getUsername());
-        if (user != null) {
-            List<String> roles = entity.getRoles();
-            List<Role> listOfRoles = new ArrayList<>();
-            for (String role : roles) {
-                Role newRole = roleRepository.findById(Long.parseLong(role)).get();
-                listOfRoles.add(newRole);
-            }
-            user.setRoles(listOfRoles);
-
-            userRepository.save(user);
-        }
-        else
-            throw new UsernameNotFoundException("User not found");
-
-        return user;
-    }
-
     public User save(User entity) {
         return this.userRepository.save(entity);
     }
@@ -109,6 +91,29 @@ public class UserService implements UserDetailsService {
 
     public User update(User entity, Integer id) throws Exception {
         return null;
+    }
+
+    public User update(UpdateUserDto entity) throws Exception {
+
+        User user = userRepository.findByUsername(entity.getUsername());
+        if (user == null)
+            throw new UsernameNotFoundException("User with given username doesn't exists.");
+
+        user.setEmailAddress(entity.getEmail());
+        user.setLastName(entity.getLastName());
+        user.setUsername(entity.getUsername());
+        user.setName(entity.getName());
+
+        List<Role> listOfRoles = new ArrayList<>();
+        for (String role : entity.getRoles()) {
+            Role newRole = roleRepository.findByName(role);
+            listOfRoles.add(newRole);
+        }
+        user.setRoles(listOfRoles);
+
+        userRepository.save(user);
+
+        return user;
     }
 
 
