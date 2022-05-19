@@ -93,7 +93,6 @@ const routes = [
     meta: {
       layout: "AppLayoutMain",
     },
-
   },
   {
     path: "/update-user",

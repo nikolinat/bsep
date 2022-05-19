@@ -10,6 +10,7 @@ public class InvalidToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column(length = 10485760)
     private String token;
 
     public InvalidToken(String token) {
