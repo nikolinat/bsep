@@ -36,6 +36,19 @@ const actions = {
         context.commit("setResult", { label: "create", ok: false, message: error });
       });
   },
+  updateUser: (context, UpdateUserDto) => {
+    const queryParam = { ...UpdateUserDto };
+    queryParam.roles = UpdateUserDto.roles.reduce((f, s) => `${f},${s}`);
+    axios
+      .put(`/users/update-user`, UpdateUserDto)
+      .then((response) => {
+        context.commit("setUsers", response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        context.commit("setResult", { label: "update", ok: false });
+      });
+  },
 };
 
 const mutations = {
