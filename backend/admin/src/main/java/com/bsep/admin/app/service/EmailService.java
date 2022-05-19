@@ -31,7 +31,7 @@ public class EmailService {
             msg.setSubject("Kucni sigurnosni sistem - verifikacija mejla");
             MimeMessageHelper helper =  new MimeMessageHelper(msg,true);
             helper.setTo(toEmail);
-            helper.setFrom("jo.jevtic999@gmail.com");
+            helper.setFrom("bezbednost");
             helper.setSubject("Kucni sigurnosni sistem - verifikacija mejla");
             String message = "<h1>Verifikacija mejla</h1><p>Da biste verifikovali mejl, kliknite na sledeći link: " +
                     "<a href='" + path + token + "'>" + path + token + "</a>" + "</p>";
@@ -41,6 +41,23 @@ public class EmailService {
             System.out.println("Error while sending email");
         }
     }
+
+    public void sendEmailForBlockedAccount(String toEmail) {
+        try {
+            MimeMessage msg = javaMailSender.createMimeMessage();
+            msg.setSubject("Kucni sigurnosni sistem - blokiran nalog");
+            MimeMessageHelper helper =  new MimeMessageHelper(msg,true);
+            helper.setTo(toEmail);
+            helper.setFrom("bezbednost");
+            helper.setSubject("Kucni sigurnosni sistem - blokiran nalog");
+            String message = "Vaš nalog je blokiran, zbog neuspešnog logovanja više puta.";
+            helper.setText(message,true);
+            javaMailSender.send(msg);
+        } catch (MessagingException ex) {
+            System.out.println("Error while sending email");
+        }
+    }
+
     public void sendCertificate(String toEmail, String path) {
         try {
             MimeMessage msg = javaMailSender.createMimeMessage();

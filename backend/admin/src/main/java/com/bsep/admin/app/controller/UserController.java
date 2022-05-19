@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,8 +38,8 @@ public class UserController {
     }
 
     @PostMapping("/new-user")
-    public ResponseEntity<?> createUser(@RequestBody CreateUserDto userDTO) throws Exception {
-        return new ResponseEntity<>(this.userService.create(userDTO),HttpStatus.OK);
+    public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserDto userDTO) throws Exception {
+        return new ResponseEntity<>(this.userService.create(userDTO),HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/update-user")

@@ -3,33 +3,27 @@ package com.bsep.admin.app.service.implementation;
 import com.bsep.admin.app.dto.CreateUserDto;
 import com.bsep.admin.app.dto.SearchFilterUserDto;
 import com.bsep.admin.app.dto.UpdateUserDto;
-import com.bsep.admin.app.dto.UserDto;
+import com.bsep.admin.app.exception.BadLogicException;
 import com.bsep.admin.app.exception.DuplicateEntityException;
 import com.bsep.admin.app.exception.MissingEntityException;
 import com.bsep.admin.app.model.Role;
 import com.bsep.admin.app.model.User;
 import com.bsep.admin.app.repository.RoleRepository;
 import com.bsep.admin.app.repository.UserRepository;
-import com.bsep.admin.app.service.contract.IService;
 import com.bsep.admin.app.utils.Base64Utility;
+import com.bsep.admin.app.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserDetailsService, IService<User> {
+public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
 
@@ -47,12 +41,12 @@ public class UserService implements UserDetailsService, IService<User> {
         return userDetails;
     }
 
-    @Override
+
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    @Override
+
     public User findById(Integer id) throws Exception {
         User user = userRepository.findById(id).orElse(null);
         if (user == null)
@@ -60,25 +54,7 @@ public class UserService implements UserDetailsService, IService<User> {
         return user;
     }
 
-    private byte[] generateSalt() throws NoSuchAlgorithmException {
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        byte[] salt = new byte[16];
-        sr.nextBytes(salt);
-        return salt;
-    }
 
-    private byte[] hashPassword(String password, byte[] salt) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        int iterations = 1000;
-        char[] chars = password.toCharArray();
-
-        PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-
-        byte[] hash = skf.generateSecret(spec).getEncoded();
-        return hash;
-    }
-
-    @Override
     public User create(CreateUserDto entity) throws Exception {
         if (userRepository.findByUsername(entity.getUsername()) != null)
             throw new DuplicateEntityException("User with given username already exists.");
@@ -96,8 +72,11 @@ public class UserService implements UserDetailsService, IService<User> {
         }
         user.setRoles(listOfRoles);
 
-        byte[] salt = generateSalt();
-        byte[] hashedPassword = hashPassword(entity.getPassword(), salt);
+        if(PasswordUtil.check(entity.getPassword())){
+            throw new BadLogicException("Password is on list most common passwords, change it.");
+        }
+        byte[] salt = PasswordUtil.generateSalt();
+        byte[] hashedPassword = PasswordUtil.hashPassword(entity.getPassword(), salt);
 
         user.setPassword(Base64Utility.encode(hashedPassword));
         userRepository.save(user);
@@ -109,7 +88,11 @@ public class UserService implements UserDetailsService, IService<User> {
         return this.userRepository.save(entity);
     }
 
-    @Override
+
+    public User update(User entity, Integer id) throws Exception {
+        return null;
+    }
+
     public User update(UpdateUserDto entity) throws Exception {
 
         User user = userRepository.findByUsername(entity.getUsername());
@@ -133,7 +116,7 @@ public class UserService implements UserDetailsService, IService<User> {
         return user;
     }
 
-    @Override
+
     public void delete(Integer id) throws Exception {
 
     }
@@ -159,5 +142,9 @@ public class UserService implements UserDetailsService, IService<User> {
                 (searchFilterUserDto.getName().isEmpty() || user.getName().contains(searchFilterUserDto.getName())) &&
                 (searchFilterUserDto.getLastName().isEmpty() || user.getLastName().contains(searchFilterUserDto.getLastName())) &&
                 (roles.isEmpty() || roles.containsAll(user.getRoles()))).collect(Collectors.toList());
+    }
+
+    public User findUser(String username){
+        return userRepository.findByUsername(username);
     }
 }
