@@ -114,9 +114,13 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    public User delete(String username) throws Exception {
+        User user = userRepository.findByUsername(username);
+        if (user == null)
+            throw new UsernameNotFoundException("User with given username doesn't exists.");
 
-    public void delete(Integer id) throws Exception {
-
+        userRepository.delete(user);
+        return user;
     }
 
     public List<User> findAllAdmins() {
