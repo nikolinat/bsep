@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@codejunkies/vue-pwned-password": "^0.0.17"
+  }
+}

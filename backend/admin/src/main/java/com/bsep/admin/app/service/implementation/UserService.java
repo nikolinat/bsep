@@ -3,6 +3,7 @@ package com.bsep.admin.app.service.implementation;
 import com.bsep.admin.app.dto.CreateUserDto;
 import com.bsep.admin.app.dto.SearchFilterUserDto;
 import com.bsep.admin.app.dto.UserDto;
+import com.bsep.admin.app.exception.BadLogicException;
 import com.bsep.admin.app.exception.DuplicateEntityException;
 import com.bsep.admin.app.exception.MissingEntityException;
 import com.bsep.admin.app.model.Role;
@@ -78,6 +79,9 @@ public class UserService implements UserDetailsService, IService<User> {
         }
         user.setRoles(listOfRoles);
 
+        if(PasswordUtil.check(entity.getPassword())){
+            throw new BadLogicException("Password is on list most common passwords, change it.");
+        }
         byte[] salt = PasswordUtil.generateSalt();
         byte[] hashedPassword = PasswordUtil.hashPassword(entity.getPassword(), salt);
 

@@ -14,7 +14,9 @@
         <text-input label="Username" v-model="newUser.username" type="text" />
       </div>
       <div class="col-6">
-        <text-input label="Email" v-model="newUser.email" type="text" />
+        <text-input label="Email" v-model="newUser.email" type="text" :isValid="validateEmail(newUser.email)"
+                :showErrorMessage="showErrorMessage"
+                errorMessage="Please enter valid email" />
       </div>
     </form-row>
 
@@ -24,7 +26,11 @@
           label="Password"
           v-model="newUser.password"
           type="password"
+          :isValid="validatePassword(newUser.password)"
+                :showErrorMessage="showErrorMessage"
+                errorMessage="Password must have at least 13 characters, special character and a number."
         />
+        <!-- <pwned-password  placeholder="Password" v-model="newUser.password" @checkcomplete="checkComplete"></pwned-password> -->
       </div>
       <div class="col-6">
         <text-input
@@ -57,6 +63,9 @@ import TextInput from "../../generic-components/Form/TextInput.vue";
 import MultiSelectOptionInput from "../../generic-components/Form/MultiSelectOptionInput.vue";
 import { mapGetters, mapActions } from "vuex";
 import toastr from "toastr";
+//import PwnedPassword from '@codejunkies/vue-pwned-password';
+import { validateEmail, validatePassword,  } from '../../utils/validation'
+
 
 export default {
   components: {
@@ -65,6 +74,7 @@ export default {
     TextInput,
     Button,
     MultiSelectOptionInput,
+    //PwnedPassword
   },
 
   data: function () {
@@ -115,9 +125,26 @@ export default {
       } else {
         toastr.error("Invalid password");
       }
+      
     },
+     validateEmail(email) {
+            return validateEmail(email);
+        },
+        validatePassword(password) {
+            return validatePassword(password);
+        },
   },
 
   mounted() {},
 };
 </script>
+<style>
+
+.pwned-password.password-compromised .pwned-password-input {
+  border-color: #900;
+}
+
+.pwned-password.password-uncompromised .pwned-password-input {
+  border-color: #090;
+}
+</style>
