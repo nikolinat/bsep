@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,11 +27,14 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -41,11 +45,9 @@ public class UserService implements UserDetailsService {
         return userDetails;
     }
 
-
     public List<User> findAll() {
         return userRepository.findAll();
     }
-
 
     public User findById(Integer id) throws Exception {
         User user = userRepository.findById(id).orElse(null);
@@ -53,7 +55,6 @@ public class UserService implements UserDetailsService {
             throw new MissingEntityException("User with given id does not exist in the system.");
         return user;
     }
-
 
     public User create(CreateUserDto entity) throws Exception {
         if (userRepository.findByUsername(entity.getUsername()) != null)
@@ -79,6 +80,7 @@ public class UserService implements UserDetailsService {
         byte[] hashedPassword = PasswordUtil.hashPassword(entity.getPassword(), salt);
 
         user.setPassword(Base64Utility.encode(hashedPassword));
+
         userRepository.save(user);
 
         return user;
@@ -86,11 +88,6 @@ public class UserService implements UserDetailsService {
 
     public User save(User entity) {
         return this.userRepository.save(entity);
-    }
-
-
-    public User update(User entity, Integer id) throws Exception {
-        return null;
     }
 
     public User update(UpdateUserDto entity) throws Exception {

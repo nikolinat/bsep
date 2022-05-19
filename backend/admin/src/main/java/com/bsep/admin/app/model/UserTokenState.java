@@ -1,21 +1,27 @@
 package com.bsep.admin.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.http.HttpCookie;
+
 public class UserTokenState {
     private String accessToken;
     private Long expiresIn;
     private String role;
     private Integer id;
+    @JsonIgnore
+    private HttpCookie cookieSecureContent;
 
     public UserTokenState() {
         this.accessToken = null;
         this.expiresIn = null;
     }
 
-    public UserTokenState(String accessToken, long expiresIn,String role, Integer id) {
+    public UserTokenState(String accessToken, long expiresIn,String role, Integer id, HttpCookie cookieSecureContent) {
         this.accessToken = accessToken;
         this.expiresIn = expiresIn;
         this.role = role;
         this.id = id;
+        this.cookieSecureContent = cookieSecureContent;
     }
 
     public String getAccessToken() {
@@ -50,4 +56,11 @@ public class UserTokenState {
         this.id = id;
     }
 
+    public HttpCookie getCookieSecureContent() {
+        return cookieSecureContent;
+    }
+
+    public void setCookieSecureContent(HttpCookie cookieSecureContent) {
+        this.cookieSecureContent = cookieSecureContent;
+    }
 }

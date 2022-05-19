@@ -1,7 +1,10 @@
 package com.bsep.admin.app.utils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -10,7 +13,15 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class TokenUtils {
@@ -31,18 +42,28 @@ public class TokenUtils {
     private static final String AUDIENCE_MOBILE = "mobile";
     private static final String AUDIENCE_TABLET = "tablet";
 
-    private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
+    private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
-    public String generateToken(String username,String role, Integer id) {
+    private final SecureRandom secureRandom = new SecureRandom();
+
+    public String generateToken(String username, String role, Integer id, String cookieSecureContent) {
+        String secureContentHash = generateSecureContentHash(cookieSecureContent);
         return Jwts.builder()
                 .claim("role", role)
                 .claim("id", id)
+                .claim("cookieSecureContent", secureContentHash)
                 .setIssuer(APP_NAME)
                 .setSubject(username)
                 .setAudience(generateAudience())
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
                 .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
+    }
+
+    public String generateCookieContent() {
+        byte[] randomContent = new byte[50];
+        this.secureRandom.nextBytes(randomContent);
+        return DatatypeConverter.printHexBinary(randomContent);
     }
 
     private String generateAudience() {
@@ -53,11 +74,48 @@ public class TokenUtils {
         return new Date(new Date().getTime() + EXPIRES_IN);
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, UserDetails userDetails, String secureContent) {
         String algorithm = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getHeader().getAlgorithm();
         final String username = getUsernameFromToken(token);
 
-        return (username != null && username.equals(userDetails.getUsername()) && algorithm.equals("HS256"));
+        boolean isUsernameValid = username != null && username.equals(userDetails.getUsername());
+        boolean isAlgorithmValid = algorithm.equals("HS512");
+
+        boolean isSecureContentValid = false;
+        if(secureContent != null) {
+            isSecureContentValid = validateTokenSecureContent(secureContent, token);
+        }
+        return isUsernameValid && isAlgorithmValid && isSecureContentValid;
+    }
+
+    private boolean validateTokenSecureContent(String secureContent, String token) {
+        String secureContentHash = generateSecureContentHash(secureContent);
+        String secureContentFromToken = getSecureContentFromToken(token);
+        return secureContentFromToken.equals(secureContentHash);
+    }
+
+    private String generateSecureContentHash(String userFingerprint) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] userFingerprintDigest = digest.digest(userFingerprint.getBytes(StandardCharsets.UTF_8));
+            return DatatypeConverter.printHexBinary(userFingerprintDigest);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    private String getSecureContentFromToken(String token) {
+        String fingerprint;
+        try {
+            final Claims claims = this.getAllClaimsFromToken(token);
+            fingerprint = claims.get("cookieSecureContent", String.class);
+        } catch (ExpiredJwtException ex) {
+            throw ex;
+        } catch (Exception e) {
+            fingerprint = null;
+        }
+        return fingerprint;
     }
 
     public String getUsernameFromToken(String token) {
@@ -69,6 +127,19 @@ public class TokenUtils {
             username = null;
         }
         return username;
+    }
+
+    public String getSecureContentFromCookie(HttpServletRequest request) {
+        String secureContent = null;
+        if (request.getCookies() != null && request.getCookies().length > 0) {
+            List<Cookie> cookies = Arrays.stream(request.getCookies()).collect(Collectors.toList());
+            Optional<Cookie> cookie = cookies.stream().filter(c -> "SecureContent".equals(c.getName())).findFirst();
+
+            if (cookie.isPresent()) {
+                secureContent = cookie.get().getValue();
+            }
+        }
+        return secureContent;
     }
 
     public Date getIssuedAtDateFromToken(String token) {
