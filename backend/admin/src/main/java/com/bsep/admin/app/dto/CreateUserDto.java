@@ -1,12 +1,19 @@
 package com.bsep.admin.app.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 public class CreateUserDto {
+    @NotEmpty(message = "Name should not be null or empty")
     private String name;
+    @NotEmpty(message = "Last name should not be null or empty")
     private String lastName;
+    @NotEmpty(message = "Username should not be null or empty")
     private String username;
+    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@" + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")
     private String email;
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{13,}$")
     private String password;
     List<String> roles;
 

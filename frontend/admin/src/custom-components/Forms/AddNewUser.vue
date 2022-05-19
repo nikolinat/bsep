@@ -14,7 +14,9 @@
         <text-input label="Username" v-model="newUser.username" type="text" />
       </div>
       <div class="col-6">
-        <text-input label="Email" v-model="newUser.email" type="text" />
+        <text-input label="Email" v-model="newUser.email" type="text" :isValid="validateEmail(newUser.email)"
+                :showErrorMessage="showErrorMessage"
+                errorMessage="Please enter valid email" />
       </div>
     </form-row>
 
@@ -24,6 +26,9 @@
           label="Password"
           v-model="newUser.password"
           type="password"
+          :isValid="validatePassword(newUser.password)"
+                :showErrorMessage="showErrorMessage"
+                errorMessage="Password must have at least 13 characters, special character and a number."
         />
       </div>
       <div class="col-6">
@@ -57,6 +62,8 @@ import TextInput from "../../generic-components/Form/TextInput.vue";
 import MultiSelectOptionInput from "../../generic-components/Form/MultiSelectOptionInput.vue";
 import { mapGetters, mapActions } from "vuex";
 import toastr from "toastr";
+import { validateEmail, validatePassword,  } from '../../utils/validation'
+
 
 export default {
   components: {
@@ -70,10 +77,6 @@ export default {
   data: function () {
     return {
       roles: [
-        {
-          label: "ROLE_ADMIN",
-          value: 1,
-        },
         {
           label: "ROLE_HOUSE_OWNER",
           value: 2,
@@ -124,7 +127,14 @@ export default {
       } else {
         toastr.error("Invalid password");
       }
+      
     },
+     validateEmail(email) {
+            return validateEmail(email);
+        },
+        validatePassword(password) {
+            return validatePassword(password);
+        },
   },
 
   mounted() {},

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootApplication
+
 public class AdminApplication {
     @Bean
     public WebMvcConfigurer corsConfigurer() {

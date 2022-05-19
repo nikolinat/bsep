@@ -3,12 +3,15 @@ package com.bsep.admin.app.service.implementation;
 import com.bsep.admin.app.dto.CreateUserDto;
 import com.bsep.admin.app.dto.SearchFilterUserDto;
 import com.bsep.admin.app.dto.UpdateUserDto;
+import com.bsep.admin.app.exception.BadLogicException;
 import com.bsep.admin.app.exception.DuplicateEntityException;
 import com.bsep.admin.app.exception.MissingEntityException;
 import com.bsep.admin.app.model.Role;
 import com.bsep.admin.app.model.User;
 import com.bsep.admin.app.repository.RoleRepository;
 import com.bsep.admin.app.repository.UserRepository;
+import com.bsep.admin.app.utils.Base64Utility;
+import com.bsep.admin.app.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -53,24 +56,6 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-//    private byte[] generateSalt() throws NoSuchAlgorithmException {
-//        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-//        byte[] salt = new byte[16];
-//        sr.nextBytes(salt);
-//        return salt;
-//    }
-//
-//    private byte[] hashPassword(String password, byte[] salt) throws InvalidKeySpecException, NoSuchAlgorithmException {
-//        int iterations = 1000;
-//        char[] chars = password.toCharArray();
-//
-//        PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
-//        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-//
-//        byte[] hash = skf.generateSecret(spec).getEncoded();
-//        return hash;
-//    }
-
     public User create(CreateUserDto entity) throws Exception {
         if (userRepository.findByUsername(entity.getUsername()) != null)
             throw new DuplicateEntityException("User with given username already exists.");
@@ -88,7 +73,14 @@ public class UserService implements UserDetailsService {
         }
         user.setRoles(listOfRoles);
 
-        user.setPassword(passwordEncoder.encode(entity.getPassword()));
+        if(PasswordUtil.check(entity.getPassword())){
+            throw new BadLogicException("Password is on list most common passwords, change it.");
+        }
+        byte[] salt = PasswordUtil.generateSalt();
+        byte[] hashedPassword = PasswordUtil.hashPassword(entity.getPassword(), salt);
+
+        user.setPassword(Base64Utility.encode(hashedPassword));
+
         userRepository.save(user);
 
         return user;
@@ -121,6 +113,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+
     public void delete(Integer id) throws Exception {
 
     }
@@ -146,5 +139,9 @@ public class UserService implements UserDetailsService {
                 (searchFilterUserDto.getName().isEmpty() || user.getName().contains(searchFilterUserDto.getName())) &&
                 (searchFilterUserDto.getLastName().isEmpty() || user.getLastName().contains(searchFilterUserDto.getLastName())) &&
                 (roles.isEmpty() || roles.containsAll(user.getRoles()))).collect(Collectors.toList());
+    }
+
+    public User findUser(String username){
+        return userRepository.findByUsername(username);
     }
 }

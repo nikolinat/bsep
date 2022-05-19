@@ -1,11 +1,10 @@
 package com.bsep.admin.app.config;
 
-import com.bsep.admin.app.repository.InvalidTokenRepository;
-import com.bsep.admin.app.security.auth.RestAutheticationEntryPoint;
+//import com.bsep.admin.app.security.auth.RestAutheticationEntryPoint;
+import com.bsep.admin.app.security.auth.RestAuthenticationEntryPoint;
 import com.bsep.admin.app.security.auth.TokenAuthenticationFilter;
 import com.bsep.admin.app.service.contract.IInvalidTokenService;
 import com.bsep.admin.app.service.implementation.UserDetailServiceCustom;
-import com.bsep.admin.app.service.implementation.UserService;
 import com.bsep.admin.app.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +30,7 @@ import org.springframework.web.cors.CorsConfiguration;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private RestAutheticationEntryPoint restAuthenticationEntryPoint;
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Bean
     @Override

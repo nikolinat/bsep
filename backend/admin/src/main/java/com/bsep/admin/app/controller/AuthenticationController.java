@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @CrossOrigin
 @RestController
@@ -30,8 +32,12 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(
-            @RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
+            @RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) throws NoSuchAlgorithmException, InvalidKeySpecException {
         UserTokenState userTokenState = this.authenticationService.authenticate(authenticationRequest);
+      
+        if(userTokenState == null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 
         HttpCookie cookie = userTokenState.getCookieSecureContent();
         //String cookie = "SecureContent=" + userTokenState.getCookieSecureContent() + "; HttpOnly; Path=/; Secure; SameSite=None";
@@ -40,7 +46,7 @@ public class AuthenticationController {
         //headers.add("Access-Control-Allow-Origin", "http://192.168.1.3:8081");
         headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
         //headers.add("Set-Cookie", cookie);
-
+      
         return ResponseEntity.ok().headers(headers).body(userTokenState);
     }
 
