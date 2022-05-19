@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -50,7 +52,12 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles;
+
+        List<GrantedAuthority> permissions = new ArrayList<>();
+        for (Role role : this.roles) {
+            permissions.addAll(role.getPrivileges());
+        }
+        return permissions;
     }
 
     public User(Long version, Integer id, String lastName, String name, String emailAddress, String password, List<Role> roles, byte[] salt,

@@ -10,6 +10,7 @@ import com.bsep.admin.app.model.Role;
 import com.bsep.admin.app.model.User;
 import com.bsep.admin.app.repository.RoleRepository;
 import com.bsep.admin.app.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.bsep.admin.app.utils.Base64Utility;
 import com.bsep.admin.app.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -199,14 +199,24 @@ public class CertificateGenerator {
             certificateGenerator.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
 
             List<Integer> keyUsages = new ArrayList<>();
-            keyUsages.add(KeyUsage.keyCertSign);
+            keyUsages.add(KeyUsage.digitalSignature);
+            keyUsages.add(KeyUsage.keyEncipherment);
+            keyUsages.add(KeyUsage.dataEncipherment);
+            keyUsages.add(KeyUsage.nonRepudiation);
             keyUsages.add(KeyUsage.cRLSign);
+            keyUsages.add(KeyUsage.keyCertSign);
             addKeyUsage(keyUsages);
 
-            Map<SubjectAlternativeName, String> generalNames = new HashMap<>();
-            generalNames.put(SubjectAlternativeName.DirectoryName, "CN=r,OU=r,O=r,L=r,ST=r,C=rs");
-            addAuthorityKeyIdentifier(subjectData.getPublicKey().getEncoded(), generalNames, new BigInteger(subjectData.getSerialNumber().getBytes()));
+            List<String> extendedKeyUsages = new ArrayList<>();
+            extendedKeyUsages.add("1.3.6.1.5.5.7.3.1");
+            extendedKeyUsages.add("1.3.6.1.5.5.7.3.2");
+            addExtendedKeyUsageExtension(extendedKeyUsages);
 
+            Map<SubjectAlternativeName, String> subjectAlternativeNames = new HashMap<>();
+            subjectAlternativeNames.put(SubjectAlternativeName.DNSName, "localhost");
+            subjectAlternativeNames.put(SubjectAlternativeName.IPAddress, "127.0.0.1");
+
+            addSubjectAlternativeNameExtension(subjectAlternativeNames);
             X509CertificateHolder certHolder = certificateGenerator.build(contentSigner);
 
             JcaX509CertificateConverter certConverter = new JcaX509CertificateConverter();

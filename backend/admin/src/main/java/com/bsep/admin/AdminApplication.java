@@ -1,5 +1,7 @@
 package com.bsep.admin;
 
+import com.bsep.admin.app.service.implementation.CaCertificateAliasService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
