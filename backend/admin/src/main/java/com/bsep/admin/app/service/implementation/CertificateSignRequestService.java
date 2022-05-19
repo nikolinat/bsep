@@ -124,7 +124,6 @@ public class CertificateSignRequestService implements ICertificateSigningRequest
 
         String keystoreFileName = CertificateUtil.makeFilePath();
 
-        System.out.println(certificate);
         keyStoreWriter.loadKeyStore(keystoreFileName, CertificateUtil.getKeyStorePassword().toCharArray());
         keyStoreWriter.write(serialNumber, caCertificateAlias.getAlias(), issuerData.getPrivateKey(),
                 CertificateUtil.getKeyStorePassword().toCharArray(), certificate);

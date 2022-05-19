@@ -40,6 +40,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             throws IOException, ServletException {
         String username;
         String authToken = tokenUtils.getToken(request);
+        String secureContent = tokenUtils.getSecureContentFromCookie(request);
         try {
             if (authToken != null) {
                 invalidTokenService.findByToken(authToken);
@@ -47,7 +48,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 username = tokenUtils.getUsernameFromToken(authToken);
                 if (username != null) {
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    if (tokenUtils.validateToken(authToken, userDetails)) {
+                    if (tokenUtils.validateToken(authToken, userDetails, secureContent)) {
                         TokenBasedAuthentication authentication = new TokenBasedAuthentication(userDetails);
                         authentication.setToken(authToken);
                         SecurityContextHolder.getContext().setAuthentication(authentication);

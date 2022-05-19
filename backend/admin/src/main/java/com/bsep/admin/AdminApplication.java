@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootApplication
-public class AdminApplication {
 
+public class AdminApplication {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
 
@@ -31,7 +31,6 @@ public class AdminApplication {
     }
 
     public static void main(String[] args) {
-
         SpringApplication app = new SpringApplication(AdminApplication.class);
         Map<String, Object> props = new HashMap<>();
         props.put("server.ssl.key-store", "src/main/java/files/keystores/bsep.jks");
@@ -42,7 +41,6 @@ public class AdminApplication {
         props.put("server.port", "8443");
         app.setDefaultProperties(props);
         app.run(args);
-
     }
 
 }

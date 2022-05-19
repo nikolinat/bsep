@@ -1,12 +1,23 @@
 package com.bsep.admin.app.service.implementation;
 
+import com.bsep.admin.app.dto.CreateUserDto;
 import com.bsep.admin.app.dto.SearchFilterUserDto;
+import com.bsep.admin.app.dto.UpdateUserDto;
+import com.bsep.admin.app.exception.BadLogicException;
+import com.bsep.admin.app.exception.DuplicateEntityException;
 import com.bsep.admin.app.exception.MissingEntityException;
 import com.bsep.admin.app.model.Role;
 import com.bsep.admin.app.model.User;
 import com.bsep.admin.app.repository.RoleRepository;
 import com.bsep.admin.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.bsep.admin.app.utils.Base64Utility;
+import com.bsep.admin.app.utils.PasswordUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,14 +25,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserDetails userDetails = userRepository.findByUsername(username);
+        if(userDetails == null)
+            throw new UsernameNotFoundException(username);
+        return userDetails;
     }
 
     public List<User> findAll() {
@@ -35,13 +57,63 @@ public class UserService {
         return user;
     }
 
-    public User create(User entity) throws Exception {
-        return null;
+    public User create(CreateUserDto entity) throws Exception {
+        if (userRepository.findByUsername(entity.getUsername()) != null)
+            throw new DuplicateEntityException("User with given username already exists.");
+
+        User user = new User();
+        user.setEmailAddress(entity.getEmail());
+        user.setLastName(entity.getLastName());
+        user.setUsername(entity.getUsername());
+        user.setName(entity.getName());
+
+        List<Role> listOfRoles = new ArrayList<>();
+        for (String role : entity.getRoles()) {
+            Role newRole = roleRepository.findById(Long.parseLong(role)).get();
+            listOfRoles.add(newRole);
+        }
+        user.setRoles(listOfRoles);
+
+        if(PasswordUtil.check(entity.getPassword())){
+            throw new BadLogicException("Password is on list most common passwords, change it.");
+        }
+        byte[] salt = PasswordUtil.generateSalt();
+        byte[] hashedPassword = PasswordUtil.hashPassword(entity.getPassword(), salt);
+
+        user.setPassword(Base64Utility.encode(hashedPassword));
+
+        userRepository.save(user);
+
+        return user;
     }
 
-    public User update(User entity, Integer id) throws Exception {
-        return null;
+    public User save(User entity) {
+        return this.userRepository.save(entity);
     }
+
+    public User update(UpdateUserDto entity) throws Exception {
+
+        User user = userRepository.findByUsername(entity.getUsername());
+        if (user == null)
+            throw new UsernameNotFoundException("User with given username doesn't exists.");
+
+        user.setEmailAddress(entity.getEmail());
+        user.setLastName(entity.getLastName());
+        user.setUsername(entity.getUsername());
+        user.setName(entity.getName());
+
+        List<Role> listOfRoles = new ArrayList<>();
+        for (String role : entity.getRoles()) {
+            Role newRole = roleRepository.findByName(role);
+            listOfRoles.add(newRole);
+        }
+        user.setRoles(listOfRoles);
+
+        userRepository.save(user);
+
+        return user;
+    }
+
 
     public void delete(Integer id) throws Exception {
 
@@ -70,4 +142,7 @@ public class UserService {
                 (roles.isEmpty() || roles.containsAll(user.getRoles()))).collect(Collectors.toList());
     }
 
+    public User findUser(String username){
+        return userRepository.findByUsername(username);
+    }
 }

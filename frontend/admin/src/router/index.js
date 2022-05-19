@@ -78,10 +78,35 @@ const routes = [
       layout: "AppLayoutMain",
     },
   },
+  {
+    path: "/new-user",
+    name: "CreateUsersPage",
+    component: () => import("@/pages/CreateUserPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    },
+  },
+  {
+    path: "*",
+    name: "catchAll",
+    component: () => import("@/pages/HomePage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    },
+
+  },
+  {
+    path: "/update-user",
+    name: "UpdateUserPage",
+    component: () => import("@/pages/UpdateUserPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    },
+  }
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  // mode: "history",
   base: process.env.BASE_URL,
   routes,
 });
