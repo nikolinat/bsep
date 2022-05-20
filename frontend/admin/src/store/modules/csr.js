@@ -76,7 +76,7 @@ const actions = {
         context.commit("setResult", {
           label: "decline",
           ok: false,
-          message: err.response.data.ErrorMessage,
+          message: err.response.data.errorMessage,
         });
       });
   },
@@ -95,7 +95,7 @@ const actions = {
         context.commit("setResult", {
           label: "verify-email",
           ok: false,
-          message: err.response.data.ErrorMessage,
+          message: err.response.data.errorMessage,
         });
       });
   }

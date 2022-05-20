@@ -20,7 +20,7 @@ const actions = {
         context.commit("setUsers", response.data);
       })
       .catch((error) => {
-        context.commit("setResult", { label: "fetch", ok: false, message: error });
+        context.commit("setResult", { label: "fetch", ok: false, message: error.response.data.errorMessage });
       });
   },
   createUser: (context, CreateUserDto) => {
@@ -33,7 +33,8 @@ const actions = {
         context.commit("setResult", { label: "create", ok: true, message: "User created." });
       })
       .catch((error) => {
-        context.commit("setResult", { label: "create", ok: false, message: error });
+        console.log(error.response.data)
+        context.commit("setResult", { label: "create", ok: false, message: error.response.data.errorMessage });
       });
   },
   updateUser: (context, UpdateUserDto) => {
@@ -45,8 +46,7 @@ const actions = {
         context.commit("setUsers", response.data);
       })
       .catch((error) => {
-        console.log(error);
-        context.commit("setResult", { label: "update", ok: false });
+        context.commit("setResult", { label: "update", ok: false, message: error.response.data.errorMessage });
       });
   },
   deleteUser: (context, username) => {
@@ -56,8 +56,7 @@ const actions = {
         context.commit("setUsers", response.data);
       })
       .catch((error) => {
-        console.log(error);
-        context.commit("setResult", { label: "delete", ok: false });
+        context.commit("setResult", { label: "delete", ok: false, messag: error.response.data.errorMessage });
       });
   },
 };

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import AppLayout from '@/layouts/AppLayout'
-import {setAuthorizationHeaderInterceptor} from './utils/token'
+import {setAuthorizationHeaderInterceptor, setUnauthorizedHeaderInterceptor} from './utils/token'
 import toastr from 'toastr'
 import axios from 'axios';
 import store from './store'
@@ -10,8 +10,7 @@ import store from './store'
 axios.defaults.baseURL = "https://localhost:8443/api/v1";
 // axios.defaults.withCredentials = true;
 setAuthorizationHeaderInterceptor();
-// OTKOMENTARISATI KADA SVE BUDE GOTOVO OBAVEZNO
-// setUnauthorizedHeaderInterceptor(store) 
+setUnauthorizedHeaderInterceptor(store) 
 
 Vue.component("AppLayout", AppLayout);
 

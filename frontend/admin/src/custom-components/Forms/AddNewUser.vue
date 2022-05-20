@@ -95,6 +95,7 @@ export default {
         roles: [1, 2, 3],
       },
       password2: "",
+      showErrorMessage: false
     };
   },
 
@@ -122,7 +123,7 @@ export default {
     }),
 
     handleCreateBtn() {
-      if (this.newUser.password == this.password2) {
+      if (this.newUser.password === this.password2) {
         this.createUser(this.newUser);
       } else {
         toastr.error("Invalid password");

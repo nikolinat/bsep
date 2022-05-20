@@ -14,7 +14,9 @@
         <text-input label="Username" v-model="user.email" type="text" />
       </div>
       <div class="col-6">
-        <text-input label="Email" v-model="user.email" type="text" />
+        <text-input label="Email" v-model="user.email" type="text" :isValid="validateEmail(newUser.email)"
+                :showErrorMessage="showErrorMessage"
+                errorMessage="Please enter valid email" />
       </div>
     </form-row>
 
@@ -40,6 +42,7 @@ import TextInput from "../../generic-components/Form/TextInput.vue";
 import MultiSelectOptionInput from "../../generic-components/Form/MultiSelectOptionInput.vue";
 import { mapGetters, mapActions } from "vuex";
 import toastr from "toastr";
+import { validateEmail } from '../../utils/validation'
 
 export default {
   components: {
@@ -66,12 +69,13 @@ export default {
           value: 3,
         },
       ],
+      showErrorMessage: false
     };
   },
 
   computed: {
     ...mapGetters({
-      result: "users/getUsers",
+      result: "users/getResult",
     }),
   },
 
@@ -82,10 +86,19 @@ export default {
   },
 
   created() {
-    console.log(this.user);
   },
 
-  watch: {},
+  watch: {
+    result({ message, ok, label }) {
+      if (label === "update") {
+          if (ok) {
+            toastr.success("User updated");
+          } else {
+            toastr.error(message);
+        }
+      }
+    },
+  },
 
   methods: {
     ...mapActions({
@@ -94,7 +107,10 @@ export default {
 
     handleUpdateBtn() {
       this.updateUser(this.user);
-      toastr.success("User updated");
+    },
+
+    validateEmail(email) {
+        return validateEmail(email);
     },
   },
 };

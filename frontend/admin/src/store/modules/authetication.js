@@ -25,7 +25,7 @@ const actions = {
             context.commit('setResult', {
                 label: 'authenticate',
                 ok: false,
-                message: error.response.data.ErrorMessage
+                message: error.response.data.errorMessage
             });
         });        
     },
@@ -45,7 +45,7 @@ const actions = {
             context.commit('setResult', {
                 label: 'logout',
                 ok: false,
-                message: error.response.data.ErrorMessage
+                message: error.response.data.errorMessage
             });
         })
     }

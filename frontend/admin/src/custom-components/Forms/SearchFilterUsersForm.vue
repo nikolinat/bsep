@@ -56,6 +56,7 @@ import FormRow from '../../generic-components/Form/FormRow.vue'
 import TextInput from '../../generic-components/Form/TextInput.vue'
 import MultiSelectOptionInput from '../../generic-components/Form/MultiSelectOptionInput.vue'
 import { mapGetters, mapActions } from "vuex";
+import toastr from 'toastr';
 
 export default {
    components: {
@@ -96,11 +97,20 @@ export default {
     computed: {
         ...mapGetters({
             users: "users/getUsers",
+            result: "users/getResult"
             }),
     },
 
     watch: {
-
+        result({ message, ok, label }) {
+        if (label === "delete") {
+            if (ok) {
+                toastr.success("User deleted");
+            } else {
+                toastr.error(message);
+            }
+        }
+        },
     },
 
     methods: {

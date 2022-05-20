@@ -11,9 +11,7 @@ import com.bsep.admin.app.model.User;
 import com.bsep.admin.app.repository.RoleRepository;
 import com.bsep.admin.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.bsep.admin.app.utils.Base64Utility;
 import com.bsep.admin.app.utils.PasswordUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -77,10 +75,8 @@ public class UserService implements UserDetailsService {
         if(PasswordUtil.check(entity.getPassword())){
             throw new BadLogicException("Password is on list most common passwords, change it.");
         }
-        byte[] salt = PasswordUtil.generateSalt();
-        byte[] hashedPassword = PasswordUtil.hashPassword(entity.getPassword(), salt);
 
-        user.setPassword(Base64Utility.encode(hashedPassword));
+        user.setPassword(passwordEncoder.encode(entity.getPassword()));
 
         userRepository.save(user);
 
