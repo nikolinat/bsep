@@ -19,7 +19,7 @@
               <div v-if="!role">
                 <dropdown-item :to="'/auth'">Login</dropdown-item>
                 <dropdown-item-divider />
-                <dropdown-item :to="'/new-user'">Register</dropdown-item>
+                <dropdown-item :to="'/'">Register</dropdown-item>
               </div>
               <div v-else>
                 <dropdown-item to='/profile'>Profile</dropdown-item>
