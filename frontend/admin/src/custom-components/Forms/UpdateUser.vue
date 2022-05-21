@@ -5,16 +5,16 @@
         <text-input label="Name" v-model="user.name" type="text" />
       </div>
       <div class="col-6">
-        <text-input label="Last name" v-model="user.email" type="text" />
+        <text-input label="Last name" v-model="user.lastName" type="text" />
       </div>
     </form-row>
 
     <form-row>
       <div class="col-6">
-        <text-input label="Username" v-model="user.email" type="text" />
+        <text-input label="Username" v-model="user.username" type="text" />
       </div>
       <div class="col-6">
-        <text-input label="Email" v-model="user.email" type="text" :isValid="validateEmail(newUser.email)"
+        <text-input label="Email" v-model="user.email" type="text" :isValid="validateEmail(user.email)"
                 :showErrorMessage="showErrorMessage"
                 errorMessage="Please enter valid email" />
       </div>
@@ -26,7 +26,7 @@
         label="Select user role"
         :showLabel="false"
         :options="roles"
-        :v-model="user.roles"
+        :v-model="choosenRoles"
       />
     </form-row>
 
@@ -57,32 +57,25 @@ export default {
     return {
       roles: [
         {
-          label: "ROLE_ADMIN",
-          value: 1,
-        },
-        {
           label: "ROLE_HOUSE_OWNER",
-          value: 2,
+          value: "ROLE_HOUSE_OWNER",
         },
         {
           label: "ROLE_TENANT",
-          value: 3,
+          value: "ROLE_TENANT",
         },
       ],
-      showErrorMessage: false
+      showErrorMessage: false,
+      choosenRoles: [],
+      user: {}
     };
   },
 
   computed: {
     ...mapGetters({
       result: "users/getResult",
+      getUser: "users/getUser"
     }),
-  },
-
-  props: {
-    user: {
-      type: Object,
-    },
   },
 
   created() {
@@ -98,14 +91,27 @@ export default {
         }
       }
     },
+    getUser(user) {
+      this.user = user;
+    },
+    choosenRoles(roles) {
+      console.log("TU SAM")
+      this.choosenRoles = roles;
+    }
   },
 
   methods: {
     ...mapActions({
       updateUser: "users/updateUser",
+      fetchUser: "users/fetchUser"
     }),
 
     handleUpdateBtn() {
+      console.log(this.choosenRoles)
+      if(this.choosenRoles.length > 0) {
+        this.user.roles = this.choosenRoles;
+      }
+      console.log(this.user.roles)
       this.updateUser(this.user);
     },
 
@@ -113,5 +119,8 @@ export default {
         return validateEmail(email);
     },
   },
+  mounted() {
+    this.fetchUser(this.$route.params.id);
+  } 
 };
 </script>

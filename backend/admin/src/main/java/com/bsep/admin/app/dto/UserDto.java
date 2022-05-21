@@ -3,6 +3,7 @@ package com.bsep.admin.app.dto;
 import java.util.List;
 
 public class UserDto {
+    private Integer id;
     private String name;
     private String lastName;
     private String username;
@@ -13,7 +14,8 @@ public class UserDto {
 
     }
 
-    public UserDto(String name, String lastName, String username, String email, List<String> roles) {
+    public UserDto(Integer id, String name, String lastName, String username, String email, List<String> roles) {
+        this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.username = username;
@@ -59,5 +61,13 @@ public class UserDto {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

@@ -76,25 +76,36 @@ export default {
     searchedUsers(users) {
       this.users = users;
     },
+    result({label, ok, message}) {
+      if (label === "delete") {
+          if (ok) {
+            toastr.success("User deleted");
+            this.$emit("deletedUser")
+          } else {
+            toastr.error(message);
+        }
+      }
+    }
   },
   computed: {
     ...mapGetters({
       searchedUsers: "users/getUsers",
+      result: "users/getResult"
     }),
   },
   methods: {
     ...mapActions({
       deleteUser: "users/deleteUser",
+      fetchUsers: "users/fetchUsers"
     }),
     onUpdate(user) {
       this.selectedUser = user;
 
-      this.$router.push({ name: "UpdateUserPage", params: { data: user } });
+      this.$router.push("/update-user/" + user.id);
     },
     onDelete() {
       this.deleteUser(this.selectedUser.username);
-      toastr.success("User updated");
-      location.reload();
+      document.getElementById("deleteUser").click();
     },
   },
 };

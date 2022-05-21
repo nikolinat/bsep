@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
@@ -31,7 +32,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserTokenState> createAuthenticationToken(
+    public ResponseEntity<UserTokenState> createAuthenticationToken(@Valid
             @RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) throws NoSuchAlgorithmException, InvalidKeySpecException {
         UserTokenState userTokenState = this.authenticationService.authenticate(authenticationRequest);
       

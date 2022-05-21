@@ -95,7 +95,7 @@ const routes = [
     },
   },
   {
-    path: "/update-user",
+    path: "/update-user/:id",
     name: "UpdateUserPage",
     component: () => import("@/pages/UpdateUserPage.vue"),
     meta: {
