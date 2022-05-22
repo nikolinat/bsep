@@ -12,7 +12,7 @@ public class UpdateUserDto {
     private String lastName;
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username should not be empty and must have only letters and numbers.")
     private String username;
-    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@" + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",
+    @Pattern(regexp = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$",
             message = "Wrong email format.")
     private String email;
     @RolesConstraint

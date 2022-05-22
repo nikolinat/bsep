@@ -2,13 +2,13 @@
   <div>
     <Table>
       <TableHead
-        :columnNames="['Name', 'Last name', 'Username', 'Email']"
+        :columnNames="['Name', 'Last name', 'Username', 'Email', 'Roles']"
       ></TableHead>
       <TableBody>
         <TableRow
           v-for="(user, i) in users"
           :key="i"
-          :values="[user.name, user.lastName, user.username, user.email]"
+          :values="[user.name, user.lastName, user.username, user.email, formatRoles(user)]"
         >
           <div class="pull-right text-gray">
             <DropDownMenu>
@@ -107,6 +107,11 @@ export default {
       this.deleteUser(this.selectedUser.username);
       document.getElementById("deleteUser").click();
     },
+    formatRoles(user) {
+      let roles = ""
+      user.roles.forEach(role => roles += role + ", ")
+      return roles.slice(0, -2)
+    }
   },
 };
 </script>
