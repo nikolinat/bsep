@@ -1,9 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import {Roles} from '../constants.js';
+import {getRoleFromToken} from '../utils/token.js'
 
 Vue.use(VueRouter);
 
 const $ = window.$;
+
 
 const routes = [
   {
@@ -20,6 +23,7 @@ const routes = [
     component: () => import("@/pages/HomePage.vue"),
     meta: {
       layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN, Roles.ROLE_HOUSE_OWNER, Roles.ROLE_TENANT]
     },
   },
   {
@@ -28,6 +32,34 @@ const routes = [
     component: () => import("@/pages/RealEstatesPage.vue"),
     meta: {
       layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
+    },
+  },
+  {
+    path: "/new-user",
+    name: "CreateUsersPage",
+    component: () => import("@/pages/CreateUserPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
+    },
+  },
+  {
+    path: "/update-user/:id",
+    name: "UpdateUserPage",
+    component: () => import("@/pages/UpdateUserPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
+    },
+  },
+  {
+    path: "/users",
+    name: "UsersPage",
+    component: () => import("@/pages/UsersPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
     },
   },
   {
@@ -36,6 +68,7 @@ const routes = [
     component: () => import("@/pages/HomePage.vue"),
     meta: {
       layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN, Roles.ROLE_HOUSE_OWNER, Roles.ROLE_TENANT]
     },
   },
 ];
@@ -46,10 +79,21 @@ const router = new VueRouter({
   routes,
 });
 
-router.afterEach((to, from) => {
-  console.log(to + from);
+router.beforeEach((to, from, next) => {
+  const { role} = to.meta;
+	if(role){
+		const userRole = getRoleFromToken();
+		if(role.length && !role.includes(userRole)){
+			return next({path: 'auth'});
+		}
+
+	}
+	next();
+});
+
+router.afterEach(() => {
   setTimeout(() => {
-    $(".selectpicker").selectpicker("refresh");
+    $('.selectpicker').selectpicker('refresh');
   }, 100);
 });
 

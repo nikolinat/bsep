@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import {Roles} from '../constants.js';
+import {getRoleFromToken} from '../utils/token.js';
 
 Vue.use(VueRouter);
 
@@ -20,6 +22,7 @@ const routes = [
     component: () => import("@/pages/HomePage.vue"),
     meta: {
       layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
     },
   },
   {
@@ -28,6 +31,7 @@ const routes = [
     component: () => import("@/pages/ValidCertificatesPage.vue"),
     meta: {
       layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
     },
   },
   {
@@ -36,6 +40,7 @@ const routes = [
     component: () => import("@/pages/RevokedCertificatesPage.vue"),
     meta: {
       layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
     },
   },
   {
@@ -44,6 +49,7 @@ const routes = [
     component: () => import("@/pages/CreateCSRPage.vue"),
     meta: {
       layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
     },
   },
   {
@@ -52,6 +58,7 @@ const routes = [
     component: () => import("@/pages/CreateCertificatePage.vue"),
     meta: {
       layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
     },
   },
   {
@@ -60,6 +67,7 @@ const routes = [
     component: () => import("@/pages/CSRPage.vue"),
     meta: {
       layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
     },
   },
   {
@@ -68,6 +76,7 @@ const routes = [
     component: () => import("@/pages/EmailVerificationPage.vue"),
     meta: {
       layout: "AuthLayout",
+      role: [Roles.ROLE_ADMIN]
     },
   },
   {
@@ -76,6 +85,7 @@ const routes = [
     component: () => import("@/pages/UsersPage.vue"),
     meta: {
       layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
     },
   },
   {
@@ -84,14 +94,7 @@ const routes = [
     component: () => import("@/pages/CreateUserPage.vue"),
     meta: {
       layout: "AppLayoutMain",
-    },
-  },
-  {
-    path: "*",
-    name: "catchAll",
-    component: () => import("@/pages/HomePage.vue"),
-    meta: {
-      layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
     },
   },
   {
@@ -100,6 +103,16 @@ const routes = [
     component: () => import("@/pages/UpdateUserPage.vue"),
     meta: {
       layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
+    },
+  },
+  {
+    path: "*",
+    name: "catchAll",
+    component: () => import("@/pages/HomePage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    
     },
   }
 ];
@@ -108,6 +121,18 @@ const router = new VueRouter({
   // mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const { role} = to.meta;
+	if(role){
+		const userRole = getRoleFromToken();
+		if(role.length && !role.includes(userRole)){
+			return next({path: 'auth'});
+		}
+
+	}
+	next();
 });
 
 router.afterEach((to, from) => {

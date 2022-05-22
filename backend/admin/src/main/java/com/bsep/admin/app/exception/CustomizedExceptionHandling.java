@@ -47,6 +47,14 @@ public class CustomizedExceptionHandling extends ResponseEntityExceptionHandler 
         response.setMessage(exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<Object> handleExceptions(InvalidCredentialsException exception, WebRequest webRequest) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setDateTime(LocalDateTime.now());
+        response.setMessage(exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

@@ -1,6 +1,8 @@
 package com.bsep.admin.app.service.implementation;
 
 import com.bsep.admin.app.dto.JwtAuthenticationRequest;
+import com.bsep.admin.app.exception.BadLogicException;
+import com.bsep.admin.app.exception.InvalidCredentialsException;
 import com.bsep.admin.app.model.LockedAccount;
 import com.bsep.admin.app.model.User;
 import com.bsep.admin.app.model.UserTokenState;
@@ -41,7 +43,7 @@ public class AuthenticationService implements IAuthenticationService {
         this.userService = userService;
         this.cookieUtil = cookieUtil;
     }
-    
+
 
     @Override
     public UserTokenState authenticate(JwtAuthenticationRequest jwtAuthenticationRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -53,9 +55,12 @@ public class AuthenticationService implements IAuthenticationService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             User user = (User) authentication.getPrincipal();
             String role = user.getRoles().get(0).getName();
+            if (!role.equals("ROLE_ADMIN")) {
+                throw new InvalidCredentialsException("Only admin can login in this application.");
+            }
             Integer id = user.getId();
             HttpCookie cookie = cookieUtil.createAccessTokenCookie(tokenUtils.generateCookieContent(), 3600L);
-            String jwt = tokenUtils.generateToken(user.getUsername(), role, id,  cookie.getValue());
+            String jwt = tokenUtils.generateToken(user.getUsername(), role, id, cookie.getValue());
             int expiresIn = tokenUtils.getExpiredIn();
             if (lockedAccountService.findByUsername(jwtAuthenticationRequest.getUsername()) != null && lockedAccountService.findByUsername(jwtAuthenticationRequest.getUsername()).getLoginCounts() < 3) {
                 lockedAccountService.delete(jwtAuthenticationRequest.getUsername());

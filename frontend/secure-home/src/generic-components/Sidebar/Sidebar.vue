@@ -4,6 +4,8 @@
     <div class="sidebar-wrapper">
       <ul class="nav">
         <sidebar-item name="Home" icon="dashboard" to="/"></sidebar-item>
+        <sidebar-item name="Registration user" icon="dashboard" to="/new-user"></sidebar-item>
+        <sidebar-item name="Users" icon="assignment" to="/users"></sidebar-item>
         <sidebar-item name="Real estates" icon="assignment" to="/real-estates"></sidebar-item>
       </ul>
     </div>

@@ -28,7 +28,8 @@ export function setUnauthorizedHeaderInterceptor(store) {
 		if ((401 === error.response.status || 403 == error.response.status) && sessionStorage.getItem('token')) {
 			store.dispatch('authentication/logOut');
 			router.push('/auth')
-		} else {
+		}
+		else {
 			return Promise.reject(error);
 		}
 	});

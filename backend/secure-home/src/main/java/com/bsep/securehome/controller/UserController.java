@@ -40,16 +40,27 @@ public class UserController {
         return new ResponseEntity<>(usersDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('WRITE_USERS')")
     @PostMapping("/new-user")
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserDto userDTO) throws Exception {
         return new ResponseEntity<>(this.userService.create(userDTO), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('WRITE_USERS')")
     @PutMapping(value = "/update-user")
     public ResponseEntity<?> updateUser(@RequestBody UpdateUserDto userDTO) throws Exception {
         return new ResponseEntity<>(this.userService.update(userDTO), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('READ_USERS')")
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUser(@PathVariable Integer id) throws Exception {
+        User user = userService.findById(id);
+        UserDto userDto = userMapper.userToUserDto(user);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('WRITE_USERS')")
     @RequestMapping(value = "/delete-user/{username}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUser(@PathVariable(value = "username") String username) throws Exception {
         return new ResponseEntity<>(this.userService.delete(username), HttpStatus.OK);

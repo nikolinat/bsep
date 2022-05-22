@@ -1,13 +1,9 @@
 package com.bsep.securehome.controller;
 
-
 import com.bsep.securehome.dto.RealEstateDto;
-import com.bsep.securehome.dto.SearchFilterUserDto;
 import com.bsep.securehome.dto.UpdateRealEstateDto;
-import com.bsep.securehome.dto.UserDto;
 import com.bsep.securehome.mapper.RealEstateMapper;
 import com.bsep.securehome.model.RealEstate;
-import com.bsep.securehome.model.User;
 import com.bsep.securehome.service.implementation.RealEstateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +42,7 @@ public class RealEstateController {
     @PutMapping("")
     public ResponseEntity<?> updateRealEstate(@RequestBody UpdateRealEstateDto updateRealEstateDto) {
         RealEstate realEstate = realEstateService.update(updateRealEstateDto);
-        return new ResponseEntity<>(realEstate, HttpStatus.OK);
+        return new ResponseEntity<>(realEstateMapper.realEstateToRealEstateDto(realEstate), HttpStatus.OK);
     }
 
 
