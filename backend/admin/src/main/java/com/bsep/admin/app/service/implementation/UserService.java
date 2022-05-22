@@ -59,6 +59,10 @@ public class UserService implements UserDetailsService {
         if (userRepository.findByUsername(entity.getUsername()) != null)
             throw new DuplicateEntityException("User with given username already exists.");
 
+        if(userRepository.findByEmailAddress(entity.getEmail()) != null) {
+            throw new DuplicateEntityException("User with given email already exists.");
+        }
+
         User user = new User();
         user.setEmailAddress(entity.getEmail());
         user.setLastName(entity.getLastName());
@@ -93,6 +97,11 @@ public class UserService implements UserDetailsService {
         if (user == null)
             throw new UsernameNotFoundException("User with given username doesn't exists.");
 
+        User userWithEntityEmail = userRepository.findByEmailAddress(entity.getEmail());
+        if(userWithEntityEmail != null && userWithEntityEmail.getId() != user.getId()) {
+            throw new BadLogicException("Entered email is already in system. Enter another email.");
+        }
+
         user.setEmailAddress(entity.getEmail());
         user.setLastName(entity.getLastName());
         user.setUsername(entity.getUsername());
@@ -113,7 +122,7 @@ public class UserService implements UserDetailsService {
     public User delete(String username) throws Exception {
         User user = userRepository.findByUsername(username);
         if (user == null)
-            throw new UsernameNotFoundException("User with given username doesn't exists.");
+            throw new MissingEntityException("User with given username doesn't exists.");
 
         userRepository.delete(user);
         return user;

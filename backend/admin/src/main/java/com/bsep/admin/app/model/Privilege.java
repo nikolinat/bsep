@@ -15,7 +15,7 @@ public class Privilege implements GrantedAuthority {
 
     private String name;
 
-    @ManyToMany(mappedBy = "privileges")
+    @ManyToMany(mappedBy = "privileges", fetch = FetchType.LAZY)
     private Set<Role> roles;
 
     public Privilege(){}

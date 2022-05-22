@@ -1,5 +1,7 @@
 package com.bsep.admin.app.dto;
 
+import com.bsep.admin.app.validators.constraints.RolesConstraint;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.util.List;
@@ -9,15 +11,16 @@ public class CreateUserDto {
     private String name;
     @Pattern(regexp = "^[a-zA-Z]+$", message = "Last name should not be empty and must have only letters.")
     private String lastName;
-    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "Username should not be empty and must have only letters and numbers.")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username should not be empty and must have only letters and numbers.")
     private String username;
-    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@" + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",
+    @Pattern(regexp = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$",
         message = "Wrong email format.")
     private String email;
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{13,}$", message = "Wrong password format. Must have at least 13 characters and " +
             "one upper case letter," +
             "one lower case letter, number and special character.")
     private String password;
+    @RolesConstraint
     List<String> roles;
 
     public CreateUserDto() {

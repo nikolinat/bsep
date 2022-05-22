@@ -110,7 +110,7 @@ export default {
                 toastr.error(message);
             }
         }
-        },
+        }
     },
 
     methods: {

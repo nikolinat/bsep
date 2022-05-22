@@ -1,17 +1,26 @@
 <template>
-  <Form>
+  <Form @submit="onSubmit($event)">
     <form-row>
       <div class="col-6">
-        <text-input label="Name" v-model="newUser.name" type="text" />
+        <text-input label="Name" v-model="newUser.name" type="text" 
+                :isValid="validateStringWithLettersOnly(newUser.name)"
+                :showErrorMessage="showErrorMessage"
+                errorMessage="Name must have only letters" />
       </div>
       <div class="col-6">
-        <text-input label="Last name" v-model="newUser.lastName" type="text" />
+        <text-input label="Last name" v-model="newUser.lastName" type="text"
+                :isValid="validateStringWithLettersOnly(newUser.lastName)"
+                :showErrorMessage="showErrorMessage"
+                errorMessage="Last name must have only letters." />
       </div>
     </form-row>
 
     <form-row>
       <div class="col-6">
-        <text-input label="Username" v-model="newUser.username" type="text" />
+        <text-input label="Username" v-model="newUser.username" type="text"
+                :isValid="validateStringWithLettersAndNumbersOnly(newUser.username)"
+                :showErrorMessage="showErrorMessage"
+                errorMessage="Username must have only letters an numbers." />
       </div>
       <div class="col-6">
         <text-input label="Email" v-model="newUser.email" type="text" :isValid="validateEmail(newUser.email)"
@@ -36,6 +45,9 @@
           label="Repeat password"
           v-model="password2"
           type="password"
+          :isValid="validatePassword(password2)"
+                :showErrorMessage="showErrorMessage"
+                errorMessage="Password must have at least 13 characters, special character and a number."
         />
       </div>
     </form-row>
@@ -50,7 +62,7 @@
       />
     </form-row>
 
-    <Button @click="handleCreateBtn">Create</Button>
+    <Button @click="showErrorMessage = true" type="submit">Create</Button>
   </Form>
 </template>
 
@@ -62,7 +74,7 @@ import TextInput from "../../generic-components/Form/TextInput.vue";
 import MultiSelectOptionInput from "../../generic-components/Form/MultiSelectOptionInput.vue";
 import { mapGetters, mapActions } from "vuex";
 import toastr from "toastr";
-import { validateEmail, validatePassword,  } from '../../utils/validation'
+import { validateEmail, validatePassword, validateStringWithLettersOnly, validateStringWithLettersAndNumbersOnly } from '../../utils/validation'
 
 
 export default {
@@ -122,20 +134,28 @@ export default {
       createUser: "users/createUser",
     }),
 
-    handleCreateBtn() {
+    onSubmit(e) {
+      e.preventDefault();
       if (this.newUser.password === this.password2) {
         this.createUser(this.newUser);
       } else {
-        toastr.error("Invalid password");
+        toastr.error("Invalid password or repeated password.");
       }
+      
       
     },
      validateEmail(email) {
             return validateEmail(email);
-        },
-        validatePassword(password) {
-            return validatePassword(password);
-        },
+    },
+    validatePassword(password) {
+          return validatePassword(password);
+      },
+    validateStringWithLettersAndNumbersOnly(username) {
+      return validateStringWithLettersAndNumbersOnly(username);
+    },
+    validateStringWithLettersOnly(name) {
+      return validateStringWithLettersOnly(name);
+    }
   },
 
   mounted() {},

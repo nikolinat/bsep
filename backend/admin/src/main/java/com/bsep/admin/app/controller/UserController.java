@@ -41,14 +41,23 @@ public class UserController {
         return new ResponseEntity<>(usersDto, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUser(@PathVariable Integer id) throws Exception {
+        User user = userService.findById(id);
+        UserDto userDto = userMapper.userToUserDto(user);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
     @PostMapping("/new-user")
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserDto userDTO) throws Exception {
-        return new ResponseEntity<>(this.userService.create(userDTO),HttpStatus.CREATED);
+        User user = this.userService.create(userDTO);
+        return new ResponseEntity<>(this.userMapper.userToUserDto(user), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/update-user")
-    public ResponseEntity<?> updateUser(@RequestBody UpdateUserDto userDTO) throws Exception {
-        return new ResponseEntity<>(this.userService.update(userDTO),HttpStatus.OK);
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UpdateUserDto userDTO) throws Exception {
+        User user = this.userService.update(userDTO);
+        return new ResponseEntity<>(this.userMapper.userToUserDto(user),HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete-user/{username}", method = RequestMethod.DELETE)

@@ -32,6 +32,14 @@ public class CustomizedExceptionHandling extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(DuplicateEntityException.class)
+    public ResponseEntity<Object> handleExceptions(DuplicateEntityException exception, WebRequest webRequest) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setDateTime(LocalDateTime.now());
+        response.setMessage(exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<Object> handleExceptions(InvalidTokenException exception, WebRequest webRequest) {
         ExceptionResponse response = new ExceptionResponse();
