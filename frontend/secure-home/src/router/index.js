@@ -23,6 +23,14 @@ const routes = [
     },
   },
   {
+    path: "/real-estates",
+    name: "RealEstates",
+    component: () => import("@/pages/RealEstatesPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+    },
+  },
+  {
     path: "*",
     name: "catchAll",
     component: () => import("@/pages/HomePage.vue"),

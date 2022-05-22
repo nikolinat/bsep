@@ -1,9 +1,11 @@
 package com.bsep.securehome.setup;
 
 import com.bsep.securehome.model.Privilege;
+import com.bsep.securehome.model.RealEstate;
 import com.bsep.securehome.model.Role;
 import com.bsep.securehome.model.User;
 import com.bsep.securehome.repository.PrivilegeRepository;
+import com.bsep.securehome.repository.RealEstateRepository;
 import com.bsep.securehome.repository.RoleRepository;
 import com.bsep.securehome.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class SetupRolesAndPrivileges implements
     @Autowired
     private PrivilegeRepository privilegeRepository;
 
+    @Autowired
+    private RealEstateRepository realEstateRepository;
+
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -41,8 +46,9 @@ public class SetupRolesAndPrivileges implements
         Privilege readCsr = createPrivilegeIfNotFound("READ_CSR");
         Privilege writeCsr = createPrivilegeIfNotFound("WRITE_CSR");
         Privilege editCsr = createPrivilegeIfNotFound("EDIT_CSR");
+        Privilege readRealEstate = createPrivilegeIfNotFound("READ_REAL_ESTATES");
 
-        List<Privilege> adminPrivileges = Arrays.asList(readCertificates, editCertificate, readUsers, readCsr, editCsr);
+        List<Privilege> adminPrivileges = Arrays.asList(readCertificates, editCertificate, readUsers, readCsr, editCsr, readRealEstate);
         List<Privilege> ownerPrivileges = Collections.singletonList(writeCsr);
         List<Privilege> tenantPrivileges = new ArrayList<>();
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
@@ -52,6 +58,7 @@ public class SetupRolesAndPrivileges implements
         addAdmin();
         addOwner();
         addTenant();
+        addRealEstates();
         alreadySetup = true;
     }
 
@@ -123,6 +130,37 @@ public class SetupRolesAndPrivileges implements
             user.setRoles(Collections.singletonList(tenantRole));
             user.setDeleted(false);
             userRepository.save(user);
+        }
+        if (userRepository.findByUsername("sima123") == null) {
+            Role tenantRole = roleRepository.findByName("ROLE_TENANT");
+            User user = new User();
+            user.setEmailAddress("simasimic@gmail.com");
+            user.setName("sima");
+            user.setLastName("simic");
+            user.setPassword("$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra");
+            user.setUsername("sima123");
+            user.setSalt("0e4ace1c-d09e-11ec-9d64-0242ac120002".getBytes());
+            user.setRoles(Collections.singletonList(tenantRole));
+            user.setDeleted(false);
+            userRepository.save(user);
+        }
+
+    }
+    @Transactional
+    void addRealEstates() {
+        if (!realEstateRepository.findById(1L).isPresent()) {
+            RealEstate realEstate = new RealEstate("Kuca");
+            realEstate.setOwner(userRepository.findByUsername("pera123"));
+            realEstate.setTenants(Collections.singletonList(userRepository.findByUsername("zika123")));
+            realEstateRepository.save(realEstate);
+
+        }
+        if (!realEstateRepository.findById(2L).isPresent()) {
+            RealEstate realEstate = new RealEstate("Stan");
+            realEstate.setOwner(userRepository.findByUsername("zika123"));
+            realEstate.setTenants(new ArrayList<>());
+            realEstateRepository.save(realEstate);
+
         }
     }
 }
