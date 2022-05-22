@@ -13,7 +13,7 @@ public class RealEstateMapper {
     private UserMapper userMapper;
 
     public RealEstateDto realEstateToRealEstateDto(RealEstate realEstate) {
-        return new RealEstateDto(realEstate.getName(), realEstate.getId(), userMapper.userToUserDto(realEstate.getOwner()),
+        return new RealEstateDto(realEstate.getName(), realEstate.getAddress(), realEstate.getId(), userMapper.userToUserDto(realEstate.getOwner()),
                 realEstate.getTenants().stream().map(tenant -> userMapper.userToUserDto(tenant)).collect(Collectors.toList()));
     }
 }

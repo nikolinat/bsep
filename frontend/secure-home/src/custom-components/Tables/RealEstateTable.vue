@@ -6,8 +6,9 @@
           'Id',
           'Name',
           'Owner',
-          ' ',
-          ' '
+          'Address',
+          '',
+          ''
         ]"
       ></TableHead>
       <TableBody>
@@ -18,6 +19,7 @@
             realEstate.id,
             realEstate.name,
             realEstate.owner.name + ' '+ realEstate.owner.lastName,
+            realEstate.address,
             '',
           ]"
         >
@@ -136,11 +138,11 @@ export default {
   methods: {
     ...mapActions({
       fetchRealEstates: "realestate/fetchRealEstates",
-      fetchUsers: "users/fetchUsers"
+      fetchOwnersAndTenants: "users/fetchOwnersAndTenants"
     }),
   },
   mounted() {
-    this.fetchUsers(this.searchFilterDto);
+    this.fetchOwnersAndTenants();
     }
 };
 </script>

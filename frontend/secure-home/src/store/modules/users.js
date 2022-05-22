@@ -59,6 +59,17 @@ const actions = {
         context.commit("setResult", { label: "delete", ok: false, messag: error.response.data.errorMessage });
       });
   },
+
+  fetchOwnersAndTenants: (context) => {
+    axios
+      .get(`/users`)
+      .then((response) => {
+        context.commit("setUsers", response.data);
+      })
+      .catch((error) => {
+        context.commit("setResult", { label: "fetchOwnersAndTenants", ok: false, message: error.response.data.errorMessage });
+      });
+  },
 };
 
 const mutations = {

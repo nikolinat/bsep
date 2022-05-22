@@ -149,14 +149,14 @@ public class SetupRolesAndPrivileges implements
     @Transactional
     void addRealEstates() {
         if (!realEstateRepository.findById(1L).isPresent()) {
-            RealEstate realEstate = new RealEstate("Kuca");
+            RealEstate realEstate = new RealEstate("Kuca", "Kisacka 1");
             realEstate.setOwner(userRepository.findByUsername("pera123"));
             realEstate.setTenants(Collections.singletonList(userRepository.findByUsername("zika123")));
             realEstateRepository.save(realEstate);
 
         }
         if (!realEstateRepository.findById(2L).isPresent()) {
-            RealEstate realEstate = new RealEstate("Stan");
+            RealEstate realEstate = new RealEstate("Stan", "Marka Kraljevica 5");
             realEstate.setOwner(userRepository.findByUsername("zika123"));
             realEstate.setTenants(new ArrayList<>());
             realEstateRepository.save(realEstate);

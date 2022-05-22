@@ -68,7 +68,7 @@ export default {
           if (ok) {
             toastr.success("Successfuly added owner/tenant!");
             this.fetchRealEstates();
-            this.fetchUsers(this.searchFilterDto);
+            this.fetchOwnersAndTenants();
           } else {
             toastr.error(message);
         }
@@ -85,7 +85,7 @@ computed: {
     ...mapActions({
       updateRealEstate: "realestate/updateRealEstate",
       fetchRealEstates: "realestate/fetchRealEstates",
-      fetchUsers: "users/fetchUsers",
+      fetchOwnersAndTenants: "users/fetchOwnersAndTenants",
     }),
 
     onAdd(user) {

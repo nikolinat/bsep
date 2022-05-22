@@ -11,6 +11,8 @@ public class RealEstate {
 
     private String name;
 
+    private String address;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
 
@@ -27,8 +29,9 @@ public class RealEstate {
     public RealEstate() {
     }
 
-    public RealEstate(String name) {
+    public RealEstate(String name, String address) {
         this.name = name;
+        this.address = address;
     }
 
     public Long getId() {
@@ -61,5 +64,13 @@ public class RealEstate {
 
     public void setTenants(Collection<User> tenants) {
         this.tenants = tenants;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
