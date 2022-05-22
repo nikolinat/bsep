@@ -3,7 +3,8 @@
     <sidebar-logo></sidebar-logo>
     <div class="sidebar-wrapper">
       <ul class="nav">
-
+        <sidebar-item name="Home" icon="dashboard" to="/"></sidebar-item>
+        <sidebar-item name="Real estates" icon="assignment" to="/real-estates"></sidebar-item>
       </ul>
     </div>
   </div>

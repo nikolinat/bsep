@@ -54,4 +54,12 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable(value = "username") String username) throws Exception {
         return new ResponseEntity<>(this.userService.delete(username), HttpStatus.OK);
     }
+
+    @PreAuthorize("hasAuthority('READ_USERS')")
+    @GetMapping("")
+    public ResponseEntity<List<UserDto>> getUsers() {
+        List<User> users = userService.findOwnersAndTenants();
+        List<UserDto> usersDto = users.stream().map(user -> userMapper.userToUserDto(user)).collect(Collectors.toList());
+        return new ResponseEntity<>(usersDto, HttpStatus.OK);
+    }
 }
