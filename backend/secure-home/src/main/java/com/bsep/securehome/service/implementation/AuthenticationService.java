@@ -54,7 +54,7 @@ public class AuthenticationService implements IAuthenticationService {
             String role = user.getRoles().get(0).getName();
             Integer id = user.getId();
             HttpCookie cookie = cookieUtil.createAccessTokenCookie(tokenUtils.generateCookieContent());
-            String jwt = tokenUtils.generateToken(user.getUsername(), role, id,  cookie.getValue());
+            String jwt = tokenUtils.generateToken(user.getUsername(), role, id, cookie.getValue());
             int expiresIn = tokenUtils.getExpiredIn();
             if (lockedAccountService.findByUsername(jwtAuthenticationRequest.getUsername()) != null && lockedAccountService.findByUsername(jwtAuthenticationRequest.getUsername()).getLoginCounts() < 3) {
                 lockedAccountService.delete(jwtAuthenticationRequest.getUsername());
@@ -66,10 +66,12 @@ public class AuthenticationService implements IAuthenticationService {
             if (lockedAccountService.findByUsername(username) == null) {
 
                 lockedAccountService.create(new LockedAccount(1, username, LocalDateTime.now()));
-                emailService.sendEmailForBlockedAccount(userService.findUser(username).getEmailAddress());
-            } else {
 
-                lockedAccountService.update(username);
+            } else {
+                LockedAccount l = lockedAccountService.update(username);
+                if (l.getLoginCounts() >= 3) {
+                    emailService.sendEmailForBlockedAccount(userService.findUser(username).getEmailAddress());
+                }
             }
 
         }

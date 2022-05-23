@@ -86,7 +86,7 @@ public class TokenUtils {
             isSecureContentValid = validateTokenSecureContent(secureContent, token);
         }
         //Zakomentarisi posle
-        isSecureContentValid = true;
+        //isSecureContentValid = true;
         return isUsernameValid && isAlgorithmValid && isSecureContentValid;
     }
 

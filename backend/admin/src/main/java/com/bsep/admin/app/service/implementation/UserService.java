@@ -39,7 +39,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDetails userDetails = userRepository.findByUsername(username);
-        if(userDetails == null)
+        if (userDetails == null)
             throw new UsernameNotFoundException(username);
         return userDetails;
     }
@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService {
         if (userRepository.findByUsername(entity.getUsername()) != null)
             throw new DuplicateEntityException("User with given username already exists.");
 
-        if(userRepository.findByEmailAddress(entity.getEmail()) != null) {
+        if (userRepository.findByEmailAddress(entity.getEmail()) != null) {
             throw new DuplicateEntityException("User with given email already exists.");
         }
 
@@ -76,7 +76,7 @@ public class UserService implements UserDetailsService {
         }
         user.setRoles(listOfRoles);
 
-        if(PasswordUtil.check(entity.getPassword())){
+        if (PasswordUtil.check(entity.getPassword())) {
             throw new BadLogicException("Password is on list most common passwords, change it.");
         }
 
@@ -98,7 +98,7 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User with given username doesn't exists.");
 
         User userWithEntityEmail = userRepository.findByEmailAddress(entity.getEmail());
-        if(userWithEntityEmail != null && userWithEntityEmail.getId() != user.getId()) {
+        if (userWithEntityEmail != null && userWithEntityEmail.getId() != user.getId()) {
             throw new BadLogicException("Entered email is already in system. Enter another email.");
         }
 
@@ -128,16 +128,6 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public List<User> findAllAdmins() {
-        Role adminRole = roleRepository.getById(1L);
-        return userRepository.findAll().stream().filter(user -> user.getRoles().contains(adminRole)).collect(Collectors.toList());
-    }
-
-    public List<User> findOwnersAndTenants() {
-        Role adminRole = roleRepository.getById(1L);
-        return userRepository.findAll().stream().filter(user -> !user.getRoles().contains(adminRole)).collect(Collectors.toList());
-    }
-
     public List<User> searchAndFilterUsers(SearchFilterUserDto searchFilterUserDto) {
         List<User> users = userRepository.findAll();
 
@@ -151,7 +141,7 @@ public class UserService implements UserDetailsService {
                 (roles.isEmpty() || roles.containsAll(user.getRoles()))).collect(Collectors.toList());
     }
 
-    public User findUser(String username){
+    public User findUser(String username) {
         return userRepository.findByUsername(username);
     }
 }

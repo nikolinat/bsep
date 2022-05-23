@@ -51,7 +51,7 @@ public class CertificateSigningRequestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('WRITE_CSR')")
+
     @PutMapping("/verify-email/{token}")
     public ResponseEntity<?> verifyEmail(@PathVariable String token) {
         certificateSigningRequestService.verifyEmail(token);

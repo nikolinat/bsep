@@ -22,10 +22,11 @@ const actions = {
             });
         })
         .catch(error => {
+            const message = error.response.data.errorMessage !== undefined? error.response.data.errorMessage : 'Bad credentials!';
             context.commit('setResult', {
                 label: 'authenticate',
                 ok: false,
-                message: error.response.data.errorMessage
+                message: message
             });
         });        
     },

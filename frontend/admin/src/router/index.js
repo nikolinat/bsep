@@ -76,34 +76,6 @@ const routes = [
     component: () => import("@/pages/EmailVerificationPage.vue"),
     meta: {
       layout: "AuthLayout",
-      role: [Roles.ROLE_ADMIN]
-    },
-  },
-  {
-    path: "/users",
-    name: "UsersPage",
-    component: () => import("@/pages/UsersPage.vue"),
-    meta: {
-      layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN]
-    },
-  },
-  {
-    path: "/new-user",
-    name: "CreateUsersPage",
-    component: () => import("@/pages/CreateUserPage.vue"),
-    meta: {
-      layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN]
-    },
-  },
-  {
-    path: "/update-user/:id",
-    name: "UpdateUserPage",
-    component: () => import("@/pages/UpdateUserPage.vue"),
-    meta: {
-      layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN]
     },
   },
   {

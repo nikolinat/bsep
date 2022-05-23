@@ -72,10 +72,13 @@ public class AuthenticationService implements IAuthenticationService {
             if (lockedAccountService.findByUsername(username) == null) {
 
                 lockedAccountService.create(new LockedAccount(1, username, LocalDateTime.now()));
-                emailService.sendEmailForBlockedAccount(userService.findUser(username).getEmailAddress());
             } else {
 
-                lockedAccountService.update(username);
+                LockedAccount l = lockedAccountService.update(username);
+                if (l.getLoginCounts() >= 3) {
+                    emailService.sendEmailForBlockedAccount(userService.findUser(username).getEmailAddress());
+                }
+
             }
 
         }

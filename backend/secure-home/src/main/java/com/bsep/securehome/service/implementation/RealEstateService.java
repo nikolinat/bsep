@@ -61,6 +61,9 @@ public class RealEstateService implements IRealEstateService {
             if (roleList.size() != 0) {
                 List<User> tenants = realEstate.getTenants().stream().filter(tenant -> tenant.getUsername().equals(user.getUsername())).collect(Collectors.toList());
                 if(tenants.size() == 0) {
+                    if(realEstate.getOwner().getUsername().equals(user.getUsername())){
+                        throw new BadLogicException("User is owner of this real estate!");
+                    }
                     realEstate.getTenants().add(user);
                 }else {
                     throw new BadLogicException("User is already tenant in this real estate!");

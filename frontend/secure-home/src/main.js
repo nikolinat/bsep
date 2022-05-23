@@ -8,7 +8,7 @@ import axios from 'axios';
 import store from './store'
 
 axios.defaults.baseURL = "https://localhost:8444/api/v1";
-// axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;
 setAuthorizationHeaderInterceptor();
 setUnauthorizedHeaderInterceptor(store) 
 

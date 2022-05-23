@@ -24,12 +24,6 @@
           icon="assignment"
           to="/csr"
         ></sidebar-item>
-        <sidebar-item name="Users" icon="assignment" to="/users"></sidebar-item>
-        <sidebar-item
-          name="Create User"
-          icon="assignment"
-          to="/new-user"
-        ></sidebar-item>
       </ul>
     </div>
   </div>
@@ -38,11 +32,17 @@
 <script>
 import SidebarItem from "./SidebarItem.vue";
 import SidebarLogo from "./SidebarLogo.vue";
+import {getRoleFromToken} from "../../utils/token.js";
+
 export default {
   data: () => {
-    return {};
+    return {
+      role: "",
+    };
   },
-  mounted() {},
+  mounted() {
+    this.role = getRoleFromToken();
+  },
   components: {
     SidebarLogo,
     SidebarItem,
