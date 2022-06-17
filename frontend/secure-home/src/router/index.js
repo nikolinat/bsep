@@ -35,6 +35,7 @@ const routes = [
       role: [Roles.ROLE_ADMIN]
     },
   },
+
   {
     path: "/new-user",
     name: "CreateUsersPage",

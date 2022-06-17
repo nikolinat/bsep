@@ -35,6 +35,11 @@
                   >View tenants</DropDownItem
                 >
               </ModalOpener>
+               <ModalOpener :modalBoxId="'addDeviceModalOpener'">
+                <DropDownItem @click="selectedRealEstate = realEstate"
+                  >Add device</DropDownItem
+                >
+              </ModalOpener>
             </DropDownMenu>
           </div>
         </TableRow>
@@ -61,6 +66,17 @@
             <TenantTable :users="selectedRealEstate.tenants"></TenantTable>
       </div>
     </Modal>
+
+    <Modal
+      modalBoxId="addDeviceModalOpener"
+      title="Add device"
+      :sizeClass="'modal-sg'">
+      <div slot="body" v-if="selectedRealEstate !== null">
+              <AddDeviceForm :realEstateId="selectedRealEstate.id"/>
+      </div>
+        <ModalCloser id="addDeviceModalCloser"></ModalCloser>
+    </Modal>
+   
   </div>
 </template>
 
@@ -78,6 +94,7 @@ import AddOwnerTenantTable from "../../custom-components/Tables/AddOwnerTenantTa
 import SelectOptionInput from '../../generic-components/Form/SelectOptionInput.vue';
 import Button from "../../generic-components/Form/Button.vue";
 import TenantTable from "../../custom-components/Tables/TenantTable.vue";
+import AddDeviceForm from '../../custom-components/Forms/AddDeviceForm.vue'
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -122,7 +139,8 @@ export default {
     SelectOptionInput,
     ModalCloser,
     Button,
-    TenantTable
+    TenantTable,
+    AddDeviceForm
   },
 
   computed: {

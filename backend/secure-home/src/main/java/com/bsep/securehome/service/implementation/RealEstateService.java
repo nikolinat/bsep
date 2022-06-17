@@ -1,6 +1,5 @@
 package com.bsep.securehome.service.implementation;
 
-import com.bsep.securehome.dto.RealEstateDto;
 import com.bsep.securehome.dto.UpdateRealEstateDto;
 import com.bsep.securehome.exception.BadLogicException;
 import com.bsep.securehome.exception.MissingEntityException;
@@ -9,7 +8,6 @@ import com.bsep.securehome.model.Role;
 import com.bsep.securehome.model.User;
 import com.bsep.securehome.repository.RealEstateRepository;
 import com.bsep.securehome.repository.RoleRepository;
-import com.bsep.securehome.repository.UserRepository;
 import com.bsep.securehome.service.contract.IRealEstateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

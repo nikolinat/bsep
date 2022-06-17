@@ -48,8 +48,9 @@ public class SetupRolesAndPrivileges implements
         Privilege writeCsr = createPrivilegeIfNotFound("WRITE_CSR");
         Privilege editCsr = createPrivilegeIfNotFound("EDIT_CSR");
         Privilege readRealEstate = createPrivilegeIfNotFound("READ_REAL_ESTATES");
+        Privilege readMyHomes = createPrivilegeIfNotFound("READ_MY_HOMES");
 
-        List<Privilege> adminPrivileges = Arrays.asList(readCertificates, editCertificate, readUsers,writeUsers, readCsr, editCsr, readRealEstate);
+        List<Privilege> adminPrivileges = Arrays.asList(readCertificates, editCertificate, readUsers,writeUsers, readCsr, editCsr, readRealEstate, readMyHomes);
         List<Privilege> ownerPrivileges = Collections.singletonList(writeCsr);
         List<Privilege> tenantPrivileges = new ArrayList<>();
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
@@ -149,6 +150,7 @@ public class SetupRolesAndPrivileges implements
     }
     @Transactional
     void addRealEstates() {
+
         if (!realEstateRepository.findById(1L).isPresent()) {
             RealEstate realEstate = new RealEstate("Kuca", "Kisacka 1");
             realEstate.setOwner(userRepository.findByUsername("pera123"));
@@ -158,7 +160,7 @@ public class SetupRolesAndPrivileges implements
         }
         if (!realEstateRepository.findById(2L).isPresent()) {
             RealEstate realEstate = new RealEstate("Stan", "Marka Kraljevica 5");
-            realEstate.setOwner(userRepository.findByUsername("zika123"));
+            realEstate.setOwner(userRepository.findByUsername("pera123"));
             realEstate.setTenants(new ArrayList<>());
             realEstateRepository.save(realEstate);
 
