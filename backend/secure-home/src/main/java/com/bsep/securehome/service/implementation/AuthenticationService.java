@@ -1,5 +1,6 @@
 package com.bsep.securehome.service.implementation;
 
+import com.bsep.securehome.annotation.LogBefore;
 import com.bsep.securehome.dto.JwtAuthenticationRequest;
 import com.bsep.securehome.model.LockedAccount;
 import com.bsep.securehome.model.User;
@@ -44,7 +45,6 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public UserTokenState authenticate(JwtAuthenticationRequest jwtAuthenticationRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
-
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     jwtAuthenticationRequest.getUsername(), jwtAuthenticationRequest.getPassword()));
