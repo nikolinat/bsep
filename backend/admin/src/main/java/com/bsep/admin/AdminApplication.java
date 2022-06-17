@@ -32,14 +32,14 @@ public class AdminApplication {
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(AdminApplication.class);
-        Map<String, Object> props = new HashMap<>();
-        props.put("server.ssl.key-store", "src/main/java/files/keystores/bsep.jks");
-        props.put("server.ssl.key-store-password", "bsep");
-        props.put("server.ssl.key-store-type", "jks");
-        props.put("server.ssl.key-alias", "root");
-        props.put("server.ssl.key-password", "bsep");
-        props.put("server.port", "8443");
-        app.setDefaultProperties(props);
+        // Map<String, Object> props = new HashMap<>();
+        // props.put("server.ssl.key-store", "src/main/java/files/keystores/bsep.jks");
+        // props.put("server.ssl.key-store-password", "bsep");
+        // props.put("server.ssl.key-store-type", "jks");
+        // props.put("server.ssl.key-alias", "root");
+        // props.put("server.ssl.key-password", "bsep");
+        // props.put("server.port", "8443");
+        // app.setDefaultProperties(props);
         app.run(args);
     }
 

@@ -69,12 +69,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         BasicAuthenticationFilter.class);
         http.csrf().disable();
 
-        http
-                .headers()
-                .xssProtection()
-                .and()
-                .contentSecurityPolicy("script-src 'self'");
-        http.headers().frameOptions().sameOrigin();
+        // http
+        //         .headers()
+        //         .xssProtection()
+        //         .and()
+        //         .contentSecurityPolicy("script-src 'self'");
+        // http.headers().frameOptions().sameOrigin();
     }
 
     @Override
