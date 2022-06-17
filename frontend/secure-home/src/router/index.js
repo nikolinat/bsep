@@ -64,6 +64,15 @@ const routes = [
     },
   },
   {
+    path: "/devices/:id",
+    name: "ViewDevicesPage",
+    component: () => import("@/pages/ViewDevicesPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
+    },
+  },
+  {
     path: "*",
     name: "catchAll",
     component: () => import("@/pages/HomePage.vue"),

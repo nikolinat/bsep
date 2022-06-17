@@ -6,17 +6,17 @@ public class RealEstateDto {
     private String name;
     private String address;
     private Long id;
-    private UserDto owner;
+    private List<UserDto> owners;
     private List<UserDto> tenants;
 
     public RealEstateDto() {
     }
 
-    public RealEstateDto(String name, String address, Long id, UserDto owner, List<UserDto> tenants) {
+    public RealEstateDto(String name, String address, Long id, List<UserDto> owners, List<UserDto> tenants) {
         this.name = name;
         this.address = address;
         this.id = id;
-        this.owner = owner;
+        this.owners = owners;
         this.tenants = tenants;
     }
 
@@ -36,14 +36,14 @@ public class RealEstateDto {
         this.id = id;
     }
 
-    public UserDto getOwner() {
-        return owner;
+    public List<UserDto> getOwners() {
+        return this.owners;
     }
 
-    public void setOwner(UserDto owner) {
-        this.owner = owner;
+    public void setOwners(List<UserDto> owners) {
+        this.owners = owners;
     }
-
+   
     public List<UserDto> getTenants() {
         return tenants;
     }

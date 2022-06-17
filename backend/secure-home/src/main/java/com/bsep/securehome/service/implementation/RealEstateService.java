@@ -45,10 +45,15 @@ public class RealEstateService implements IRealEstateService {
         if (role.getName().equals("ROLE_HOUSE_OWNER")) {
             List<Role> roleList = user.getRoles().stream().filter(r -> r.getName().equals("ROLE_HOUSE_OWNER")).collect(Collectors.toList());
             if (roleList.size() != 0) {
-                if(realEstate.getOwner().getUsername().equals(user.getUsername())){
-                    throw new BadLogicException("User is already owner of this real estate!");
+                List<User> owners = realEstate.getOwners().stream().filter(owner -> owner.getUsername().equals(user.getUsername())).collect(Collectors.toList());
+                List<User> tenants = realEstate.getTenants().stream().filter(tenant -> tenant.getUsername().equals(user.getUsername())).collect(Collectors.toList());
+                if(owners.size() == 0) {
+                    if(tenants.size() != 0){
+                        realEstate.getTenants().remove(user);
+                    }
+                    realEstate.getOwners().add(user);
                 }else {
-                    realEstate.setOwner(user);
+                    throw new BadLogicException("User is already owner of this real estate!");
                 }
             } else {
                 throw new BadLogicException("You need to change role for this user to owner.");
@@ -58,9 +63,10 @@ public class RealEstateService implements IRealEstateService {
             List<Role> roleList = user.getRoles().stream().filter(r -> r.getName().equals("ROLE_TENANT") ).collect(Collectors.toList());
             if (roleList.size() != 0) {
                 List<User> tenants = realEstate.getTenants().stream().filter(tenant -> tenant.getUsername().equals(user.getUsername())).collect(Collectors.toList());
+                List<User> owners = realEstate.getOwners().stream().filter(owner -> owner.getUsername().equals(user.getUsername())).collect(Collectors.toList());  
                 if(tenants.size() == 0) {
-                    if(realEstate.getOwner().getUsername().equals(user.getUsername())){
-                        throw new BadLogicException("User is owner of this real estate!");
+                    if(owners.size() != 0){
+                        realEstate.getOwners().remove(user);
                     }
                     realEstate.getTenants().add(user);
                 }else {
@@ -72,5 +78,18 @@ public class RealEstateService implements IRealEstateService {
         }
         realEstateRepository.save(realEstate);
         return realEstate;
+    }
+
+    @Override
+    public RealEstate removeTenant(Integer id, Long realEstateId) throws Exception {
+        RealEstate realEstate = realEstateRepository.findById(realEstateId).orElse(null);
+        User user = userService.findById(id);
+        if(realEstate.getOwners().contains(user)){
+            realEstate.getOwners().remove(user);
+        }else if(realEstate.getTenants().contains(user)){
+            realEstate.getTenants().remove(user);
+        }
+
+        return realEstateRepository.save(realEstate);
     }
 }

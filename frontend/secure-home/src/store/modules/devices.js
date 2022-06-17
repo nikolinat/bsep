@@ -3,11 +3,13 @@ import axios from "axios";
 const state = {
   device: null,
   result: null,
+  devices: null
 };
 
 const getters = {
   getDevice: (state) => state.device,
   getResult: (state) => state.result,
+  getDevices: (state) => state.devices,
 };
 
 const actions = {
@@ -23,6 +25,19 @@ const actions = {
         context.commit("setResult", { label: "create", ok: false });
       });
   },
+  fetchDevicesForRealEstate: (context, realestateId) => {
+    axios.get('/device/' + realestateId)
+    .then(response => {
+        context.commit("setDevices", response.data);
+    })
+    .catch(error => {
+        context.commit('setResult', {
+            label: 'fetch',
+            ok: false,
+            message: error.response.data.message
+        });
+    }); 
+},
 
 };
 const mutations = {
@@ -30,6 +45,9 @@ const mutations = {
     state.device = device;
   },
 
+  setDevices: (state, devices) => {
+    state.devices = devices;
+  },
   setResult: (state, result) => {
     state.result = result;
   },

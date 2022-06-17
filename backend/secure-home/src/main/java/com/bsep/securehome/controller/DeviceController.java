@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bsep.securehome.dto.DeviceDto;
+import com.bsep.securehome.dto.MessageDto;
 import com.bsep.securehome.service.implementation.DeviceService;
 
 @CrossOrigin()
@@ -43,9 +44,10 @@ public class DeviceController {
         return new ResponseEntity<>(devices, HttpStatus.OK);
     }
 
-    @PostMapping("/normal")
-    public ResponseEntity<?> normalState(@RequestBody String message) throws IOException {
-        System.out.println(message);
+    @PostMapping("/state")
+    public ResponseEntity<?> normalState(@RequestBody MessageDto message) throws IOException {
+        System.out.println("TUUUUUUUUUUUUUU");
+        System.out.println(message.getDateTime());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

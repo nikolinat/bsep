@@ -1,5 +1,10 @@
+import datetime
 import glob
 import os
+import random
+import time
+
+import requests
 
 
 class Device:
@@ -26,3 +31,16 @@ def read(type):
                 if type in line:
                     readDevice(devices, line)
     return devices
+
+
+def state(devices, messages):
+    while 1:
+        for k, v in devices.items():
+            requests.post('http://localhost:8444/api/v1/device/state', json={
+                'dateTime': datetime.datetime.utcnow().isoformat(),
+                'id': v.id,
+                'type': v.type,
+                'message': random.choice(messages)
+            },
+                          headers={'Content-Type': 'application/json'})
+            time.sleep(int(v.period))

@@ -5,7 +5,6 @@
         :columnNames="[
           'Id',
           'Name',
-          'Owner',
           'Address',
           '',
           ''
@@ -18,7 +17,6 @@
           :values="[
             realEstate.id,
             realEstate.name,
-            realEstate.owner.name + ' '+ realEstate.owner.lastName,
             realEstate.address,
             '',
           ]"
@@ -35,11 +33,17 @@
                   >View tenants</DropDownItem
                 >
               </ModalOpener>
+                <ModalOpener :modalBoxId="'viewOwnersModalOpener'">
+                <DropDownItem @click="selectedRealEstate = realEstate"
+                  >View owners</DropDownItem
+                >
+              </ModalOpener>
                <ModalOpener :modalBoxId="'addDeviceModalOpener'">
                 <DropDownItem @click="selectedRealEstate = realEstate"
                   >Add device</DropDownItem
                 >
               </ModalOpener>
+              <DropDownItem @click="viewDevice(realEstate)"> View devices </DropDownItem>
             </DropDownMenu>
           </div>
         </TableRow>
@@ -63,7 +67,15 @@
       title="Tenants"
       :sizeClass="'modal-lg'">
       <div slot="body" v-if="selectedRealEstate !== null">
-            <TenantTable :users="selectedRealEstate.tenants"></TenantTable>
+            <TenantTable :users="selectedRealEstate.tenants" :realEstate="selectedRealEstate"></TenantTable>
+      </div>
+    </Modal>
+    <Modal
+      modalBoxId="viewOwnersModalOpener"
+      title="Owners"
+      :sizeClass="'modal-lg'">
+      <div slot="body" v-if="selectedRealEstate !== null">
+            <TenantTable :users="selectedRealEstate.owners" :realEstate="selectedRealEstate"></TenantTable>
       </div>
     </Modal>
 
@@ -146,11 +158,15 @@ export default {
   computed: {
     ...mapGetters({
       users: "users/getUsers",
+      getRealEstate: "realestate/getRealEstate"
     }),
   },
   watch: {
       users(newUsers) {
         this.allUsers = newUsers;
+      },
+       getRealEstate(newRealEstates){
+        this.selectedRealEstate = newRealEstates;
       }
   },
   methods: {
@@ -158,6 +174,10 @@ export default {
       fetchRealEstates: "realestate/fetchRealEstates",
       fetchOwnersAndTenants: "users/fetchOwnersAndTenants"
     }),
+
+    viewDevice(realEstate){
+       this.$router.push(`/devices/${realEstate.id}`);
+    }
   },
   mounted() {
     this.fetchOwnersAndTenants();
