@@ -55,6 +55,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
+    @LogAfterThrowing(message = "ERROR logout")
+    @LogAfterReturning(message = "SUCCESS logout")
     public ResponseEntity<InvalidToken> logout(@RequestBody String token) throws Exception {
         return new ResponseEntity<>(this.invalidTokenService.create(token), HttpStatus.OK);
     }

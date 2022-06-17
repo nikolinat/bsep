@@ -3,10 +3,12 @@ package com.bsep.securehome.aspect;
 import com.bsep.securehome.annotation.LogAfterReturning;
 import com.bsep.securehome.annotation.LogAfterThrowing;
 import com.bsep.securehome.annotation.LogBefore;
+import com.bsep.securehome.dto.JwtAuthenticationRequest;
 import com.bsep.securehome.model.Log;
 import com.bsep.securehome.model.enums.LogType;
 import com.bsep.securehome.service.implementation.LoggingService;
 import com.bsep.securehome.utils.TokenUtils;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 
@@ -34,8 +36,17 @@ public class CustomAspect {
     private TokenUtils tokenUtils;
 
     @Before("@annotation(logBefore)")
-    public void logBefore(LogBefore logBefore) throws Throwable {
-        String username = getUsernameFromRequest() != null ? getUsernameFromRequest() : "not authorized";
+    public void logBefore(JoinPoint joinPoint, LogBefore logBefore) throws Throwable {
+        Object[] args = joinPoint.getArgs();
+
+        String user = null;
+        for(Object i : args) {
+            if(i instanceof JwtAuthenticationRequest) {
+                user = ((JwtAuthenticationRequest) i).getUsername();
+            }
+        }
+
+        String username = getUsernameFromRequest() != null ? getUsernameFromRequest() : user;
 
         logger.info("User: " + username + ", Action: " + logBefore.message());
 
@@ -43,38 +54,41 @@ public class CustomAspect {
     }
 
     @AfterThrowing(value = "@annotation(logAfterThrowing)", throwing = "exception")
-    public void logAfterThrowing(Exception exception, LogAfterThrowing logAfterThrowing) throws Throwable {
-        String username = getUsernameFromRequest() != null ? getUsernameFromRequest() : "not authorized";
+    public void logAfterThrowing(JoinPoint joinPoint, Exception exception, LogAfterThrowing logAfterThrowing) throws Throwable {
+        Object[] args = joinPoint.getArgs();
 
-        String message = "User: " + username + ", Action: " + logAfterThrowing.message() + " " + exception.getMessage();
+        String user = null;
+        for(Object i : args) {
+            if(i instanceof JwtAuthenticationRequest) {
+                user = ((JwtAuthenticationRequest) i).getUsername();
+            }
+        }
+
+        String username = getUsernameFromRequest() != null ? getUsernameFromRequest() : user;
+
+        String message = "User: " + username + ", Action: " + logAfterThrowing.message() + ", Exception message:" + exception.getMessage();
         logger.error(message);
 
         loggingService.create(new Log(UUID.randomUUID(), message, LogType.SUCCESS));
     }
 
     @AfterReturning(value = "@annotation(logAfterReturning)")
-    public void logAfterReturning(LogAfterReturning logAfterReturning) throws Throwable {
-        String username = getUsernameFromRequest() != null ? getUsernameFromRequest() : "not authorized";
+    public void logAfterReturning(JoinPoint joinPoint, LogAfterReturning logAfterReturning) throws Throwable {
+        Object[] args = joinPoint.getArgs();
+
+        String user = null;
+        for(Object i : args) {
+            if(i instanceof JwtAuthenticationRequest) {
+                user = ((JwtAuthenticationRequest) i).getUsername();
+            }
+        }
+
+        String username = getUsernameFromRequest() != null ? getUsernameFromRequest() : user;
 
         String message = "User: " + username + ", Action: " + logAfterReturning.message();
         logger.info(message);
 
         loggingService.create(new Log(UUID.randomUUID(), message, LogType.SUCCESS));
-    }
-
-    // ako bude trebalo, doradi, ovako ne radi nista
-    @Around("@annotation(logBefore)")
-    public Object logAround(ProceedingJoinPoint joinPoint, LogBefore logBefore) throws Throwable {
-        Method method = MethodSignature.class.cast(joinPoint.getSignature()).getMethod();
-        Object[] args = joinPoint.getArgs();
-
-        for(Object i : args) {
-            System.out.println(i);
-        }
-
-        Object proceed = joinPoint.proceed();
-
-        return proceed;
     }
 
     private String getUsernameFromRequest() {
