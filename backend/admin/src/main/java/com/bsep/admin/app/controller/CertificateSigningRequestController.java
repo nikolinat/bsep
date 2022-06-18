@@ -1,5 +1,7 @@
 package com.bsep.admin.app.controller;
 
+import com.bsep.admin.app.annotation.LogAfterReturning;
+import com.bsep.admin.app.annotation.LogAfterThrowing;
 import com.bsep.admin.app.dto.GenerateCertificateDto;
 import com.bsep.admin.app.model.CertificateSigningRequest;
 import com.bsep.admin.app.service.contract.ICertificateSigningRequestService;
@@ -24,6 +26,8 @@ public class CertificateSigningRequestController {
     }
 
     @PreAuthorize("hasAuthority('WRITE_CSR')")
+    @LogAfterThrowing(message = "ERROR create csr")
+    @LogAfterReturning(message = "SUCCESS create csr")
     @PostMapping("")
     public ResponseEntity<CertificateSigningRequest> createCertificateSigningRequest(@RequestBody CertificateSigningRequest certificateSigningRequest)
             throws Exception {
@@ -31,12 +35,16 @@ public class CertificateSigningRequestController {
     }
 
     @PreAuthorize("hasAuthority('READ_CSR')")
+    @LogAfterThrowing(message = "ERROR read all csrs")
+    @LogAfterReturning(message = "SUCCESS read all csrs")
     @GetMapping("")
     public ResponseEntity<List<CertificateSigningRequest>> getCertificateSigningRequest() {
         return new ResponseEntity<>(certificateSigningRequestService.findAll(), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('EDIT_CSR')")
+    @LogAfterThrowing(message = "ERROR decline csr")
+    @LogAfterReturning(message = "SUCCESS decline csr")
     @PutMapping("/decline/{id}")
     public ResponseEntity<?> declineCertificateSigningRequest(@PathVariable Integer id, @RequestBody String reasonForDeclining) throws Exception {
         certificateSigningRequestService.declineCertificateSigningRequest(id, reasonForDeclining);
@@ -44,6 +52,8 @@ public class CertificateSigningRequestController {
     }
 
     @PreAuthorize("hasAuthority('EDIT_CSR')")
+    @LogAfterThrowing(message = "ERROR accept csr")
+    @LogAfterReturning(message = "SUCCESS accept csr")
     @PutMapping("/accept/{id}")
     public ResponseEntity<?> acceptCertificateSigningRequest(@PathVariable Integer id, @Valid @RequestBody GenerateCertificateDto
             generateCertificateDto) throws Exception {
@@ -53,6 +63,8 @@ public class CertificateSigningRequestController {
 
 
     @PutMapping("/verify-email/{token}")
+    @LogAfterThrowing(message = "ERROR verify email")
+    @LogAfterReturning(message = "SUCCESS verify email")
     public ResponseEntity<?> verifyEmail(@PathVariable String token) {
         certificateSigningRequestService.verifyEmail(token);
         return new ResponseEntity<>(HttpStatus.OK);

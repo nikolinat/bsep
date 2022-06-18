@@ -1,5 +1,7 @@
 package com.bsep.admin.app.controller;
 
+import com.bsep.admin.app.annotation.LogAfterReturning;
+import com.bsep.admin.app.annotation.LogAfterThrowing;
 import com.bsep.admin.app.dto.CertificateDto;
 import com.bsep.admin.app.model.RevokedCertificate;
 import com.bsep.admin.app.service.EmailService;
@@ -34,6 +36,8 @@ public class CertificateController {
     }
 
     @PreAuthorize("hasAuthority('EDIT_CERTIFICATE')")
+    @LogAfterThrowing(message = "ERROR revoke certificate")
+    @LogAfterReturning(message = "SUCCESS revoke certificate")
     @PutMapping("/{reason}")
     public ResponseEntity<?> revokeCertificate(@RequestBody CertificateDto certificate, @PathVariable String reason) throws Exception {
         certificateService.revoke(certificate, reason);
@@ -41,6 +45,8 @@ public class CertificateController {
     }
 
     @PreAuthorize("hasAuthority('READ_CERTIFICATES')")
+    @LogAfterThrowing(message = "ERROR read all valid certificates")
+    @LogAfterReturning(message = "SUCCESS read all valid certificates")
     @GetMapping("")
     public ResponseEntity<?> getAllValidCertificates() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, ParseException, NoSuchProviderException {
         List<CertificateDto> certificates = certificateService.findAllValidCertificates();
@@ -48,6 +54,8 @@ public class CertificateController {
     }
 
     @PreAuthorize("hasAuthority('READ_CERTIFICATES')")
+    @LogAfterThrowing(message = "ERROR read all revoked certificates")
+    @LogAfterReturning(message = "SUCCESS read all revoked certificates")
     @GetMapping("/revoked")
     public ResponseEntity<?> getAllRevokedCertificates() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, ParseException, NoSuchProviderException {
         List<CertificateDto> certificates = certificateService.findAllRevokedCertificates();
@@ -55,6 +63,8 @@ public class CertificateController {
     }
 
     @GetMapping("/create")
+    @LogAfterThrowing(message = "ERROR create root")
+    @LogAfterReturning(message = "SUCCESS create root")
     public ResponseEntity<?> createAll() throws Exception {
         certificateService.createAll();
         return new ResponseEntity<>( HttpStatus.OK);

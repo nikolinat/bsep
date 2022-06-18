@@ -39,11 +39,6 @@ public class UserController {
     @LogAfterReturning(message = "SUCCESS search adn filter users")
     @GetMapping("/search-filter")
     public ResponseEntity<List<UserDto>> searchAndFilterUsers(SearchFilterUserDto searchFilterUserDto) {
-        System.out.println(searchFilterUserDto.getEmail());
-        System.out.println(searchFilterUserDto.getUsername());
-        System.out.println(searchFilterUserDto.getLastName());
-        System.out.println(searchFilterUserDto.getName());
-        System.out.println(searchFilterUserDto.getRoles());
         List<User> users = userService.searchAndFilterUsers(searchFilterUserDto);
         List<UserDto> usersDto = users.stream().map(user -> userMapper.userToUserDto(user)).collect(Collectors.toList());
         return new ResponseEntity<>(usersDto, HttpStatus.OK);

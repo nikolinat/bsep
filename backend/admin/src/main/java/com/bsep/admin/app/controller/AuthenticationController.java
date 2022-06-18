@@ -1,5 +1,7 @@
 package com.bsep.admin.app.controller;
 
+import com.bsep.admin.app.annotation.LogAfterReturning;
+import com.bsep.admin.app.annotation.LogAfterThrowing;
 import com.bsep.admin.app.dto.JwtAuthenticationRequest;
 import com.bsep.admin.app.model.InvalidToken;
 import com.bsep.admin.app.model.UserTokenState;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -32,12 +35,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
+    @LogAfterThrowing(message = "ERROR login")
+    @LogAfterReturning(message = "SUCCESS login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(@Valid
             @RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) throws NoSuchAlgorithmException, InvalidKeySpecException {
         UserTokenState userTokenState = this.authenticationService.authenticate(authenticationRequest);
       
         if(userTokenState == null){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new BadCredentialsException("Bad credentials.");
         }
 
         HttpCookie cookie = userTokenState.getCookieSecureContent();
@@ -52,6 +57,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
+    @LogAfterThrowing(message = "ERROR logout")
+    @LogAfterReturning(message = "SUCCESS logout")
     public ResponseEntity<InvalidToken> logout(@RequestBody String token) throws Exception {
         return new ResponseEntity<>(this.invalidTokenService.create(token), HttpStatus.OK);
     }

@@ -1,18 +1,18 @@
-package com.bsep.securehome.aspect;
+package com.bsep.admin.app.aspect;
 
-import com.bsep.securehome.annotation.LogAfterReturning;
-import com.bsep.securehome.annotation.LogAfterThrowing;
-import com.bsep.securehome.annotation.LogBefore;
-import com.bsep.securehome.dto.JwtAuthenticationRequest;
-import com.bsep.securehome.model.Log;
-import com.bsep.securehome.model.enums.LogType;
-import com.bsep.securehome.service.implementation.LoggingService;
-import com.bsep.securehome.utils.TokenUtils;
+import com.bsep.admin.app.annotation.LogAfterReturning;
+import com.bsep.admin.app.annotation.LogAfterThrowing;
+import com.bsep.admin.app.annotation.LogBefore;
+import com.bsep.admin.app.dto.JwtAuthenticationRequest;
+import com.bsep.admin.app.model.Log;
+import com.bsep.admin.app.model.enums.LogType;
+import com.bsep.admin.app.service.implementation.LoggingService;
+import com.bsep.admin.app.utils.TokenUtils;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
-
-import org.aspectj.lang.reflect.MethodSignature;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
 import java.util.UUID;
 
 @Aspect
