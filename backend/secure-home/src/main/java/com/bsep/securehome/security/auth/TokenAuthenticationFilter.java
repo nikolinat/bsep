@@ -37,6 +37,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             throws IOException, ServletException {
         String username;
         String authToken = tokenUtils.getToken(request);
+        // zameniti posle
         // String secureContent = tokenUtils.getSecureContentFromCookie(request);
         String secureContent = "";
         try {

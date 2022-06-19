@@ -1,5 +1,7 @@
 package com.bsep.securehome.controller;
 
+import com.bsep.securehome.annotation.LogAfterReturning;
+import com.bsep.securehome.annotation.LogAfterThrowing;
 import com.bsep.securehome.dto.CreateUserDto;
 import com.bsep.securehome.dto.SearchFilterUserDto;
 import com.bsep.securehome.dto.UpdateUserDto;
@@ -33,6 +35,8 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('READ_USERS')")
+    @LogAfterThrowing(message = "ERROR search and filter users")
+    @LogAfterReturning(message = "SUCCESS search adn filter users")
     @GetMapping("/search-filter")
     public ResponseEntity<List<UserDto>> searchAndFilterUsers(SearchFilterUserDto searchFilterUserDto) {
         List<User> users = userService.searchAndFilterUsers(searchFilterUserDto);
@@ -41,18 +45,24 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('WRITE_USERS')")
+    @LogAfterThrowing(message = "ERROR create user")
+    @LogAfterReturning(message = "SUCCESS create user")
     @PostMapping("/new-user")
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserDto userDTO) throws Exception {
         return new ResponseEntity<>(this.userService.create(userDTO), HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAuthority('WRITE_USERS')")
+    @LogAfterThrowing(message = "ERROR update user")
+    @LogAfterReturning(message = "SUCCESS update user")
     @PutMapping(value = "/update-user")
     public ResponseEntity<?> updateUser(@RequestBody UpdateUserDto userDTO) throws Exception {
         return new ResponseEntity<>(this.userService.update(userDTO), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('READ_USERS')")
+    @LogAfterThrowing(message = "ERROR read user by id")
+    @LogAfterReturning(message = "SUCCESS read user by id")
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Integer id) throws Exception {
         User user = userService.findById(id);
@@ -61,12 +71,16 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('WRITE_USERS')")
+    @LogAfterThrowing(message = "ERROR delete user")
+    @LogAfterReturning(message = "SUCCESS delete user")
     @RequestMapping(value = "/delete-user/{username}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUser(@PathVariable(value = "username") String username) throws Exception {
         return new ResponseEntity<>(this.userService.delete(username), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('READ_USERS')")
+    @LogAfterThrowing(message = "ERROR read all users")
+    @LogAfterReturning(message = "SUCCESS read all users")
     @GetMapping("")
     public ResponseEntity<List<UserDto>> getUsers() {
         List<User> users = userService.findOwnersAndTenants();

@@ -1,5 +1,7 @@
 package com.bsep.securehome.controller;
 
+import com.bsep.securehome.annotation.LogAfterReturning;
+import com.bsep.securehome.annotation.LogAfterThrowing;
 import com.bsep.securehome.dto.RealEstateDto;
 import com.bsep.securehome.dto.UpdateRealEstateDto;
 import com.bsep.securehome.mapper.RealEstateMapper;
@@ -30,6 +32,8 @@ public class RealEstateController {
     }
 
     @PreAuthorize("hasAuthority('READ_REAL_ESTATES')")
+    @LogAfterThrowing(message = "ERROR read all real estates")
+    @LogAfterReturning(message = "SUCCESS read all real estates")
     @GetMapping("")
     public ResponseEntity<List<RealEstateDto>> getRealEstates() {
         List<RealEstate> realEstates = realEstateService.findAll();
@@ -39,6 +43,8 @@ public class RealEstateController {
     }
 
     @PreAuthorize("hasAuthority('READ_REAL_ESTATES')")
+    @LogAfterThrowing(message = "ERROR update real estate")
+    @LogAfterReturning(message = "SUCCESS update real estate")
     @PutMapping("")
     public ResponseEntity<?> updateRealEstate(@RequestBody UpdateRealEstateDto updateRealEstateDto) {
         RealEstate realEstate = realEstateService.update(updateRealEstateDto);
@@ -50,8 +56,6 @@ public class RealEstateController {
     public ResponseEntity<?> removeTenant(@PathVariable  Integer id, @PathVariable Long realEstateId) throws Exception {
         return new ResponseEntity<>(realEstateMapper.realEstateToRealEstateDto(realEstateService.removeTenant(id, realEstateId)), HttpStatus.OK);
     }
-
-
 
 
 }

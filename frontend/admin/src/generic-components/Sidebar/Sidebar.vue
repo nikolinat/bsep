@@ -24,6 +24,11 @@
           icon="assignment"
           to="/csr"
         ></sidebar-item>
+        <sidebar-item
+          name="Logs"
+          icon="assignment"
+          to="/logs"
+        ></sidebar-item>
       </ul>
     </div>
   </div>
