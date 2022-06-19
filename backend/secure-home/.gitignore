@@ -8,6 +8,7 @@ src/main/resources/application.properties
 src/main/resources/static
 src/main/java/files/keystores/bsep.jks
 
+scripts/__pycache__
 
 ### STS ###
 .apt_generated
