@@ -12,4 +12,8 @@ public interface IRealEstateService {
     RealEstate update(UpdateRealEstateDto updateRealEstateDto);
 
     RealEstate removeTenant(Integer id, Long realEstateId) throws Exception;
+
+    List<RealEstate> findRealEstatesByOwner(Integer ownerId);
+
+    List<RealEstate> findRealEstatesByTenant(Integer tenantId);
 }

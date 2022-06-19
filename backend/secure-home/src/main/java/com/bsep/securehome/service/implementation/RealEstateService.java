@@ -92,4 +92,22 @@ public class RealEstateService implements IRealEstateService {
 
         return realEstateRepository.save(realEstate);
     }
+
+    @Override
+    public List<RealEstate> findRealEstatesByOwner(Integer ownerId) {
+        List<RealEstate> allRealEtates = findAll();
+
+        return allRealEtates.stream()
+                .filter(realEstate -> realEstate.getOwners().stream().anyMatch(user -> user.getId() == ownerId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RealEstate> findRealEstatesByTenant(Integer tenantId) {
+        List<RealEstate> allRealEtates = findAll();
+
+        return allRealEtates.stream()
+                .filter(realEstate -> realEstate.getTenants().stream().anyMatch(user -> user.getId() == tenantId))
+                .collect(Collectors.toList());
+    }
 }

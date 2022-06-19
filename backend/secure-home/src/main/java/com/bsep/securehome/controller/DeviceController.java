@@ -37,7 +37,7 @@ public class DeviceController {
         return new ResponseEntity<>( deviceService.createDevice(device), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('READ_MY_HOMES')")
+    @PreAuthorize("hasAnyAuthority('READ_MY_HOMES', 'READ_REAL_ESTATES_BY_TENANT_OWNER')")
     @GetMapping("/{id}")
     public ResponseEntity<?> findDevices(@PathVariable Long id) throws IOException {
         ArrayList<DeviceDto> devices = deviceService.findDevicesForRealEstate(id);

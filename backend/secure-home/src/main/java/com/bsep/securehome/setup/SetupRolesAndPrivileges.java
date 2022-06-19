@@ -49,10 +49,11 @@ public class SetupRolesAndPrivileges implements
         Privilege editCsr = createPrivilegeIfNotFound("EDIT_CSR");
         Privilege readRealEstate = createPrivilegeIfNotFound("READ_REAL_ESTATES");
         Privilege readMyHomes = createPrivilegeIfNotFound("READ_MY_HOMES");
+        Privilege readRealEstatesByTenantOwner = createPrivilegeIfNotFound("READ_REAL_ESTATES_BY_TENANT_OWNER");
 
         List<Privilege> adminPrivileges = Arrays.asList(readCertificates, editCertificate, readUsers,writeUsers, readCsr, editCsr, readRealEstate, readMyHomes);
-        List<Privilege> ownerPrivileges = Collections.singletonList(writeCsr);
-        List<Privilege> tenantPrivileges = new ArrayList<>();
+        List<Privilege> ownerPrivileges = Arrays.asList(writeCsr, readRealEstatesByTenantOwner);
+        List<Privilege> tenantPrivileges = Collections.singletonList(readRealEstatesByTenantOwner);
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_HOUSE_OWNER", ownerPrivileges);
         createRoleIfNotFound("ROLE_TENANT", tenantPrivileges);

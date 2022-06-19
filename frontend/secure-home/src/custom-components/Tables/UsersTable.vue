@@ -11,7 +11,7 @@
           :values="[user.name, user.lastName, user.username, user.email, formatRoles(user)]"
         >
           <div class="pull-right text-gray">
-            <DropDownMenu v-if="user.roles[0] !== 'ROLE_ADMIN'">
+            <DropDownMenu v-if="role === 'ROLE_ADMIN'">
               <ModalOpener :modalBoxId="'deleteUser'">
                 <DropDownItem @click="selectedUser = user">Delete</DropDownItem>
               </ModalOpener>
@@ -49,16 +49,19 @@ import Modal from "../../generic-components/Modal/Modal.vue";
 import Button from "../../generic-components/Form/Button.vue";
 import { mapActions, mapGetters } from "vuex";
 import toastr from "toastr";
+import { getRoleFromToken } from '../../utils/token'
 
 export default {
-  props: {},
+  props: ['users'],
   data: () => {
     return {
-      users: [],
       selectedUser: null,
+      role: ''
     };
   },
-  mounted() {},
+  mounted() {
+    this.role = getRoleFromToken();
+  },
   components: {
     Table,
     TableHead,
@@ -73,9 +76,6 @@ export default {
   },
 
   watch: {
-    searchedUsers(users) {
-      this.users = users;
-    },
     result({label, ok, message}) {
       if (label === "delete") {
           if (ok) {
