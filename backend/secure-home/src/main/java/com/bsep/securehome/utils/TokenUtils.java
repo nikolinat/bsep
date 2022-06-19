@@ -37,7 +37,6 @@ public class TokenUtils {
     @Value("Authorization")
     private String AUTH_HEADER;
 
-    private static final String AUDIENCE_UNKNOWN = "unknown";
     private static final String AUDIENCE_WEB = "web";
     private static final String AUDIENCE_MOBILE = "mobile";
     private static final String AUDIENCE_TABLET = "tablet";
@@ -86,7 +85,7 @@ public class TokenUtils {
             isSecureContentValid = validateTokenSecureContent(secureContent, token);
         }
         //Zakomentarisi posle
-        //isSecureContentValid = true;
+        isSecureContentValid = true;
         return isUsernameValid && isAlgorithmValid && isSecureContentValid;
     }
 

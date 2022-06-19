@@ -1,7 +1,5 @@
 package com.bsep.securehome.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -16,9 +14,6 @@ import java.io.IOException;
 @Service
 public class EmailService {
     private JavaMailSender javaMailSender;
-
-    @Autowired
-    private Environment env;
 
     public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;

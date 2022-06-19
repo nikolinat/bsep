@@ -45,6 +45,12 @@ public class RealEstateController {
         return new ResponseEntity<>(realEstateMapper.realEstateToRealEstateDto(realEstate), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('WRITE_USERS')")
+    @PutMapping(value = "/remove-tenant/{id}/{realEstateId}")
+    public ResponseEntity<?> removeTenant(@PathVariable  Integer id, @PathVariable Long realEstateId) throws Exception {
+        return new ResponseEntity<>(realEstateMapper.realEstateToRealEstateDto(realEstateService.removeTenant(id, realEstateId)), HttpStatus.OK);
+    }
+
 
 
 

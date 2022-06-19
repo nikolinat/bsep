@@ -1,12 +1,16 @@
 package com.bsep.admin;
 
 import com.bsep.admin.app.service.implementation.CaCertificateAliasService;
+
+import org.hibernate.annotations.SourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import ch.qos.logback.core.net.SyslogOutputStream;
 
 import java.util.HashMap;
 import java.util.Map;

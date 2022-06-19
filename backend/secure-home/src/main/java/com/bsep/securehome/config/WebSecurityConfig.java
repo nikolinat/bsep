@@ -62,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
                 .authorizeRequests()
+                .antMatchers("/api/v1/device/state").permitAll()
                 .antMatchers("/api/v1/auth/login").permitAll()
                 .anyRequest().authenticated().and()
                 .cors().and()
@@ -74,7 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .xssProtection()
                 .and()
                 .contentSecurityPolicy("script-src 'self'");
-        http.headers().frameOptions().sameOrigin();
+        //http.headers().frameOptions().sameOrigin();
     }
 
     @Override
