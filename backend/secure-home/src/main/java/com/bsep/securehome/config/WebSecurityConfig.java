@@ -62,19 +62,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
                 .authorizeRequests()
+                .antMatchers("/api/v1/device/state").permitAll()
                 .antMatchers("/api/v1/auth/login").permitAll()
                 .anyRequest().authenticated().and()
                 .cors().and()
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService, invalidTokenService),
                         BasicAuthenticationFilter.class);
         http.csrf().disable();
-
         // http
         //         .headers()
         //         .xssProtection()
         //         .and()
         //         .contentSecurityPolicy("script-src 'self'");
         // http.headers().frameOptions().sameOrigin();
+
     }
 
     @Override

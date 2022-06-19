@@ -35,6 +35,7 @@ const routes = [
       role: [Roles.ROLE_ADMIN]
     },
   },
+
   {
     path: "/new-user",
     name: "CreateUsersPage",
@@ -57,6 +58,15 @@ const routes = [
     path: "/users",
     name: "UsersPage",
     component: () => import("@/pages/UsersPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
+    },
+  },
+  {
+    path: "/devices/:id",
+    name: "ViewDevicesPage",
+    component: () => import("@/pages/ViewDevicesPage.vue"),
     meta: {
       layout: "AppLayoutMain",
       role: [Roles.ROLE_ADMIN]

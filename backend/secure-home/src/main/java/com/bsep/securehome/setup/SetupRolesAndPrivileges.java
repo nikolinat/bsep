@@ -48,8 +48,9 @@ public class SetupRolesAndPrivileges implements
         Privilege writeCsr = createPrivilegeIfNotFound("WRITE_CSR");
         Privilege editCsr = createPrivilegeIfNotFound("EDIT_CSR");
         Privilege readRealEstate = createPrivilegeIfNotFound("READ_REAL_ESTATES");
+        Privilege readMyHomes = createPrivilegeIfNotFound("READ_MY_HOMES");
 
-        List<Privilege> adminPrivileges = Arrays.asList(readCertificates, editCertificate, readUsers,writeUsers, readCsr, editCsr, readRealEstate);
+        List<Privilege> adminPrivileges = Arrays.asList(readCertificates, editCertificate, readUsers,writeUsers, readCsr, editCsr, readRealEstate, readMyHomes);
         List<Privilege> ownerPrivileges = Collections.singletonList(writeCsr);
         List<Privilege> tenantPrivileges = new ArrayList<>();
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
@@ -149,16 +150,21 @@ public class SetupRolesAndPrivileges implements
     }
     @Transactional
     void addRealEstates() {
+
         if (!realEstateRepository.findById(1L).isPresent()) {
             RealEstate realEstate = new RealEstate("Kuca", "Kisacka 1");
-            realEstate.setOwner(userRepository.findByUsername("pera123"));
+            ArrayList<User> owners = new ArrayList<>();
+            owners.add(userRepository.findByUsername("pera123"));
+            realEstate.setOwners(owners);
             realEstate.setTenants(Collections.singletonList(userRepository.findByUsername("zika123")));
             realEstateRepository.save(realEstate);
 
         }
         if (!realEstateRepository.findById(2L).isPresent()) {
             RealEstate realEstate = new RealEstate("Stan", "Marka Kraljevica 5");
-            realEstate.setOwner(userRepository.findByUsername("zika123"));
+            ArrayList<User> owners = new ArrayList<>();
+            owners.add(userRepository.findByUsername("pera123"));
+            realEstate.setOwners(owners);
             realEstate.setTenants(new ArrayList<>());
             realEstateRepository.save(realEstate);
 

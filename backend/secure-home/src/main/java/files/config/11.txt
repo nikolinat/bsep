@@ -1,0 +1,2 @@
+1a93a366-11b9-4a9f-9de0-c3e9fed591dc,11,pegla,IRON,20,peglaa
+ee1c6462-15cc-462e-9d50-9c53f5ef0ada,11,sporet,COOKER,5,sporeet

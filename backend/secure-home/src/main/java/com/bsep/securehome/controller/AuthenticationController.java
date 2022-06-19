@@ -49,7 +49,7 @@ public class AuthenticationController {
         HttpHeaders headers = new HttpHeaders();
         //headers.add("Access-Control-Allow-Origin", "http://192.168.1.3:8081");
         headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
-        //headers.add("Set-Cookie", cookie);
+        // headers.add("Set-Cookie", cookie);
 
         return ResponseEntity.ok().headers(headers).body(userTokenState);
     }

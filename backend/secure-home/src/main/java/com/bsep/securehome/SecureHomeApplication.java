@@ -16,6 +16,20 @@ import java.util.Properties;
 @SpringBootApplication
 @EnableMongoRepositories
 public class SecureHomeApplication {
+
+    public static void main(String[] args) {
+        SpringApplication app = new SpringApplication(SecureHomeApplication.class);
+        Map<String, Object> props = new HashMap<>();
+        // props.put("server.ssl.key-store", "src/main/java/files/keystores/bsep.jks");
+        // props.put("server.ssl.key-store-password", "bsep");
+        // props.put("server.ssl.key-store-type", "jks");
+        // props.put("server.ssl.key-alias", "root");
+        // props.put("server.ssl.key-password", "bsep");
+         props.put("server.port", "8444");
+        app.setDefaultProperties(props);
+        app.run(args);
+    }
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
 
@@ -27,22 +41,9 @@ public class SecureHomeApplication {
                 registry.addMapping("/**")
                         .allowedMethods("*")
                         .allowedHeaders("*")
-                        .allowedOrigins("*");
+                        .allowedOrigins("http://localhost:8080");
             }
         };
-    }
-
-    public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(SecureHomeApplication.class);
-        Map<String, Object> props = new HashMap<>();
-//        props.put("server.ssl.key-store", "src/main/java/files/keystores/bsep.jks");
-//        props.put("server.ssl.key-store-password", "bsep");
-//        props.put("server.ssl.key-store-type", "jks");
-//        props.put("server.ssl.key-alias", "root");
-//        props.put("server.ssl.key-password", "bsep");
-        props.put("server.port", "8444");
-        app.setDefaultProperties(props);
-        app.run(args);
     }
 
     @Bean

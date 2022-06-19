@@ -6,14 +6,14 @@ import java.util.List;
 
 public class CertificateDto {
 
-    private BigInteger serialNumber;
-    private String alias;
-    private Date startDate;
-    private Date endDate;
-    private SubjectDto subject;
-    private boolean isRoot;
-    private boolean isIntermediate;
-    private List<ExtensionDto> extensions;
+    public BigInteger serialNumber;
+    public String alias;
+    public Date startDate;
+    public Date endDate;
+    public SubjectDto subject;
+    public boolean isRoot;
+    public boolean isIntermediate;
+    public List<ExtensionDto> extensions;
 
     public CertificateDto() {}
 

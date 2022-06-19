@@ -3,11 +3,13 @@ import axios from "axios";
 const state = {
   realEstates: null,
   result: null,
+  realEstate: null
 };
 
 const getters = {
   getRealEstates: (state) => state.realEstates,
   getResult: (state) => state.result,
+  getRealEstate: (state) => state.realEstate
 };
 
 const actions = {
@@ -35,6 +37,19 @@ const actions = {
       });
   },
 
+  removeTenant: (context, removeTenantDto) => {
+    axios
+      .put(`/realestates/remove-tenant/${removeTenantDto.id}/${removeTenantDto.realEstateId}`)
+      .then((response) => {
+        context.commit("setResult", { label: "remove", ok: true, message: "Successfully removed owner/tenant." });
+        context.commit("setRealEstate", response.data);
+      })
+      .catch((error) => {
+        console.log(error.response.data)
+        context.commit("setResult", { label: "remove", ok: false, message: error.response.data.message });
+      });
+  },
+
 };
 const mutations = {
   setRealEstates: (state, realEstates) => {
@@ -44,6 +59,10 @@ const mutations = {
   setResult: (state, result) => {
     state.result = result;
   },
+  setRealEstate: (state, realEstate) => {
+    state.realEstate = realEstate;
+  },
+
 };
 
 export default {

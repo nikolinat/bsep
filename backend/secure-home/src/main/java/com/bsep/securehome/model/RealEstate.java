@@ -13,10 +13,16 @@ public class RealEstate {
 
     private String address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User owner;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "realestate_owners",
+            joinColumns = @JoinColumn(
+                    name = "realestate_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "users_id", referencedColumnName = "id"))
+    private Collection<User> owners;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "realestate_tenants",
             joinColumns = @JoinColumn(
@@ -50,13 +56,14 @@ public class RealEstate {
         this.name = name;
     }
 
-    public User getOwner() {
-        return owner;
+    public Collection<User> getOwners() {
+        return this.owners;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setOwners(Collection<User> owners) {
+        this.owners = owners;
     }
+    
 
     public Collection<User> getTenants() {
         return tenants;
