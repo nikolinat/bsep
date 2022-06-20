@@ -4,6 +4,7 @@ import authentication from "./modules/authetication.js"
 import realestate from "./modules/realestate.js"
 import users from "./modules/users.js"
 import devices from './modules/devices.js'
+import alarms from './modules/alarms.js'
 
 Vue.use(Vuex);
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
     authentication,
     realestate,
     users,
-    devices
+    devices,
+    alarms
   },
 });

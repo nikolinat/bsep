@@ -8,16 +8,17 @@ import requests
 
 
 class Device:
-    def __init__(self, id, name, type, period):
+    def __init__(self, id, name, type, period, real_estate_id):
         self.id = id
         self.name = name
         self.type = type
         self.period = period
+        self.real_estate_id = real_estate_id
 
 
-def readDevice(devices, line):
+def readDevice(devices, line, real_estate_id):
     splitted = line.split(',')
-    device = Device(splitted[0], splitted[2], splitted[3], splitted[4])
+    device = Device(splitted[0], splitted[2], splitted[3], splitted[4], real_estate_id)
     devices[device.id] = device
 
 
@@ -25,11 +26,12 @@ def read(type):
     devices = {}
     path = '../src/main/java/files/config/'
     for filename in glob.glob(os.path.join(path, '*.txt')):
+        real_estate_id = filename.split("\\")[1].split(".txt")[0]
         with open(os.path.join(os.getcwd(), filename), 'r') as f:
             lines = f.readlines()
             for line in lines:
                 if type in line:
-                    readDevice(devices, line)
+                    readDevice(devices, line, real_estate_id)
     return devices
 
 
@@ -37,6 +39,7 @@ def state(devices, messages):
     while 1:
         for k, v in devices.items():
             requests.post('http://localhost:8444/api/v1/device/state', json={
+                'realEstateId': v.real_estate_id,
                 'dateTime': datetime.datetime.utcnow().isoformat(),
                 'id': v.id,
                 'type': v.type,

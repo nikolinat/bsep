@@ -73,6 +73,15 @@ const routes = [
     },
   },
   {
+    path: "/alarms/:id",
+    name: "ViewAlarmsPage",
+    component: () => import("@/pages/ViewAlarmsPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
+    },
+  },
+  {
     path: "*",
     name: "catchAll",
     component: () => import("@/pages/HomePage.vue"),

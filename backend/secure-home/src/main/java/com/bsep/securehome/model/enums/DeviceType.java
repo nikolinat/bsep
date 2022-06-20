@@ -1,4 +1,4 @@
-package com.bsep.securehome.utils;
+package com.bsep.securehome.model.enums;
 
 public enum DeviceType {
     IRON,
