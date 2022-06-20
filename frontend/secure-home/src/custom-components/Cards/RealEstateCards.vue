@@ -13,7 +13,9 @@
                             <ModalOpener :modalBoxId="'devicesModal'">
                                 <Button @click="handleViewDevices(realEstate.id)">Devices</Button>
                             </ModalOpener>
-                            <Button>Messages</Button>
+                            <ModalOpener :modalBoxId="'devicesMessagesModal'">
+                                <Button @click="handleViewDevicesMessages(realEstate.id)">Messages</Button>
+                            </ModalOpener>
                         </div>
                     </RotatingCard>
                 </template>
@@ -36,6 +38,13 @@
                 <DevicesTable :devices="devices" />
             </div>
         </Modal>
+
+        <Modal modalBoxId="devicesMessagesModal" :title="'Device messages'" sizeClass="modal-lg">
+            <div slot="body">
+                <SearchFilterDevicesMessages  :realEstateId="realEstateId"/>
+                <DeviceMessageTable :devicesMessages="devicesMessages" />
+            </div>
+        </Modal>
     </div>
 </template>
 
@@ -47,6 +56,8 @@ import ModalOpener from "../../generic-components/Modal/ModalOpener.vue"
 import Modal from "../../generic-components/Modal/Modal.vue"
 import UsersTable from "../Tables/UsersTable.vue"
 import DevicesTable from '../Tables/DevicesTable.vue'
+import DeviceMessageTable from '../Tables/DeviceMessageTable.vue'
+import SearchFilterDevicesMessages from '../Forms/SearchFilterDevicesMessages.vue'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -57,7 +68,9 @@ export default {
         ModalOpener,
         Modal,
         UsersTable,
-        DevicesTable
+        DevicesTable,
+        DeviceMessageTable,
+        SearchFilterDevicesMessages
     },
     name: 'RealEstates',
 
@@ -65,16 +78,19 @@ export default {
         return {
             owners: [],
             tenants: [],
+            realEstateId: null
         }
     },
     computed: {
         ...mapGetters({
-            devices: 'devices/getDevices'
+            devices: 'devices/getDevices',
+            devicesMessages: 'deviceMessage/getDevicesMessages'
         })
     },
     methods: {
         ...mapActions({
-            fetchDevicesByRealEstate: 'devices/fetchDevicesForRealEstate'
+            fetchDevicesByRealEstate: 'devices/fetchDevicesForRealEstate',
+            fetchDevicesMessagesForRealEstate: 'deviceMessage/fetchDevicesMessagesForRealEstate'
         }),
 
         handleViewOwneres(owners) {
@@ -87,6 +103,11 @@ export default {
 
         handleViewDevices(id) {
             this.fetchDevicesByRealEstate(id);
+        },
+
+        handleViewDevicesMessages(id) {
+            this.realEstateId = id;
+            this.fetchDevicesMessagesForRealEstate(id);
         }
     }
 }
