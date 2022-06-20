@@ -70,7 +70,7 @@ public class DeviceController {
         if (deviceService.checkRegex(message)) {
             List<AlarmDto> alarms = alarmService.findAlarmsForDevice(message.getRealEstateId(), message.getType());
             deviceMessageService.create(new DeviceMessage(UUID.randomUUID(), message.getId(), message.getType(),
-                    message.getMessage(), LocalDateTime.now(ZoneOffset.UTC), false), alarms);
+                    message.getMessage(), LocalDateTime.now(ZoneOffset.UTC), false), alarms, message.getRealEstateId());
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
