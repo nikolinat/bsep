@@ -35,7 +35,24 @@ const routes = [
       role: [Roles.ROLE_ADMIN]
     },
   },
-
+  {
+    path: "/owner-real-estates",
+    name: "RealEstatesOwnerPage",
+    component: () => import("@/pages/RealEstatesOwnerPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+      role: [Roles.ROLE_HOUSE_OWNER, Roles.ROLE_TENANT]
+    },
+  },
+  {
+    path: "/tenant-real-estates",
+    name: "RealEstatesTenantPage",
+    component: () => import("@/pages/RealEstatesTenantPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+      role: [Roles.ROLE_HOUSE_OWNER, Roles.ROLE_TENANT]
+    },
+  },
   {
     path: "/new-user",
     name: "CreateUsersPage",

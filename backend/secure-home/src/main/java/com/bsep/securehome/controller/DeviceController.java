@@ -3,6 +3,8 @@ package com.bsep.securehome.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.bsep.securehome.annotation.LogAfterReturning;
+import com.bsep.securehome.annotation.LogAfterThrowing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,12 +34,16 @@ public class DeviceController {
     }
 
     @PreAuthorize("hasAuthority('READ_MY_HOMES')")
+    @LogAfterThrowing(message = "ERROR create device")
+    @LogAfterReturning(message = "SUCCESS create device")
     @PostMapping("")
     public ResponseEntity<?> create(@RequestBody DeviceDto device) throws IOException {
         return new ResponseEntity<>( deviceService.createDevice(device), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('READ_MY_HOMES')")
+    @PreAuthorize("hasAnyAuthority('READ_MY_HOMES', 'READ_REAL_ESTATES_BY_TENANT_OWNER')")
+    @LogAfterThrowing(message = "ERROR read devices by real estate id")
+    @LogAfterReturning(message = "SUCCESS read devices by real estate id")
     @GetMapping("/{id}")
     public ResponseEntity<?> findDevices(@PathVariable Long id) throws IOException {
         ArrayList<DeviceDto> devices = deviceService.findDevicesForRealEstate(id);

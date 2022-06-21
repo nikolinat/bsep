@@ -7,6 +7,7 @@ import com.bsep.admin.app.service.contract.ILoggingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -20,6 +21,7 @@ public class LoggingController {
         this.loggingService = loggingService;
     }
 
+    @PreAuthorize("hasAuthority('READ_LOGS')")
     @GetMapping("")
     @LogAfterThrowing(message = "ERROR read all logs")
     @LogAfterReturning(message = "SUCCESS read all logs")
@@ -27,6 +29,7 @@ public class LoggingController {
         return new ResponseEntity<>(this.loggingService.findAll(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('READ_LOGS')")
     @GetMapping("/search-filter")
     @LogAfterThrowing(message = "ERROR search and filter logs")
     @LogAfterReturning(message = "SUCCESS search and filter logs")

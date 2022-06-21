@@ -7,6 +7,9 @@
         <sidebar-item v-if="role === 'ROLE_ADMIN'" name="Registration user" icon="dashboard" to="/new-user"></sidebar-item>
         <sidebar-item v-if="role === 'ROLE_ADMIN'" name="Users" icon="assignment" to="/users"></sidebar-item>
         <sidebar-item  v-if="role === 'ROLE_ADMIN'" name="Real estates" icon="assignment" to="/real-estates"></sidebar-item>
+
+        <sidebar-item  v-if="role === 'ROLE_TENANT' || role === 'ROLE_HOUSE_OWNER'" name="Real estates owner" icon="assignment" to="/owner-real-estates"></sidebar-item>
+        <sidebar-item  v-if="role === 'ROLE_TENANT' || role === 'ROLE_HOUSE_OWNER'" name="Real estates tenant" icon="assignment" to="/tenant-real-estates"></sidebar-item>
       </ul>
     </div>
   </div>

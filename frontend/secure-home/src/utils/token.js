@@ -51,6 +51,14 @@ export function getRoleFromToken() {
 	return Object.keys(Roles).find(role => Roles[role] === roleFromToken);
 }
 
+export function getIdFromToken() {
+	if(hasTokenExpired()) {
+		return null;
+	}
+
+    return decodeToken()?.id;
+}
+
 export function isUserLoggedIn() {
     return getRoleFromToken() && !hasTokenExpired();
 }

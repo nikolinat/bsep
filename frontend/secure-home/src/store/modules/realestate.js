@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getIdFromToken } from "../../utils/token";
 
 const state = {
   realEstates: null,
@@ -47,6 +48,32 @@ const actions = {
       .catch((error) => {
         console.log(error.response.data)
         context.commit("setResult", { label: "remove", ok: false, message: error.response.data.message });
+      });
+  },
+
+  fetchRealEstatesByOwner: (context) => {
+    const userId = getIdFromToken();
+    axios
+      .get(`/realestates/by-owner/` + userId)
+      .then((response) => {
+        context.commit("setRealEstates", response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        context.commit("setResult", { label: "fetch", ok: false });
+      });
+  },
+
+  fetchRealEstatesByTenant: (context) => {
+    const userId = getIdFromToken();
+    axios
+      .get(`/realestates/by-tenant/` + userId)
+      .then((response) => {
+        context.commit("setRealEstates", response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        context.commit("setResult", { label: "fetch", ok: false });
       });
   },
 
