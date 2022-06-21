@@ -6,7 +6,7 @@
           <SearchFilterUsersForm/>
         </card>
         <card>
-          <UsersTable @deletedUser="deletedUser"/>
+          <UsersTable @deletedUser="deletedUser" :users="users"/>
         </card>
       </div>
     </div>
@@ -17,7 +17,7 @@
 import Card from "../generic-components/Card/Card.vue";
 import SearchFilterUsersForm from "../custom-components/Forms/SearchFilterUsersForm.vue";
 import UsersTable from "../custom-components/Tables/UsersTable.vue";
-import { mapActions } from "vuex"
+import { mapActions, mapGetters } from "vuex"
 
 export default {
   components: {
@@ -26,6 +26,21 @@ export default {
     UsersTable,
   },
   name: "UsersPage",
+  data: () => {
+    return {
+      users: [],
+    };
+  },
+  watch: {
+    searchedUsers(users) {
+      this.users = users;
+    }
+  },
+  computed: {
+    ...mapGetters({
+      searchedUsers: "users/getUsers",
+    })
+  },
   methods: {
     ...mapActions({
             fetchUsers: "users/fetchUsers",

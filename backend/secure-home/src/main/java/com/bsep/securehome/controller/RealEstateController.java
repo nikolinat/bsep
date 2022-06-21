@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,5 +60,25 @@ public class RealEstateController {
         return new ResponseEntity<>(realEstateMapper.realEstateToRealEstateDto(realEstateService.removeTenant(id, realEstateId)), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('READ_REAL_ESTATES_BY_TENANT_OWNER')")
+    @LogAfterThrowing(message = "ERROR read real estates by owner")
+    @LogAfterReturning(message = "SUCCESS read real estates by owner")
+    @GetMapping(value = "/by-owner/{ownerId}")
+    public ResponseEntity<?> readRealEstatesByOwner(@PathVariable Integer ownerId) throws Exception {
+        List<RealEstate> realEstates = realEstateService.findRealEstatesByOwner(ownerId);
+        List<RealEstateDto> realEstateDtos = new ArrayList<>();
+        realEstates.forEach(realEstate -> realEstateDtos.add(realEstateMapper.realEstateToRealEstateDto(realEstate)));
+        return new ResponseEntity<>(realEstateDtos, HttpStatus.OK);
+    }
 
+    @PreAuthorize("hasAuthority('READ_REAL_ESTATES_BY_TENANT_OWNER')")
+    @LogAfterThrowing(message = "ERROR read real estates by tenant")
+    @LogAfterReturning(message = "SUCCESS read real estates by tenant")
+    @GetMapping(value = "/by-tenant/{tenantId}")
+    public ResponseEntity<?> readRealEstatesByTenant(@PathVariable Integer tenantId) throws Exception {
+        List<RealEstate> realEstates = realEstateService.findRealEstatesByTenant(tenantId);
+        List<RealEstateDto> realEstateDtos = new ArrayList<>();
+        realEstates.forEach(realEstate -> realEstateDtos.add(realEstateMapper.realEstateToRealEstateDto(realEstate)));
+        return new ResponseEntity<>(realEstateDtos, HttpStatus.OK);
+    }
 }

@@ -1,21 +1,13 @@
-package com.bsep.securehome.model;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import javax.persistence.Id;
-
-import org.springframework.data.mongodb.core.mapping.Document;
+package com.bsep.securehome.dto;
 
 import com.bsep.securehome.model.enums.DeviceType;
 
+import java.time.LocalDateTime;
 
-@Document
-public class DeviceMessage {
-    @Id
-    private UUID id;
-
+public class DeviceMessageDto {
     private String deviceId;
+
+    private String deviceName;
 
     private DeviceType type;
 
@@ -25,37 +17,37 @@ public class DeviceMessage {
 
     private Boolean alarm;
 
-    public DeviceMessage() {}
-
-
-    public DeviceMessage(UUID id, String deviceId, DeviceType type, String message, LocalDateTime dateTime, Boolean alarm) {
-        this.id = id;
+    public DeviceMessageDto(String deviceId, String deviceName, DeviceType type, String message, LocalDateTime dateTime, Boolean alarm) {
         this.deviceId = deviceId;
+        this.deviceName = deviceName;
         this.type = type;
         this.message = message;
         this.dateTime = dateTime;
         this.alarm = alarm;
     }
 
+    public DeviceMessageDto() {
 
-    public UUID getId() {
-        return this.id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getDeviceId() {
-        return this.deviceId;
+        return deviceId;
     }
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
 
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
     public DeviceType getType() {
-        return this.type;
+        return type;
     }
 
     public void setType(DeviceType type) {
@@ -63,7 +55,7 @@ public class DeviceMessage {
     }
 
     public String getMessage() {
-        return this.message;
+        return message;
     }
 
     public void setMessage(String message) {
@@ -71,7 +63,7 @@ public class DeviceMessage {
     }
 
     public LocalDateTime getDateTime() {
-        return this.dateTime;
+        return dateTime;
     }
 
     public void setDateTime(LocalDateTime dateTime) {
@@ -79,7 +71,7 @@ public class DeviceMessage {
     }
 
     public Boolean isAlarm() {
-        return this.alarm;
+        return alarm;
     }
 
     public void setAlarm(Boolean alarm) {

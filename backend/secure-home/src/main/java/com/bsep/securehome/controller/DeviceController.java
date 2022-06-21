@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.bsep.securehome.annotation.LogAfterReturning;
+import com.bsep.securehome.annotation.LogAfterThrowing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,7 +56,7 @@ public class DeviceController {
         return new ResponseEntity<>(deviceService.createDevice(device), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('READ_DEVICES')")
+    @PreAuthorize("hasAnyAuthority('READ_DEVICES', 'READ_REAL_ESTATES_BY_TENANT_OWNER')")
     @LogAfterThrowing(message = "ERROR read devices by real estate id")
     @LogAfterReturning(message = "SUCCESS read devices by real estate id")
     @GetMapping("/{id}")
