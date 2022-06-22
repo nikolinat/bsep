@@ -7,7 +7,6 @@ import com.bsep.securehome.service.implementation.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,11 +19,14 @@ public class DeviceMessageMapper {
         this.deviceService = deviceService;
     }
 
-    public DeviceMessageDto fromDeviceMessageToDeviceMessageDto(DeviceMessage deviceMessage, Long realEstateId) throws Exception {
-        List<DeviceDto> deviceDtoList = deviceService.findDevicesForRealEstate(realEstateId).stream().filter(deviceDto -> deviceDto.getId().equals(deviceMessage.getDeviceId()))
+    public DeviceMessageDto fromDeviceMessageToDeviceMessageDto(DeviceMessage deviceMessage, Long realEstateId)
+            throws Exception {
+        List<DeviceDto> deviceDtoList = deviceService.findDevicesForRealEstate(realEstateId).stream()
+                .filter(deviceDto -> deviceDto.getId().equals(deviceMessage.getDeviceId()))
                 .collect(Collectors.toList());
 
-        return new DeviceMessageDto(deviceMessage.getDeviceId(), deviceDtoList.get(0).getName(), deviceMessage.getType(),
+        return new DeviceMessageDto(deviceMessage.getDeviceId(), deviceDtoList.get(0).getName(),
+                deviceMessage.getType(),
                 deviceMessage.getMessage(), deviceMessage.getDateTime(), deviceMessage.isAlarm());
     }
 
