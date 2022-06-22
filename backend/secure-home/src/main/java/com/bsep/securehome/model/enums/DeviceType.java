@@ -13,5 +13,7 @@ public enum DeviceType {
     LIGHTS,
     CAMERAS,
     FRONT_DOOR,
-    GATE
+    GATE,
+    AIR_CONDITIONING,
+    HEATING
 }

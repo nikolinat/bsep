@@ -6,6 +6,7 @@ import users from "./modules/users.js"
 import devices from './modules/devices.js'
 import alarms from './modules/alarms.js'
 import deviceMessage from './modules/deviceMessage.js'
+import rules from './modules/rules.js'
 
 Vue.use(Vuex);
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
     users,
     devices,
     alarms,
-    deviceMessage
+    deviceMessage,
+    rules
   },
 });

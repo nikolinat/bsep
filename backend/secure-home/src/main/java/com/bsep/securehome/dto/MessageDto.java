@@ -10,18 +10,19 @@ public class MessageDto {
     private DeviceType type;
     private String message;
     private Long realEstateId;
-
+    private Integer value;
 
     public MessageDto() {
     }
 
 
-    public MessageDto(LocalDateTime dateTime, String id, DeviceType type, String message, Long realEstateId) {
+    public MessageDto(LocalDateTime dateTime, String id, DeviceType type, String message, Long realEstateId, Integer value) {
         this.dateTime = dateTime;
         this.id = id;
         this.type = type;
         this.message = message;
         this.realEstateId = realEstateId;
+        this.value = value;
     }
   
 
@@ -64,6 +65,14 @@ public class MessageDto {
 
     public void setRealEstateId(Long realEstateId) {
         this.realEstateId = realEstateId;
+    }
+
+    public Integer getValue() {
+        return this.value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
     }
 
     

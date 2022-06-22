@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bsep.securehome.annotation.LogAfterReturning;
-import com.bsep.securehome.annotation.LogAfterThrowing;
 import com.bsep.securehome.dto.AlarmDto;
 import com.bsep.securehome.dto.DeviceDto;
 import com.bsep.securehome.dto.MessageDto;
@@ -69,10 +67,13 @@ public class DeviceController {
     @LogAfterThrowing(message = "ERROR send message from device")
     @LogAfterReturning(message = "SUCCESS send message from device")
     public ResponseEntity<?> getMessageFromDevice(@RequestBody MessageDto message) throws IOException {
+        System.out.println(message.getValue());
+        System.out.println(message.getType());
+        System.out.println(message.getMessage());
         if (deviceService.checkRegex(message)) {
             List<AlarmDto> alarms = alarmService.findAlarmsForDevice(message.getRealEstateId(), message.getType());
             deviceMessageService.create(new DeviceMessage(UUID.randomUUID(), message.getId(), message.getType(),
-                    message.getMessage(), LocalDateTime.now(ZoneOffset.UTC), false), alarms, message.getRealEstateId());
+                    message.getMessage(), LocalDateTime.now(ZoneOffset.UTC), false, message.getValue()), alarms, message.getRealEstateId());
         }
 
         return new ResponseEntity<>(HttpStatus.OK);

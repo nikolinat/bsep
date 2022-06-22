@@ -99,6 +99,15 @@ const routes = [
     },
   },
   {
+    path: "/rule",
+    name: "RulePage",
+    component: () => import("@/pages/RulePage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
+    },
+  },
+  {
     path: "*",
     name: "catchAll",
     component: () => import("@/pages/HomePage.vue"),

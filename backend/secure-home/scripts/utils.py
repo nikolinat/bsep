@@ -38,12 +38,21 @@ def read(type):
 def state(devices, messages):
     while 1:
         for k, v in devices.items():
-            requests.post('http://localhost:8444/api/v1/device/state', json={
-                'realEstateId': v.real_estate_id,
-                'dateTime': datetime.datetime.utcnow().isoformat(),
-                'id': v.id,
-                'type': v.type,
-                'message': random.choice(messages)
-            },
-                          headers={'Content-Type': 'application/json'})
+            message = random.choice(messages)
+            value = 0
+            if v.type == 'HEATING' and message == 'Grejanje je ukljuceno':
+                value = random.randrange(15, 30)
+            if v.type == 'AIR_CONDITIONING' and message == 'Klima je ukljucena u rezimu hladjenja' or v.type == 'AIR_CONDITIONING'\
+                    and message == 'Klima je ukljucena u rezimu grejanja':
+                value = random.randrange(15, 30)
+            else:
+                requests.post('http://localhost:8444/api/v1/device/state', json={
+                    'realEstateId': v.real_estate_id,
+                    'dateTime': datetime.datetime.utcnow().isoformat(),
+                    'id': v.id,
+                    'type': v.type,
+                    'message': message,
+                    'value': value
+                },
+                              headers={'Content-Type': 'application/json'})
             time.sleep(int(v.period))

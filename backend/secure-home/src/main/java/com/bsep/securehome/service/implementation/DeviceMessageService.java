@@ -17,14 +17,9 @@ import com.bsep.securehome.repository.RealEstateRepository;
 import com.bsep.securehome.service.EmailService;
 import com.bsep.securehome.dto.DeviceDto;
 import com.bsep.securehome.dto.SearchFilterDeviceMessagesDto;
-import com.bsep.securehome.model.DeviceMessage;
-import com.bsep.securehome.repository.DeviceMessageRepository;
 import com.bsep.securehome.service.contract.IDeviceMessageService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,14 +44,14 @@ public class DeviceMessageService implements IDeviceMessageService {
 
     @Override
     public DeviceMessage create(DeviceMessage deviceMessage, List<AlarmDto> alarms, Long realEstateId) {
-        if (alarms.size() != 0) {
+        //if (alarms.size() != 0) {
             KieSession kieSession = kieContainer.newKieSession();
             kieSession.insert(deviceMessage);
             alarms.forEach(alarm -> kieSession.insert(alarm));
             kieSession.getAgenda().getAgendaGroup("alarm").setFocus();
             kieSession.fireAllRules();
             kieSession.dispose();
-        }
+        //}
         if(deviceMessage.isAlarm()){
            RealEstate realEstate= realEstateRepository.findById(realEstateId).orElse(null);
            Collection<User> owners = realEstate.getOwners();

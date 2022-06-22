@@ -73,8 +73,9 @@ public class DeviceService {
                 if (splitted[0].equals(deviceId)) {
                     return splitted[5];
                 }
-                scanner.close();
+               
             }
+            scanner.close();
 
         } else {
             return null;

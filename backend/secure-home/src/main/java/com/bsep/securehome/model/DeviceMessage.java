@@ -25,6 +25,8 @@ public class DeviceMessage {
 
     private Boolean alarm;
 
+    private Integer value;
+
     public DeviceMessage() {}
 
 
@@ -35,6 +37,16 @@ public class DeviceMessage {
         this.message = message;
         this.dateTime = dateTime;
         this.alarm = alarm;
+    }
+
+    public DeviceMessage(UUID id, String deviceId, DeviceType type, String message, LocalDateTime dateTime, Boolean alarm, Integer value) {
+        this.id = id;
+        this.deviceId = deviceId;
+        this.type = type;
+        this.message = message;
+        this.dateTime = dateTime;
+        this.alarm = alarm;
+        this.value = value;
     }
 
 
@@ -85,4 +97,13 @@ public class DeviceMessage {
     public void setAlarm(Boolean alarm) {
         this.alarm = alarm;
     }
+
+    public Integer getValue() {
+        return this.value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
+    }
+
 }
