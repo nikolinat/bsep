@@ -1,5 +1,6 @@
 import axios from "axios";
-import {setToken, removeToken} from '../../utils/token'
+import {setToken, removeToken, getRoleFromToken} from '../../utils/token'
+import { tryConnecting } from "../../utils/sockets.js";
 
 const state = {
     result: null
@@ -20,6 +21,12 @@ const actions = {
                 ok: true,
                 message: ''
             });
+
+            const role = getRoleFromToken();
+            if(role === "ROLE_HOUSE_OWNER" || role === "ROLE_TENANT") {
+                tryConnecting();
+            }
+            
         })
         .catch(error => {
             const message = error.response.data.errorMessage !== undefined? error.response.data.errorMessage : 'Bad credentials!';
