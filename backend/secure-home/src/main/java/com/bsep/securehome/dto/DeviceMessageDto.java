@@ -1,6 +1,6 @@
 package com.bsep.securehome.dto;
 
-import com.bsep.securehome.utils.DeviceType;
+import com.bsep.securehome.model.enums.DeviceType;
 
 import java.time.LocalDateTime;
 
@@ -15,9 +15,9 @@ public class DeviceMessageDto {
 
     private LocalDateTime dateTime;
 
-    private boolean alarm;
+    private Boolean alarm;
 
-    public DeviceMessageDto(String deviceId, String deviceName, DeviceType type, String message, LocalDateTime dateTime, boolean alarm) {
+    public DeviceMessageDto(String deviceId, String deviceName, DeviceType type, String message, LocalDateTime dateTime, Boolean alarm) {
         this.deviceId = deviceId;
         this.deviceName = deviceName;
         this.type = type;
@@ -70,11 +70,11 @@ public class DeviceMessageDto {
         this.dateTime = dateTime;
     }
 
-    public boolean isAlarm() {
+    public Boolean isAlarm() {
         return alarm;
     }
 
-    public void setAlarm(boolean alarm) {
+    public void setAlarm(Boolean alarm) {
         this.alarm = alarm;
     }
 }

@@ -44,6 +44,12 @@
                 >
               </ModalOpener>
               <DropDownItem @click="viewDevice(realEstate)"> View devices </DropDownItem>
+              <ModalOpener :modalBoxId="'addAlarmModalOpener'">
+                <DropDownItem @click="selectedRealEstate = realEstate"
+                  >Add alarm</DropDownItem
+                >
+              </ModalOpener>
+               <DropDownItem @click="viewAlarms(realEstate)"> View alarms </DropDownItem>
             </DropDownMenu>
           </div>
         </TableRow>
@@ -67,7 +73,7 @@
       title="Tenants"
       :sizeClass="'modal-lg'">
       <div slot="body" v-if="selectedRealEstate !== null">
-            <TenantTable :users="selectedRealEstate.tenants" :realEstate="selectedRealEstate"></TenantTable>
+        <TenantTable :users="selectedRealEstate.tenants" :realEstate="selectedRealEstate"></TenantTable>
       </div>
     </Modal>
     <Modal
@@ -75,7 +81,7 @@
       title="Owners"
       :sizeClass="'modal-lg'">
       <div slot="body" v-if="selectedRealEstate !== null">
-            <TenantTable :users="selectedRealEstate.owners" :realEstate="selectedRealEstate"></TenantTable>
+        <TenantTable :users="selectedRealEstate.owners" :realEstate="selectedRealEstate"></TenantTable>
       </div>
     </Modal>
 
@@ -84,11 +90,20 @@
       title="Add device"
       :sizeClass="'modal-sg'">
       <div slot="body" v-if="selectedRealEstate !== null">
-              <AddDeviceForm :realEstateId="selectedRealEstate.id"/>
+        <AddDeviceForm :realEstateId="selectedRealEstate.id"/>
       </div>
         <ModalCloser id="addDeviceModalCloser"></ModalCloser>
     </Modal>
-   
+
+     <Modal
+      modalBoxId="addAlarmModalOpener"
+      title="Add alarm"
+      :sizeClass="'modal-sg'">
+      <div slot="body" v-if="selectedRealEstate !== null">
+        <AddAlarmForm :realEstateId="selectedRealEstate.id"/>
+      </div>
+        <ModalCloser id="addAlarmModalCloser"></ModalCloser>
+    </Modal>   
   </div>
 </template>
 
@@ -107,6 +122,8 @@ import SelectOptionInput from '../../generic-components/Form/SelectOptionInput.v
 import Button from "../../generic-components/Form/Button.vue";
 import TenantTable from "../../custom-components/Tables/TenantTable.vue";
 import AddDeviceForm from '../../custom-components/Forms/AddDeviceForm.vue'
+import AddAlarmForm from '../../custom-components/Forms/AddAlarmForm.vue'
+
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -152,7 +169,8 @@ export default {
     ModalCloser,
     Button,
     TenantTable,
-    AddDeviceForm
+    AddDeviceForm,
+    AddAlarmForm
   },
 
   computed: {
@@ -177,6 +195,10 @@ export default {
 
     viewDevice(realEstate){
        this.$router.push(`/devices/${realEstate.id}`);
+    },
+
+    viewAlarms(realEstate){
+      this.$router.push(`/alarms/${realEstate.id}`);
     }
   },
   mounted() {

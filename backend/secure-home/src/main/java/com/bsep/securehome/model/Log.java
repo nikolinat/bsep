@@ -29,9 +29,7 @@ public class Log {
         this.logType = logType;
     }
 
-    private Log() {
-
-    }
+    private Log() {}
 
     @Override
     public String toString() {

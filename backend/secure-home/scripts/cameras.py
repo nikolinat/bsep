@@ -1,6 +1,6 @@
 from utils import read, state
 
-messages = ['Kamere su ukljucene.', 'Nestalo je struje.', 'Kamere su iskljucene.', 'Uocen nepoznat objekat.']
+messages = ['Kamere su ukljucene', 'Nestalo je struje', 'Kamere su iskljucene', 'Uocen nepoznat objekat']
 
 
 def main():

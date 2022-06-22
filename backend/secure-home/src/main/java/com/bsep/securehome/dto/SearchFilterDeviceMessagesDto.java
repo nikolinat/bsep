@@ -1,6 +1,6 @@
 package com.bsep.securehome.dto;
 
-import com.bsep.securehome.utils.DeviceType;
+import com.bsep.securehome.model.enums.DeviceType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;

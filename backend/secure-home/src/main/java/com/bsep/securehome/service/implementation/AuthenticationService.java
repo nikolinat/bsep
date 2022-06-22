@@ -1,6 +1,5 @@
 package com.bsep.securehome.service.implementation;
 
-import com.bsep.securehome.annotation.LogBefore;
 import com.bsep.securehome.dto.JwtAuthenticationRequest;
 import com.bsep.securehome.model.LockedAccount;
 import com.bsep.securehome.model.User;

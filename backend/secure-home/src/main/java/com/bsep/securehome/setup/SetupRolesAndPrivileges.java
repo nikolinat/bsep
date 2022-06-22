@@ -44,16 +44,22 @@ public class SetupRolesAndPrivileges implements
         Privilege editCertificate = createPrivilegeIfNotFound("EDIT_CERTIFICATE");
         Privilege readUsers = createPrivilegeIfNotFound("READ_USERS");
         Privilege writeUsers = createPrivilegeIfNotFound("WRITE_USERS");
+        Privilege removeUsers = createPrivilegeIfNotFound("REMOVE_USERS");
         Privilege readCsr = createPrivilegeIfNotFound("READ_CSR");
         Privilege writeCsr = createPrivilegeIfNotFound("WRITE_CSR");
         Privilege editCsr = createPrivilegeIfNotFound("EDIT_CSR");
         Privilege readRealEstate = createPrivilegeIfNotFound("READ_REAL_ESTATES");
-        Privilege readMyHomes = createPrivilegeIfNotFound("READ_MY_HOMES");
+        Privilege readDevice = createPrivilegeIfNotFound("READ_DEVICES");
+        Privilege createDevice = createPrivilegeIfNotFound("CREATE_DEVICE");
+        Privilege createAlarm = createPrivilegeIfNotFound("CREATE_ALARM");
+        Privilege readAlarms = createPrivilegeIfNotFound("READ_ALARMS");
         Privilege readRealEstatesByTenantOwner = createPrivilegeIfNotFound("READ_REAL_ESTATES_BY_TENANT_OWNER");
 
-        List<Privilege> adminPrivileges = Arrays.asList(readCertificates, editCertificate, readUsers,writeUsers, readCsr, editCsr, readRealEstate, readMyHomes);
-        List<Privilege> ownerPrivileges = Arrays.asList(writeCsr, readRealEstatesByTenantOwner);
-        List<Privilege> tenantPrivileges = Collections.singletonList(readRealEstatesByTenantOwner);
+        List<Privilege> adminPrivileges = Arrays.asList(readCertificates, editCertificate, readUsers, writeUsers,
+                readCsr, editCsr, readRealEstate, removeUsers, readDevice, createDevice, createAlarm, readAlarms);
+        List<Privilege> ownerPrivileges = Arrays.asList(writeCsr, removeUsers, readDevice, createAlarm, readAlarms, readRealEstatesByTenantOwner);
+        List<Privilege> tenantPrivileges = Arrays.asList(readDevice, readAlarms, readRealEstatesByTenantOwner);
+
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_HOUSE_OWNER", ownerPrivileges);
         createRoleIfNotFound("ROLE_TENANT", tenantPrivileges);
@@ -149,6 +155,7 @@ public class SetupRolesAndPrivileges implements
         }
 
     }
+
     @Transactional
     void addRealEstates() {
 

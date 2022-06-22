@@ -1,0 +1,18 @@
+package bsep.kjar;
+import com.bsep.securehome.model.DeviceMessage;
+import com.bsep.securehome.model.enums.DeviceType;
+rule "Heating alarm"
+	no-loop
+	agenda-group "alarm"
+	when
+		$deviceMessage: DeviceMessage(type == DeviceType.HEATING, message == "Grejanje je ukljuceno", value >= 50)
+    then
+		Integer v = $deviceMessage.getValue();
+		String m = "Grejanje je ukljuceno" + ".Temperatura:" + String.valueOf(v) + " stepeni.";
+		modify($deviceMessage){
+			setAlarm(true),
+			setMessage(m);
+		}
+end
+
+
