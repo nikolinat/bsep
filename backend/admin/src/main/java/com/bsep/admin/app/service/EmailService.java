@@ -25,7 +25,7 @@ public class EmailService {
     }
 
     public void sendEmailVerificationMail(String toEmail, String token) {
-        String path = "http://localhost:8080/email-verification/";
+        String path = "https://localhost:8080/email-verification/";
         try {
             MimeMessage msg = javaMailSender.createMimeMessage();
             msg.setSubject("Kucni sigurnosni sistem - verifikacija mejla");

@@ -4,8 +4,6 @@ import com.bsep.admin.app.dto.UserDto;
 import com.bsep.admin.app.model.User;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component

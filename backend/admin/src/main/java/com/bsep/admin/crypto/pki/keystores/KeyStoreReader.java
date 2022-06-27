@@ -1,21 +1,17 @@
 package com.bsep.admin.crypto.pki.keystores;
 
-import com.bsep.admin.app.controller.CertificateController;
 import com.bsep.admin.crypto.pki.data.IssuerData;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 
 

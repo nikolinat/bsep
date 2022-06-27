@@ -5,15 +5,11 @@ import com.bsep.admin.crypto.pki.data.IssuerData;
 import com.bsep.admin.crypto.pki.data.SubjectData;
 import com.bsep.admin.crypto.pki.keystores.KeyStoreReader;
 import com.bsep.admin.crypto.pki.keystores.KeyStoreWriter;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
-import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
