@@ -65,6 +65,14 @@ export const types = [
             label: "GATE",
             value: "GATE",
 
+        },
+        {
+            label:"AIR CONDITIONING",
+            value: "AIR_CONDITIONING"
+        }, 
+        {
+            label: "HEATING",
+            value: "HEATING"
         }
 
 ]

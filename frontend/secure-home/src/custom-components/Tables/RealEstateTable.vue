@@ -36,6 +36,15 @@
               <DropDownItem @click="viewReport(realEstate)">
                 View report
               </DropDownItem>
+
+              <ModalOpener :modalBoxId="'addAlarmModalOpener'">
+                <DropDownItem @click="selectedRealEstate = realEstate"
+                  >Add alarm</DropDownItem
+                >
+              </ModalOpener>
+              <DropDownItem @click="viewAlarms(realEstate)">
+                View alarms
+              </DropDownItem>
             </DropDownMenu>
           </div>
         </TableRow>
@@ -103,6 +112,17 @@
       </div>
       <ModalCloser id="addDeviceModalCloser"></ModalCloser>
     </Modal>
+
+    <Modal
+      modalBoxId="addAlarmModalOpener"
+      title="Add alarm"
+      :sizeClass="'modal-sg'"
+    >
+      <div slot="body" v-if="selectedRealEstate !== null">
+        <AddAlarmForm :realEstateId="selectedRealEstate.id" />
+      </div>
+      <ModalCloser id="addAlarmModalCloser"></ModalCloser>
+    </Modal>
   </div>
 </template>
 
@@ -121,6 +141,8 @@ import SelectOptionInput from "../../generic-components/Form/SelectOptionInput.v
 import Button from "../../generic-components/Form/Button.vue";
 import TenantTable from "../../custom-components/Tables/TenantTable.vue";
 import AddDeviceForm from "../../custom-components/Forms/AddDeviceForm.vue";
+import AddAlarmForm from "../../custom-components/Forms/AddAlarmForm.vue";
+
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -166,6 +188,7 @@ export default {
     Button,
     TenantTable,
     AddDeviceForm,
+    AddAlarmForm,
   },
 
   computed: {
@@ -188,11 +211,15 @@ export default {
       fetchOwnersAndTenants: "users/fetchOwnersAndTenants",
     }),
 
+    viewReport(realEstate) {
+      this.$router.push(`/reports/${realEstate.id}`);
+    },
     viewDevice(realEstate) {
       this.$router.push(`/devices/${realEstate.id}`);
     },
-    viewReport(realEstate) {
-      this.$router.push(`/reports/${realEstate.id}`);
+
+    viewAlarms(realEstate) {
+      this.$router.push(`/alarms/${realEstate.id}`);
     },
   },
   mounted() {

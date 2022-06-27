@@ -7,7 +7,8 @@ import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.bsep.securehome.utils.DeviceType;
+import com.bsep.securehome.model.enums.DeviceType;
+
 
 @Document
 public class DeviceMessage {
@@ -22,18 +23,30 @@ public class DeviceMessage {
 
     private LocalDateTime dateTime;
 
-    private boolean alarm;
+    private Boolean alarm;
 
+    private Integer value;
 
     public DeviceMessage() {}
 
 
-    public DeviceMessage(UUID id, String deviceId, DeviceType type, String message, LocalDateTime dateTime) {
+    public DeviceMessage(UUID id, String deviceId, DeviceType type, String message, LocalDateTime dateTime, Boolean alarm) {
         this.id = id;
         this.deviceId = deviceId;
         this.type = type;
         this.message = message;
         this.dateTime = dateTime;
+        this.alarm = alarm;
+    }
+
+    public DeviceMessage(UUID id, String deviceId, DeviceType type, String message, LocalDateTime dateTime, Boolean alarm, Integer value) {
+        this.id = id;
+        this.deviceId = deviceId;
+        this.type = type;
+        this.message = message;
+        this.dateTime = dateTime;
+        this.alarm = alarm;
+        this.value = value;
     }
 
 
@@ -75,6 +88,22 @@ public class DeviceMessage {
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public Boolean isAlarm() {
+        return this.alarm;
+    }
+
+    public void setAlarm(Boolean alarm) {
+        this.alarm = alarm;
+    }
+
+    public Integer getValue() {
+        return this.value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
     }
 
 }

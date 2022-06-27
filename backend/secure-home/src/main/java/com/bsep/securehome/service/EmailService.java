@@ -78,4 +78,19 @@ public class EmailService {
             System.out.println("Greška prilikom slanja!");
         }
     }
+
+    public void sendEmailMessageFromDevice(String toEmail, String message) {
+        try {
+            MimeMessage msg = javaMailSender.createMimeMessage();
+            msg.setSubject("Alarm");
+            MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+            helper.setTo(toEmail);
+            helper.setFrom("bezbednost");
+            helper.setSubject("Alarm");
+            helper.setText(message, true);
+            javaMailSender.send(msg);
+        } catch (MessagingException ex) {
+            System.out.println("Greška prilikom slanja!");
+        }
+    }
 }

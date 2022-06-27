@@ -21,7 +21,8 @@ import com.bsep.securehome.dto.DeviceDto;
 import com.bsep.securehome.dto.SearchDeviceDto;
 import com.bsep.securehome.model.DevicesLog;
 import com.bsep.securehome.repository.DevicesLogRepository;
-import com.bsep.securehome.utils.DeviceType;
+import com.bsep.securehome.dto.MessageDto;
+import com.bsep.securehome.model.enums.DeviceType;
 
 @Component
 public class DeviceService {
@@ -38,18 +39,17 @@ public class DeviceService {
     
     public DeviceDto createDevice(DeviceDto device) throws IOException{
         device.setId(UUID.randomUUID().toString());
-        String filePath = "src/main/java/files/config/"+device.getRealEstateId() + ".txt";
+        String filePath = "src/main/java/files/config/" + device.getRealEstateId() + ".txt";
         File file = new File(filePath);
-        if(file.exists()){
+        if (file.exists()) {
             Files.write(Paths.get(filePath), device.toString().getBytes(), StandardOpenOption.APPEND);
-        }else {
+        } else {
             Files.write(Paths.get(filePath), device.toString().getBytes(), StandardOpenOption.CREATE);
         }
         return device;
     }
 
-
-    public DeviceDto mapDevice(String device){
+    public DeviceDto mapDevice(String device) {
         String[] splitted = device.split(",");
         DeviceDto deviceDto = new DeviceDto();
         deviceDto.setId(splitted[0]);
@@ -59,23 +59,22 @@ public class DeviceService {
         deviceDto.setPeriod(Integer.parseInt(splitted[4]));
         deviceDto.setFilter(splitted[5]);
         return deviceDto;
-        }
+    }
 
-
-    public ArrayList<DeviceDto> findDevicesForRealEstate(Long realEstateId) throws FileNotFoundException{
+    public ArrayList<DeviceDto> findDevicesForRealEstate(Long realEstateId) throws FileNotFoundException {
         ArrayList<DeviceDto> devices = new ArrayList<>();
         String filePath = configPath+"src/main/java/files/config/"+realEstateId + ".txt";
         File file = new File(filePath);
-        if(file.exists()){
+        if (file.exists()) {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
-               DeviceDto device = mapDevice(scanner.nextLine());
-               devices.add(device);
-              }
-              scanner.close();
+                DeviceDto device = mapDevice(scanner.nextLine());
+                devices.add(device);
+            }
+            scanner.close();
 
-        }else {
-           return null;
+        } else {
+            return null;
         }
         return devices;
 
@@ -106,5 +105,35 @@ public class DeviceService {
         && LocalDate.parse(device.getDateTime()) .isBefore(searchDeviceDto.getEndDate()))).collect(Collectors.toList());
         
         return findDevices;
+    }
+    
+    public String findRegex(Long realEstateId, String deviceId) throws FileNotFoundException {
+        String filePath = "src/main/java/files/config/" + realEstateId + ".txt";
+        File file = new File(filePath);
+        if (file.exists()) {
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] splitted = line.split(",");
+                if (splitted[0].equals(deviceId)) {
+                    return splitted[5];
+                }
+               
+            }
+            scanner.close();
+
+        } else {
+            return null;
+        }
+        return null;
+    }
+
+    public boolean checkRegex(MessageDto messageDto) throws FileNotFoundException {
+        String regex = findRegex(messageDto.getRealEstateId(), messageDto.getId());
+        if (messageDto.getMessage().matches(regex)) {
+            return true;
+        }
+        return false;
+
     }
 }

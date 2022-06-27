@@ -1,12 +1,13 @@
 package com.bsep.securehome.dto;
 
+import com.bsep.securehome.model.enums.DeviceType;
+
 import java.time.LocalDateTime;
 
-import com.bsep.securehome.utils.DeviceType;
-
 public class DeviceMessageDto {
-    
     private String deviceId;
+
+    private String deviceName;
 
     private DeviceType type;
 
@@ -14,27 +15,39 @@ public class DeviceMessageDto {
 
     private LocalDateTime dateTime;
 
+    private Boolean alarm;
 
-    public DeviceMessageDto() {}
-
-
-    public DeviceMessageDto(String deviceId, DeviceType type, String message, LocalDateTime dateTime) {
+    public DeviceMessageDto(String deviceId, String deviceName, DeviceType type, String message, LocalDateTime dateTime, Boolean alarm) {
         this.deviceId = deviceId;
+        this.deviceName = deviceName;
         this.type = type;
         this.message = message;
         this.dateTime = dateTime;
+        this.alarm = alarm;
+    }
+
+    public DeviceMessageDto() {
+
     }
 
     public String getDeviceId() {
-        return this.deviceId;
+        return deviceId;
     }
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
 
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
     public DeviceType getType() {
-        return this.type;
+        return type;
     }
 
     public void setType(DeviceType type) {
@@ -42,7 +55,7 @@ public class DeviceMessageDto {
     }
 
     public String getMessage() {
-        return this.message;
+        return message;
     }
 
     public void setMessage(String message) {
@@ -50,10 +63,18 @@ public class DeviceMessageDto {
     }
 
     public LocalDateTime getDateTime() {
-        return this.dateTime;
+        return dateTime;
     }
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public Boolean isAlarm() {
+        return alarm;
+    }
+
+    public void setAlarm(Boolean alarm) {
+        this.alarm = alarm;
     }
 }

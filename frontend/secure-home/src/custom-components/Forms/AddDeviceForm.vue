@@ -17,7 +17,7 @@
     </form-row>
     <form-row>
       <div class="col-12">
-        <text-input label="Filter" v-model="device.filter" type="text"
+        <text-input label="Filter (regex)" v-model="device.filter" type="text"
                 :showErrorMessage="showErrorMessage"/>
       </div>
     </form-row>

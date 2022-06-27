@@ -1,0 +1,114 @@
+<template>
+    <div class="content">
+            <div class="row">
+                <template v-for="(realEstate, index) in realEstates">
+                    <RotatingCard :key="index" :name="realEstate.name" :address="realEstate.address">
+                        <div slot="buttons">
+                            <ModalOpener :modalBoxId="'ownersModal'">
+                                <Button @click="handleViewOwneres(realEstate.owners)">Owners</Button>
+                            </ModalOpener>
+                            <ModalOpener :modalBoxId="'tenantsModal'">
+                                <Button @click="handleViewTenants(realEstate.tenants)">Tenants</Button>
+                            </ModalOpener>
+                            <ModalOpener :modalBoxId="'devicesModal'">
+                                <Button @click="handleViewDevices(realEstate.id)">Devices</Button>
+                            </ModalOpener>
+                            <ModalOpener :modalBoxId="'devicesMessagesModal'">
+                                <Button @click="handleViewDevicesMessages(realEstate.id)">Messages</Button>
+                            </ModalOpener>
+                        </div>
+                    </RotatingCard>
+                </template>
+            </div>
+
+        <Modal modalBoxId="ownersModal" :title="'Owners'" sizeClass="modal-lg">
+            <div slot="body">
+                <UsersTable :users="owners" />
+            </div>
+        </Modal>
+
+        <Modal modalBoxId="tenantsModal" :title="'Tenants'" sizeClass="modal-lg">
+            <div slot="body">
+                <UsersTable :users="tenants" />
+            </div>
+        </Modal>
+
+        <Modal modalBoxId="devicesModal" :title="'Devices'" sizeClass="modal-lg">
+            <div slot="body">
+                <DevicesTable :devices="devices" />
+            </div>
+        </Modal>
+
+        <Modal modalBoxId="devicesMessagesModal" :title="'Device messages'" sizeClass="modal-lg">
+            <div slot="body">
+                <SearchFilterDevicesMessages  :realEstateId="realEstateId"/>
+                <DeviceMessageTable :devicesMessages="devicesMessages" />
+            </div>
+        </Modal>
+    </div>
+</template>
+
+<script>
+
+import RotatingCard from "../../generic-components/Card/RotatingCard.vue"
+import Button from "../../generic-components/Form/Button.vue"
+import ModalOpener from "../../generic-components/Modal/ModalOpener.vue"
+import Modal from "../../generic-components/Modal/Modal.vue"
+import UsersTable from "../Tables/UsersTable.vue"
+import DevicesTable from '../Tables/DevicesTable.vue'
+import DeviceMessageTable from '../Tables/DeviceMessageTable.vue'
+import SearchFilterDevicesMessages from '../Forms/SearchFilterDevicesMessages.vue'
+import { mapActions, mapGetters } from 'vuex'
+
+export default {
+    props: ['realEstates'],
+    components: {
+        RotatingCard,
+        Button,
+        ModalOpener,
+        Modal,
+        UsersTable,
+        DevicesTable,
+        DeviceMessageTable,
+        SearchFilterDevicesMessages
+    },
+    name: 'RealEstates',
+
+     data: () => {
+        return {
+            owners: [],
+            tenants: [],
+            realEstateId: null
+        }
+    },
+    computed: {
+        ...mapGetters({
+            devices: 'devices/getDevices',
+            devicesMessages: 'deviceMessage/getDevicesMessages'
+        })
+    },
+    methods: {
+        ...mapActions({
+            fetchDevicesByRealEstate: 'devices/fetchDevicesForRealEstate',
+            fetchDevicesMessagesForRealEstate: 'deviceMessage/fetchDevicesMessagesForRealEstate'
+        }),
+
+        handleViewOwneres(owners) {
+            this.owners = owners;
+        },
+
+        handleViewTenants(tenants) {
+            this.tenants = tenants;
+        },
+
+        handleViewDevices(id) {
+            this.fetchDevicesByRealEstate(id);
+        },
+
+        handleViewDevicesMessages(id) {
+            this.realEstateId = id;
+            this.fetchDevicesMessagesForRealEstate(id);
+        }
+    }
+}
+</script>

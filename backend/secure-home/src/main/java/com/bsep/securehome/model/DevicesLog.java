@@ -1,7 +1,7 @@
 package com.bsep.securehome.model;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.bsep.securehome.utils.DeviceType;
+import com.bsep.securehome.model.enums.DeviceType;
 
 
 @Document

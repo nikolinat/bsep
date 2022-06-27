@@ -1,0 +1,31 @@
+template header
+ 
+number
+sign
+message
+ 
+package bsep.kjar;
+import com.bsep.securehome.model.DeviceMessage;
+import com.bsep.securehome.model.enums.DeviceType;
+
+dialect "java"
+ 
+template "Air conditioning template"
+ 
+rule "Air conditionig alarm"
+	no-loop
+	agenda-group "alarm"
+	when
+		$deviceMessage: DeviceMessage(type == DeviceType.AIR_CONDITIONING, message == "@{message}",  value @{sign} @{number})
+    then
+		Integer v = $deviceMessage.getValue();
+		String m = $deviceMessage.getMessage() + ".Temperatura:" + String.valueOf(v) + " stepeni.";
+		modify($deviceMessage){
+			setAlarm(true),
+			setMessage(m);
+		}
+end
+
+
+
+end template
