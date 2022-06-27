@@ -55,4 +55,4 @@ def state(devices, messages):
                     'value': value
                 },
                               headers={'Content-Type': 'application/json'})
-            time.sleep(int(v.period))
+            time.sleep(int(v.period)/3)

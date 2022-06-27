@@ -7,6 +7,7 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bsep.securehome.dto.AlarmDto;
 import com.bsep.securehome.model.DeviceMessage;
@@ -17,11 +18,17 @@ import com.bsep.securehome.repository.DeviceMessageRepository;
 import com.bsep.securehome.repository.RealEstateRepository;
 import com.bsep.securehome.service.EmailService;
 import com.bsep.securehome.dto.DeviceDto;
+import com.bsep.securehome.dto.MessageDto;
 import com.bsep.securehome.dto.SearchFilterDeviceMessagesDto;
 import com.bsep.securehome.service.contract.IDeviceMessageService;
 import com.bsep.securehome.service.contract.INotificationService;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -49,6 +56,7 @@ public class DeviceMessageService implements IDeviceMessageService {
     }
 
     @Override
+    @Transactional
     public DeviceMessage create(DeviceMessage deviceMessage, List<AlarmDto> alarms, Long realEstateId) {
         // if (alarms.size() != 0) {
         KieSession kieSession = kieContainer.newKieSession();
@@ -110,5 +118,16 @@ public class DeviceMessageService implements IDeviceMessageService {
                         (searchFilterDeviceMessagesDto.getDateTime() == null || searchFilterDeviceMessagesDto
                                 .getDateTime().toLocalDate().isEqual(deviceMessage.getDateTime().toLocalDate())))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void addMessageToFile(MessageDto messageDto) throws IOException {
+        String filePath = "src/main/java/files/messages/messages.txt";
+        File file = new File(filePath);
+        if (file.exists()) {
+            Files.write(Paths.get(filePath), messageDto.toString().getBytes(), StandardOpenOption.APPEND);
+        } else {
+            Files.write(Paths.get(filePath), messageDto.toString().getBytes(), StandardOpenOption.CREATE);
+        }
     }
 }
