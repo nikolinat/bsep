@@ -35,7 +35,6 @@ public class DeviceService {
     public DeviceService(DevicesLogRepository devicesLogRepository) {
         this.devicesLogRepository = devicesLogRepository;
     }
-
     
     public DeviceDto createDevice(DeviceDto device) throws IOException{
         device.setId(UUID.randomUUID().toString());
