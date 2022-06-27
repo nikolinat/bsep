@@ -1,19 +1,18 @@
 <template>
-  <div class="content">
+  <div>
     <Table>
       <TableHead
-        :columnNames="['Id', 'Message', 'Type', 'Date', 'Alarm']"
+        :columnNames="['realEstateId', 'id', 'type', 'name']"
       ></TableHead>
       <TableBody>
         <TableRow
-          v-for="(device, i) in devices"
+          v-for="(deviceMessage, i) in devicess"
           :key="i"
           :values="[
-            device.devicesId,
-            device.message,
-            device.type,
-            device.dateTime,
-            device.alarm,
+            deviceMessage.realEstateId,
+            deviceMessage.id,
+            deviceMessage.type,
+            deviceMessage.name,
           ]"
         >
         </TableRow>
@@ -30,11 +29,29 @@ import TableRow from "../../generic-components/Table/TableRow.vue";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
+  props: {},
   data: () => {
     return {
-      devices: [],
+      users: [],
+      selectedUser: null,
+      devicess: [
+        {
+          realEstateId: 1,
+          id: "11",
+          type: "camera",
+          name: "camera1",
+        },
+        {
+          realEstateId: 1,
+          id: "12",
+          type: "camera",
+          name: "camera2",
+        },
+      ],
+      selectedMessage: null,
     };
   },
+  mounted() {},
   components: {
     Table,
     TableHead,
@@ -42,20 +59,15 @@ export default {
     TableRow,
   },
 
-  watch: {
-    searchedDevices(devices) {
-      this.devices = devices;
-    },
-  },
   computed: {
     ...mapGetters({
-      searchedDevices: "devices/getFilteredDevices",
-      result: "devices/getResult",
+      searchedUsers: "users/getUsers",
+      result: "users/getResult",
     }),
   },
   methods: {
     ...mapActions({
-      fetchDevices: "devices/fetchReportForDevices",
+      fetchUsers: "users/fetchUsers",
     }),
   },
 };

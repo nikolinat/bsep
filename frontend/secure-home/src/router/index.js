@@ -1,12 +1,11 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import {Roles} from '../constants.js';
-import {getRoleFromToken} from '../utils/token.js'
+import { Roles } from "../constants.js";
+import { getRoleFromToken } from "../utils/token.js";
 
 Vue.use(VueRouter);
 
 const $ = window.$;
-
 
 const routes = [
   {
@@ -23,7 +22,7 @@ const routes = [
     component: () => import("@/pages/HomePage.vue"),
     meta: {
       layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN, Roles.ROLE_HOUSE_OWNER, Roles.ROLE_TENANT]
+      role: [Roles.ROLE_ADMIN, Roles.ROLE_HOUSE_OWNER, Roles.ROLE_TENANT],
     },
   },
   {
@@ -32,7 +31,7 @@ const routes = [
     component: () => import("@/pages/RealEstatesPage.vue"),
     meta: {
       layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN]
+      role: [Roles.ROLE_ADMIN],
     },
   },
 
@@ -42,7 +41,7 @@ const routes = [
     component: () => import("@/pages/CreateUserPage.vue"),
     meta: {
       layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN]
+      role: [Roles.ROLE_ADMIN],
     },
   },
   {
@@ -51,7 +50,7 @@ const routes = [
     component: () => import("@/pages/UpdateUserPage.vue"),
     meta: {
       layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN]
+      role: [Roles.ROLE_ADMIN],
     },
   },
   {
@@ -60,7 +59,7 @@ const routes = [
     component: () => import("@/pages/UsersPage.vue"),
     meta: {
       layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN]
+      role: [Roles.ROLE_ADMIN],
     },
   },
   {
@@ -69,7 +68,16 @@ const routes = [
     component: () => import("@/pages/ViewDevicesPage.vue"),
     meta: {
       layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN]
+      role: [Roles.ROLE_ADMIN],
+    },
+  },
+  {
+    path: "/reports/:id",
+    name: "ViewReportsPage",
+    component: () => import("@/pages/ViewReportsPage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN],
     },
   },
   {
@@ -78,7 +86,7 @@ const routes = [
     component: () => import("@/pages/HomePage.vue"),
     meta: {
       layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN, Roles.ROLE_HOUSE_OWNER, Roles.ROLE_TENANT]
+      role: [Roles.ROLE_ADMIN, Roles.ROLE_HOUSE_OWNER, Roles.ROLE_TENANT],
     },
   },
 ];
@@ -90,20 +98,19 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const { role} = to.meta;
-	if(role){
-		const userRole = getRoleFromToken();
-		if(role.length && !role.includes(userRole)){
-			return next({path: 'auth'});
-		}
-
-	}
-	next();
+  const { role } = to.meta;
+  if (role) {
+    const userRole = getRoleFromToken();
+    if (role.length && !role.includes(userRole)) {
+      return next({ path: "auth" });
+    }
+  }
+  next();
 });
 
 router.afterEach(() => {
   setTimeout(() => {
-    $('.selectpicker').selectpicker('refresh');
+    $(".selectpicker").selectpicker("refresh");
   }, 100);
 });
 

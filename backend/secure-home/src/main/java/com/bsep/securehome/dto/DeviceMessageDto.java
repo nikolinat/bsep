@@ -1,19 +1,11 @@
-package com.bsep.securehome.model;
+package com.bsep.securehome.dto;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
-
-import javax.persistence.Id;
-
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.bsep.securehome.utils.DeviceType;
 
-@Document
-public class DeviceMessage {
-    @Id
-    private UUID id;
-
+public class DeviceMessageDto {
+    
     private String deviceId;
 
     private DeviceType type;
@@ -22,27 +14,15 @@ public class DeviceMessage {
 
     private LocalDateTime dateTime;
 
-    private boolean alarm;
+
+    public DeviceMessageDto() {}
 
 
-    public DeviceMessage() {}
-
-
-    public DeviceMessage(UUID id, String deviceId, DeviceType type, String message, LocalDateTime dateTime) {
-        this.id = id;
+    public DeviceMessageDto(String deviceId, DeviceType type, String message, LocalDateTime dateTime) {
         this.deviceId = deviceId;
         this.type = type;
         this.message = message;
         this.dateTime = dateTime;
-    }
-
-
-    public UUID getId() {
-        return this.id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getDeviceId() {
@@ -76,5 +56,4 @@ public class DeviceMessage {
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
-
 }

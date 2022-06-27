@@ -1,25 +1,12 @@
 <template>
   <div>
     <Table>
-      <TableHead
-        :columnNames="[
-          'Id',
-          'Name',
-          'Address',
-          '',
-          ''
-        ]"
-      ></TableHead>
+      <TableHead :columnNames="['Id', 'Name', 'Address', '', '']"></TableHead>
       <TableBody>
         <TableRow
           v-for="(realEstate, i) in realEstates"
           :key="i"
-          :values="[
-            realEstate.id,
-            realEstate.name,
-            realEstate.address,
-            '',
-          ]"
+          :values="[realEstate.id, realEstate.name, realEstate.address, '']"
         >
           <div class="pull-right text-gray">
             <DropDownMenu>
@@ -33,29 +20,48 @@
                   >View tenants</DropDownItem
                 >
               </ModalOpener>
-                <ModalOpener :modalBoxId="'viewOwnersModalOpener'">
+              <ModalOpener :modalBoxId="'viewOwnersModalOpener'">
                 <DropDownItem @click="selectedRealEstate = realEstate"
                   >View owners</DropDownItem
                 >
               </ModalOpener>
-               <ModalOpener :modalBoxId="'addDeviceModalOpener'">
+              <ModalOpener :modalBoxId="'addDeviceModalOpener'">
                 <DropDownItem @click="selectedRealEstate = realEstate"
                   >Add device</DropDownItem
                 >
               </ModalOpener>
-              <DropDownItem @click="viewDevice(realEstate)"> View devices </DropDownItem>
+              <DropDownItem @click="viewDevice(realEstate)">
+                View devices
+              </DropDownItem>
+              <DropDownItem @click="viewReport(realEstate)">
+                View report
+              </DropDownItem>
             </DropDownMenu>
           </div>
         </TableRow>
       </TableBody>
     </Table>
-    <Modal modalBoxId="addOwnerOrTenant" title="Add owner/tenant" :sizeClass="'modal-lg'">
+    <Modal
+      modalBoxId="addOwnerOrTenant"
+      title="Add owner/tenant"
+      :sizeClass="'modal-lg'"
+    >
       <div slot="body">
-        <SelectOptionInput class="col-6" label="Select user role" :showLabel="false" :options="roles" v-model="role"/>
-        <br>
-        <AddOwnerTenantTable :users="allUsers" :role="role" :realEstate="selectedRealEstate"></AddOwnerTenantTable>
+        <SelectOptionInput
+          class="col-6"
+          label="Select user role"
+          :showLabel="false"
+          :options="roles"
+          v-model="role"
+        />
+        <br />
+        <AddOwnerTenantTable
+          :users="allUsers"
+          :role="role"
+          :realEstate="selectedRealEstate"
+        ></AddOwnerTenantTable>
       </div>
-       <div slot="buttons">
+      <div slot="buttons">
         <ModalCloser id="addOwnerOrTenantCloser">
           <Button> Close </Button>
         </ModalCloser>
@@ -65,30 +71,38 @@
     <Modal
       modalBoxId="viewTenantsModalOpener"
       title="Tenants"
-      :sizeClass="'modal-lg'">
+      :sizeClass="'modal-lg'"
+    >
       <div slot="body" v-if="selectedRealEstate !== null">
-            <TenantTable :users="selectedRealEstate.tenants" :realEstate="selectedRealEstate"></TenantTable>
+        <TenantTable
+          :users="selectedRealEstate.tenants"
+          :realEstate="selectedRealEstate"
+        ></TenantTable>
       </div>
     </Modal>
     <Modal
       modalBoxId="viewOwnersModalOpener"
       title="Owners"
-      :sizeClass="'modal-lg'">
+      :sizeClass="'modal-lg'"
+    >
       <div slot="body" v-if="selectedRealEstate !== null">
-            <TenantTable :users="selectedRealEstate.owners" :realEstate="selectedRealEstate"></TenantTable>
+        <TenantTable
+          :users="selectedRealEstate.owners"
+          :realEstate="selectedRealEstate"
+        ></TenantTable>
       </div>
     </Modal>
 
     <Modal
       modalBoxId="addDeviceModalOpener"
       title="Add device"
-      :sizeClass="'modal-sg'">
+      :sizeClass="'modal-sg'"
+    >
       <div slot="body" v-if="selectedRealEstate !== null">
-              <AddDeviceForm :realEstateId="selectedRealEstate.id"/>
+        <AddDeviceForm :realEstateId="selectedRealEstate.id" />
       </div>
-        <ModalCloser id="addDeviceModalCloser"></ModalCloser>
+      <ModalCloser id="addDeviceModalCloser"></ModalCloser>
     </Modal>
-   
   </div>
 </template>
 
@@ -103,10 +117,10 @@ import ModalCloser from "../../generic-components/Modal/ModalCloser.vue";
 import DropDownMenu from "../../generic-components/DropdownMenu/DropdownMenu.vue";
 import DropDownItem from "../../generic-components/DropdownMenu/DropdownItem.vue";
 import AddOwnerTenantTable from "../../custom-components/Tables/AddOwnerTenantTable.vue";
-import SelectOptionInput from '../../generic-components/Form/SelectOptionInput.vue';
+import SelectOptionInput from "../../generic-components/Form/SelectOptionInput.vue";
 import Button from "../../generic-components/Form/Button.vue";
 import TenantTable from "../../custom-components/Tables/TenantTable.vue";
-import AddDeviceForm from '../../custom-components/Forms/AddDeviceForm.vue'
+import AddDeviceForm from "../../custom-components/Forms/AddDeviceForm.vue";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -117,14 +131,13 @@ export default {
     return {
       selectedRealEstate: null,
       allUsers: [],
-      role: '',
+      role: "",
       searchFilterDto: {
-                name: "",
-                lastName: "",
-                username: "",
-                email: "",
-                roles: [1, 2, 3]
-
+        name: "",
+        lastName: "",
+        username: "",
+        email: "",
+        roles: [1, 2, 3],
       },
       roles: [
         {
@@ -152,35 +165,38 @@ export default {
     ModalCloser,
     Button,
     TenantTable,
-    AddDeviceForm
+    AddDeviceForm,
   },
 
   computed: {
     ...mapGetters({
       users: "users/getUsers",
-      getRealEstate: "realestate/getRealEstate"
+      getRealEstate: "realestate/getRealEstate",
     }),
   },
   watch: {
-      users(newUsers) {
-        this.allUsers = newUsers;
-      },
-       getRealEstate(newRealEstates){
-        this.selectedRealEstate = newRealEstates;
-      }
+    users(newUsers) {
+      this.allUsers = newUsers;
+    },
+    getRealEstate(newRealEstates) {
+      this.selectedRealEstate = newRealEstates;
+    },
   },
   methods: {
     ...mapActions({
       fetchRealEstates: "realestate/fetchRealEstates",
-      fetchOwnersAndTenants: "users/fetchOwnersAndTenants"
+      fetchOwnersAndTenants: "users/fetchOwnersAndTenants",
     }),
 
-    viewDevice(realEstate){
-       this.$router.push(`/devices/${realEstate.id}`);
-    }
+    viewDevice(realEstate) {
+      this.$router.push(`/devices/${realEstate.id}`);
+    },
+    viewReport(realEstate) {
+      this.$router.push(`/reports/${realEstate.id}`);
+    },
   },
   mounted() {
     this.fetchOwnersAndTenants();
-    }
+  },
 };
 </script>
