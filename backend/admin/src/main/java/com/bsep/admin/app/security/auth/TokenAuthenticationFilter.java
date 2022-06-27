@@ -7,8 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.bsep.admin.app.exception.InvalidTokenException;
-import com.bsep.admin.app.repository.InvalidTokenRepository;
 import com.bsep.admin.app.service.contract.IInvalidTokenService;
 import com.bsep.admin.app.utils.TokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;

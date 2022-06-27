@@ -1,15 +1,15 @@
 import axios from 'axios'
 import toastr from 'toastr'
 import { getIdFromToken } from './token.js'
-      
 var client = {}
+
 
 export function tryConnecting() {
   let userId = getIdFromToken();
   if (userId) {
     axios.post('/sockets/notificationSocket/' + userId)
     .then(() => {
-      client = window.io.connect(`http://localhost:9093/notificationSocket/` + userId), {
+      client = window.io.connect(`https://localhost:9093/notificationSocket/` + userId, {secure: true}), {
         forceNew: true,
         transports: ['polling', 'websocket']
       }
