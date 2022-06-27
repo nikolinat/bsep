@@ -1,7 +1,6 @@
 package com.bsep.admin.app.service.implementation;
 
 import com.bsep.admin.app.dto.JwtAuthenticationRequest;
-import com.bsep.admin.app.exception.BadLogicException;
 import com.bsep.admin.app.exception.InvalidCredentialsException;
 import com.bsep.admin.app.model.LockedAccount;
 import com.bsep.admin.app.model.User;
@@ -19,7 +18,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;

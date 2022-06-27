@@ -16,6 +16,12 @@
                             <ModalOpener :modalBoxId="'devicesMessagesModal'">
                                 <Button @click="handleViewDevicesMessages(realEstate.id)">Messages</Button>
                             </ModalOpener>
+                             <ModalOpener :modalBoxId="'createAlarmModal'">
+                                <Button @click="handleCreateAlarm(realEstate.id)">Add alarm</Button>
+                            </ModalOpener>
+                            <ModalOpener :modalBoxId="'alarmsModal'">
+                                <Button @click="handleViewAlarms(realEstate.id)">Alarms</Button>
+                            </ModalOpener>
                         </div>
                     </RotatingCard>
                 </template>
@@ -45,6 +51,18 @@
                 <DeviceMessageTable :devicesMessages="devicesMessages" />
             </div>
         </Modal>
+
+        <Modal modalBoxId="alarmsModal" :title="'Alarms'" sizeClass="modal-lg">
+            <div slot="body">
+                <AlarmsTable :alarms="alarms" />
+            </div>
+        </Modal>
+        <Modal  v-if="realEstateId !== null" modalBoxId="createAlarmModal" :title="'Create alarm'" sizeClass="modal-sg">
+            <div slot="body">
+                <AddAlarmForm :realEstateId="realEstateId" />
+            </div>
+        </Modal>
+
     </div>
 </template>
 
@@ -58,6 +76,9 @@ import UsersTable from "../Tables/UsersTable.vue"
 import DevicesTable from '../Tables/DevicesTable.vue'
 import DeviceMessageTable from '../Tables/DeviceMessageTable.vue'
 import SearchFilterDevicesMessages from '../Forms/SearchFilterDevicesMessages.vue'
+import AlarmsTable from '../Tables/AlarmsTable.vue'
+import AddAlarmForm from '../Forms/AddAlarmForm.vue'
+
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -70,7 +91,9 @@ export default {
         UsersTable,
         DevicesTable,
         DeviceMessageTable,
-        SearchFilterDevicesMessages
+        SearchFilterDevicesMessages,
+        AlarmsTable,
+        AddAlarmForm
     },
     name: 'RealEstates',
 
@@ -84,13 +107,16 @@ export default {
     computed: {
         ...mapGetters({
             devices: 'devices/getDevices',
-            devicesMessages: 'deviceMessage/getDevicesMessages'
+            devicesMessages: 'deviceMessage/getDevicesMessages',
+            alarms: 'alarms/getAlarms'
         })
     },
     methods: {
         ...mapActions({
             fetchDevicesByRealEstate: 'devices/fetchDevicesForRealEstate',
-            fetchDevicesMessagesForRealEstate: 'deviceMessage/fetchDevicesMessagesForRealEstate'
+            fetchDevicesMessagesForRealEstate: 'deviceMessage/fetchDevicesMessagesForRealEstate',
+            fetchAlarmsByRealEstate: 'alarms/fetchAlarmsForRealEstate',
+
         }),
 
         handleViewOwneres(owners) {
@@ -108,6 +134,14 @@ export default {
         handleViewDevicesMessages(id) {
             this.realEstateId = id;
             this.fetchDevicesMessagesForRealEstate(id);
+        },
+
+        handleViewAlarms(id) {
+            this.fetchAlarmsByRealEstate(id);
+        },
+
+        handleCreateAlarm(id){
+            this.realEstateId = id;
         }
     }
 }
