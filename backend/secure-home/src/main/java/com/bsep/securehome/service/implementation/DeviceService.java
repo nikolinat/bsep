@@ -116,7 +116,7 @@ public class DeviceService implements ApplicationContextAware {
 
     public boolean checkRegex(MessageDto messageDto) throws FileNotFoundException {
         String regex = findRegex(messageDto.getRealEstateId(), messageDto.getId());
-        if (messageDto.getMessage().matches(regex)) {
+        if (regex != null && messageDto.getMessage().matches(regex)) {
             return true;
         }
         return false;

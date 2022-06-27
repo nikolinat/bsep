@@ -38,7 +38,6 @@ public class DeviceMessageService implements IDeviceMessageService {
     private final DeviceMessageRepository deviceMessageRepository;
     private RealEstateRepository realEstateRepository;
     private final KieContainer kieContainer;
-    private EmailService emailService;
     private final DeviceService deviceService;
     private INotificationService notificationService;
 
@@ -50,7 +49,6 @@ public class DeviceMessageService implements IDeviceMessageService {
         this.deviceMessageRepository = deviceMessageRepository;
         this.kieContainer = kieContainer;
         this.realEstateRepository = realEstateRepository;
-        this.emailService = emailService;
         this.deviceService = deviceService;
         this.notificationService = notificationService;
     }
