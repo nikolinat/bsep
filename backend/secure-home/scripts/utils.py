@@ -40,19 +40,19 @@ def state(devices, messages):
         for k, v in devices.items():
             message = random.choice(messages)
             value = 0
-            if v.type == 'HEATING' and message == 'Grejanje je ukljuceno':
+            if v.type == 'HEATING' and message == 'Heating is on':
                 value = random.randrange(15, 30)
-            if v.type == 'AIR_CONDITIONING' and message == 'Klima je ukljucena u rezimu hladjenja' or v.type == 'AIR_CONDITIONING' \
-                    and message == 'Klima je ukljucena u rezimu grejanja':
+            if v.type == 'AIR_CONDITIONING' and message == 'Air conditioning is in cooling mode' or \
+                    v.type == 'AIR_CONDITIONING' and message == 'Air conditioning is in heating mode':
                 value = random.randrange(15, 30)
             requests.post('https://localhost:8444/api/v1/device/state',
                           verify='../src/main/java/files/keystores/root.cer', json={
-                    'realEstateId': v.real_estate_id,
-                    'dateTime': datetime.datetime.utcnow().isoformat(),
-                    'id': v.id,
-                    'type': v.type,
-                    'message': message,
-                    'value': value
-                },
-                              headers={'Content-Type': 'application/json'})
-            time.sleep(int(v.period)/3)
+                            'realEstateId': v.real_estate_id,
+                            'dateTime': datetime.datetime.utcnow().isoformat(),
+                            'id': v.id,
+                            'type': v.type,
+                            'message': message,
+                            'value': value
+                            },
+                          headers={'Content-Type': 'application/json'})
+            time.sleep(int(v.period) / 3)

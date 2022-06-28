@@ -5,10 +5,10 @@ rule "Heating alarm"
 	no-loop
 	agenda-group "alarm"
 	when
-		$deviceMessage: DeviceMessage(type == DeviceType.HEATING, message == "Grejanje je ukljuceno", value >= 50)
+		$deviceMessage: DeviceMessage(type == DeviceType.HEATING, message == "Heating is on", value >= 27)
     then
 		Integer v = $deviceMessage.getValue();
-		String m = "Grejanje je ukljuceno" + ".Temperatura:" + String.valueOf(v) + " stepeni.";
+		String m = "Heating is on" + ".Temperature:" + String.valueOf(v) + " degree.";
 		modify($deviceMessage){
 			setAlarm(true),
 			setMessage(m);

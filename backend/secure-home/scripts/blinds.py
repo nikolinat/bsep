@@ -1,6 +1,6 @@
 from utils import read, state
 
-messages = ['Roletne su spustene', 'Nestalo je struje', 'Roletne su podignute']
+messages = ['Blinds are lowered', 'No electricity', 'Blinds are raised']
 
 
 def main():
