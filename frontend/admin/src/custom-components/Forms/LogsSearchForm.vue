@@ -8,6 +8,13 @@
                 :options="logTypes"
                 v-model="logSearchDto.logType"
             />
+            <SelectOptionInput
+                class="col-6"
+                label="Select application"
+                :showLabel="false"
+                :options="applications"
+                v-model="logSearchDto.applicationName"
+            />
         </form-row>
 
         <form-row>
@@ -68,10 +75,21 @@ export default {
                 value: "SUCCESS",
                 },
             ],
+            applications: [
+                {
+                    label: "Secure home",
+                    value: "Secure home"
+                },
+                {
+                    label: "Admin",
+                    value: "Admin"
+                }
+            ],
             logSearchDto: {
                 logType: null,
                 messageRegex: "",
-                dateTime: moment()
+                dateTime: moment(),
+                applicationName: ""
             }
         }
     },

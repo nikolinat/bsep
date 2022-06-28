@@ -1,12 +1,12 @@
 <template>
   <div>
     <Table>
-      <TableHead :columnNames="['Log type','Message','Date']"></TableHead>
+      <TableHead :columnNames="['Log type','Message','Date', 'Application']"></TableHead>
       <TableBody>
         <TableRow
           v-for="(log, i) in allLogs"
           :key="i"
-          :values="[log.logType, log.message, formatDate(log.dateTime)]">
+          :values="[log.logType, log.message, formatDate(log.dateTime), log.applicationName]">
         </TableRow>
       </TableBody>
     </Table>    

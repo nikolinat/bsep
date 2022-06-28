@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -18,11 +19,15 @@ import com.bsep.securehome.sockets.SocketsModule;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOServer;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 @SpringBootApplication
+@EnableScheduling
 @EnableMongoRepositories
 public class SecureHomeApplication {
     @Value("${rt-server.host}")
@@ -34,11 +39,11 @@ public class SecureHomeApplication {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(SecureHomeApplication.class);
         Map<String, Object> props = new HashMap<>();
-        // props.put("server.ssl.key-store", "src/main/java/files/keystores/bsep.jks");
-        // props.put("server.ssl.key-store-password", "bsep");
-        // props.put("server.ssl.key-store-type", "jks");
-        // props.put("server.ssl.key-alias", "root");
-        // props.put("server.ssl.key-password", "bsep");
+        props.put("server.ssl.key-store", "src/main/java/files/keystores/bsep.jks");
+        props.put("server.ssl.key-store-password", "bsep");
+        props.put("server.ssl.key-store-type", "jks");
+        props.put("server.ssl.key-alias", "root");
+        props.put("server.ssl.key-password", "bsep");
         props.put("server.port", "8444");
         app.setDefaultProperties(props);
         app.run(args);
@@ -55,7 +60,7 @@ public class SecureHomeApplication {
                 registry.addMapping("/**")
                         .allowedMethods("*")
                         .allowedHeaders("*")
-                        .allowedOrigins("http://localhost:8080");
+                        .allowedOrigins("https://localhost:8081");
             }
         };
     }
@@ -90,9 +95,11 @@ public class SecureHomeApplication {
     }
 
     @Bean
-    public SocketIOServer socketIOServer() {
+    public SocketIOServer socketIOServer() throws FileNotFoundException {
         Configuration config = new Configuration();
         config.setHostname(host);
+        config.setKeyStore(new FileInputStream(new File("src/main/java/files/keystores/bsep.jks")));
+        config.setKeyStorePassword("bsep");
         config.setPort(port);
         return new SocketIOServer(config);
     }

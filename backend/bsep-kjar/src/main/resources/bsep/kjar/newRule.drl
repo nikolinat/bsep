@@ -1,0 +1,27 @@
+package bsep.kjar;
+import com.bsep.securehome.model.DeviceMessage;
+import com.bsep.securehome.model.enums.DeviceType;
+rule "New rule alarm"
+	no-loop
+	agenda-group "alarm"
+	when
+		$deviceMessage: DeviceMessage(type == DeviceType.FRIDGE, message == "Fridge is open")
+    then
+		modify($deviceMessage){
+			setAlarm(true);
+		}
+end
+
+
+rule "New rule alarm"
+	no-loop
+	agenda-group "alarm"
+	when
+		$deviceMessage: DeviceMessage(type == DeviceType.FREEZER, message == "Freezer is open")
+    then
+		modify($deviceMessage){
+			setAlarm(true);
+		}
+end
+
+

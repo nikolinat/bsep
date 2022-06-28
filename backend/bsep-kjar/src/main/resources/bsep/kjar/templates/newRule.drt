@@ -1,0 +1,21 @@
+template header
+ 
+number
+sign
+message
+type
+ 
+template "New rule template"
+ 
+rule "New rule alarm"
+	no-loop
+	agenda-group "alarm"
+	when
+		$deviceMessage: DeviceMessage(type == DeviceType.@{type}, message == "@{message}")
+    then
+		modify($deviceMessage){
+			setAlarm(true);
+		}
+end
+
+end template

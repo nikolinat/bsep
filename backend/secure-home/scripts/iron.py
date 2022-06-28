@@ -1,6 +1,6 @@
 from utils import read, state
 
-messages = ['Pegla je upaljena', 'Curi voda iz pegle', 'Nestalo je struje', 'Pegla se iskljucila']
+messages = ['Iron is on', 'Iron is off', 'No electricity', 'Leaking water from iron', 'Iron shut down']
 
 
 def main():

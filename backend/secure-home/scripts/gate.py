@@ -1,7 +1,6 @@
 from utils import read, state
 
-messages = ['Kapija je zakljucana', 'Nestalo je struje', 'Kapija je otkljucana',
-            'Neko je pokusao da otkljuca kapiju']
+messages = ['Gate is locked', 'No electricity', 'Gate is unlocked', 'Someone tried to unlock the gate']
 
 
 def main():

@@ -18,6 +18,8 @@ public class Log {
 
     private LocalDateTime dateTime = LocalDateTime.now();
 
+    private String applicationName = "Admin";
+
     public Log(UUID id, String message, LogType logType) {
         this.id = id;
         this.message = message;
@@ -35,12 +37,8 @@ public class Log {
 
     @Override
     public String toString() {
-        return "Log{" +
-                "logType=" + logType +
-                ", id=" + id +
-                ", message='" + message + '\'' +
-                ", dateTime=" + dateTime +
-                '}';
+        return "Log [applicationName=" + applicationName + ", dateTime=" + dateTime + ", id=" + id + ", logType="
+                + logType + ", message=" + message + "]";
     }
 
     public UUID getId() {
@@ -73,5 +71,13 @@ public class Log {
 
     public void setLogType(LogType logType) {
         this.logType = logType;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
     }
 }

@@ -2,7 +2,6 @@ package com.bsep.admin.app.dto;
 
 import com.bsep.admin.app.validators.constraints.RolesConstraint;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 

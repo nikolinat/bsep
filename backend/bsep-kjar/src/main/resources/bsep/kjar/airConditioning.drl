@@ -5,10 +5,10 @@ rule "Air conditionig alarm"
 	no-loop
 	agenda-group "alarm"
 	when
-		$deviceMessage: DeviceMessage(type == DeviceType.AIR_CONDITIONING, message == "Klima je ukljucena u rezimu grejanja",  value >= 23)
+		$deviceMessage: DeviceMessage(type == DeviceType.AIR_CONDITIONING, message == "Air conditioning is in heating mode",  value >= 20)
     then
 		Integer v = $deviceMessage.getValue();
-		String m = $deviceMessage.getMessage() + ".Temperatura:" + String.valueOf(v) + " stepeni.";
+		String m = $deviceMessage.getMessage() + ".Temperature:" + String.valueOf(v) + " degree.";
 		modify($deviceMessage){
 			setAlarm(true),
 			setMessage(m);

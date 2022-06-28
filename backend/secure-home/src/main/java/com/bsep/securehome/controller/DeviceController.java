@@ -1,12 +1,8 @@
 package com.bsep.securehome.controller;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import com.bsep.securehome.annotation.LogAfterReturning;
 import com.bsep.securehome.annotation.LogAfterThrowing;
@@ -23,13 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bsep.securehome.dto.AlarmDto;
 import com.bsep.securehome.dto.DeviceDto;
 import com.bsep.securehome.dto.MessageDto;
 import com.bsep.securehome.dto.SearchDeviceDto;
 import com.bsep.securehome.model.DevicesLog;
-import com.bsep.securehome.model.DeviceMessage;
-import com.bsep.securehome.service.implementation.AlarmService;
 import com.bsep.securehome.service.implementation.DeviceMessageService;
 import com.bsep.securehome.service.implementation.DeviceService;
 
@@ -39,14 +32,11 @@ import com.bsep.securehome.service.implementation.DeviceService;
 public class DeviceController {
     private DeviceService deviceService;
     private DeviceMessageService deviceMessageService;
-    private AlarmService alarmService;
 
     @Autowired
-    public DeviceController(DeviceService deviceService, DeviceMessageService deviceMessageService,
-            AlarmService alarmService) {
+    public DeviceController(DeviceService deviceService, DeviceMessageService deviceMessageService) {
         this.deviceService = deviceService;
         this.deviceMessageService = deviceMessageService;
-        this.alarmService = alarmService;
     }
 
     @PreAuthorize("hasAuthority('CREATE_DEVICE')")
@@ -67,17 +57,10 @@ public class DeviceController {
     }
 
     @PostMapping("/state")
-    @LogAfterThrowing(message = "ERROR send message from device")
-    @LogAfterReturning(message = "SUCCESS send message from device")
+    @LogAfterThrowing(message = "ERROR add message to file")
+    @LogAfterReturning(message = "SUCCESS add message to file")
     public ResponseEntity<?> getMessageFromDevice(@RequestBody MessageDto message) throws IOException {
-        System.out.println(message.getValue());
-        System.out.println(message.getType());
-        System.out.println(message.getMessage());
-        if (deviceService.checkRegex(message)) {
-            List<AlarmDto> alarms = alarmService.findAlarmsForDevice(message.getRealEstateId(), message.getType());
-            deviceMessageService.create(new DeviceMessage(UUID.randomUUID(), message.getId(), message.getType(),
-                    message.getMessage(), LocalDateTime.now(ZoneOffset.UTC), false, message.getValue()), alarms, message.getRealEstateId());
-        }
+        deviceMessageService.addMessageToFile(message);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

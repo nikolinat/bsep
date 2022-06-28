@@ -12,7 +12,6 @@ import com.bsep.admin.app.utils.ExtensionsUtil;
 import com.bsep.admin.app.utils.SubjectUtil;
 import com.bsep.admin.crypto.pki.certificates.CertificateUtil;
 import com.bsep.admin.crypto.pki.keystores.KeyStoreReader;
-import org.bouncycastle.asn1.x509.Extensions;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
