@@ -19,7 +19,7 @@ rule "Air conditionig alarm"
 		$deviceMessage: DeviceMessage(type == DeviceType.AIR_CONDITIONING, message == "@{message}",  value @{sign} @{number})
     then
 		Integer v = $deviceMessage.getValue();
-		String m = $deviceMessage.getMessage() + ".Temperatura:" + String.valueOf(v) + " stepeni.";
+		String m = $deviceMessage.getMessage() + ".Temperature:" + String.valueOf(v) + " degree.";
 		modify($deviceMessage){
 			setAlarm(true),
 			setMessage(m);

@@ -32,6 +32,8 @@ public class RuleService {
     private String airConditioningPath;
     @Value("${heatingPath}")
     private String heatingPath;
+    @Value("${newRulePath}")
+    private String newRulePath;
     @Value("${projectPath}")
     private String projectPath;
     @Value("${kjarPath}")
@@ -40,16 +42,21 @@ public class RuleService {
     private String airConditioningDrtPath;
     @Value("${heatingDrtPath}")
     private String heatingDrtPath;
+    @Value("${newRuleDrtPath}")
+    private String newRuleDrtPath;
 
     public RuleService() {
     }
 
     public void template(RuleDto ruleDto) throws IOException {
-        String templatePath = heatingPath;
-        String drtPath = heatingDrtPath;
+        String templatePath = newRulePath;
+        String drtPath = newRuleDrtPath;
         if (ruleDto.getType().equals(DeviceType.AIR_CONDITIONING)) {
             templatePath = airConditioningPath;
             drtPath = airConditioningDrtPath;
+        }else if(ruleDto.getType().equals(DeviceType.HEATING)){
+            templatePath = heatingPath;
+            drtPath = heatingDrtPath;
         }
         File drtFile = new File(drtPath);
         InputStream template = new FileInputStream(drtFile);
@@ -59,14 +66,25 @@ public class RuleService {
         ObjectDataCompiler converter = new ObjectDataCompiler();
         String drl = converter.compile(data, template);
 
-        String header = drl.substring(drl.indexOf("package"), drl.indexOf("dialect"));
+        if(ruleDto.getType().equals(DeviceType.AIR_CONDITIONING) || ruleDto.getType().equals(DeviceType.HEATING) ){
+            String header = drl.substring(drl.indexOf("package"), drl.indexOf("dialect"));
+            String body = drl.substring(drl.indexOf("rule"));
 
-        String body = drl.substring(drl.indexOf("rule"));
+            drl = header.concat(body);
+        }else{
+            String body = drl.substring(drl.indexOf("rule"));
+            drl = body;
+        }
+       
 
-        drl = header.concat(body);
-
+    
         try {
-            Files.write(Paths.get(templatePath), drl.getBytes(), StandardOpenOption.CREATE);
+            if(ruleDto.getType().equals(DeviceType.AIR_CONDITIONING) || ruleDto.getType().equals(DeviceType.HEATING)){
+                Files.write(Paths.get(templatePath), drl.getBytes(), StandardOpenOption.CREATE);
+            }else{
+                Files.write(Paths.get(templatePath), drl.getBytes(), StandardOpenOption.APPEND);
+            }
+           
         } catch (IOException e) {
 
         }

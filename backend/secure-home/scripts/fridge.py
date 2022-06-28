@@ -1,7 +1,7 @@
 from utils import read, state
 
-messages = ['Frizider se iskljucio', 'Curi voda iz frizidera', 'Nestalo je struje', 'Nestalo je vode',
-            'Frizider je otvoren']
+messages = ['Fridge is off', 'Fridge is on', 'Water is leaking from the fridge', 'No electricity', 'No water',
+            'Fridge is open']
 
 
 def main():

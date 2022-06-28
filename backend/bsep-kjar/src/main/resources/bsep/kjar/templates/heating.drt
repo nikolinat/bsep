@@ -19,7 +19,7 @@ rule "Heating alarm"
 		$deviceMessage: DeviceMessage(type == DeviceType.HEATING, message == "@{message}", value @{sign} @{number})
     then
 		Integer v = $deviceMessage.getValue();
-		String m = "@{message}" + ".Temperatura:" + String.valueOf(v) + " stepeni.";
+		String m = "@{message}" + ".Temperature:" + String.valueOf(v) + " degree.";
 		modify($deviceMessage){
 			setAlarm(true),
 			setMessage(m);

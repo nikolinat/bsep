@@ -1,12 +1,7 @@
 package com.bsep.securehome.controller;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import com.bsep.securehome.annotation.LogAfterReturning;
 import com.bsep.securehome.annotation.LogAfterThrowing;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bsep.securehome.dto.AlarmDto;
 import com.bsep.securehome.dto.DeviceDto;
 import com.bsep.securehome.dto.MessageDto;
-import com.bsep.securehome.model.DeviceMessage;
-import com.bsep.securehome.service.implementation.AlarmService;
 import com.bsep.securehome.service.implementation.DeviceMessageService;
 import com.bsep.securehome.service.implementation.DeviceService;
 
@@ -36,14 +28,11 @@ import com.bsep.securehome.service.implementation.DeviceService;
 public class DeviceController {
     private DeviceService deviceService;
     private DeviceMessageService deviceMessageService;
-    private AlarmService alarmService;
 
     @Autowired
-    public DeviceController(DeviceService deviceService, DeviceMessageService deviceMessageService,
-            AlarmService alarmService) {
+    public DeviceController(DeviceService deviceService, DeviceMessageService deviceMessageService) {
         this.deviceService = deviceService;
         this.deviceMessageService = deviceMessageService;
-        this.alarmService = alarmService;
     }
 
     @PreAuthorize("hasAuthority('CREATE_DEVICE')")
