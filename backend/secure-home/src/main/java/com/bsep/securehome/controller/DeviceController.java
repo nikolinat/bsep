@@ -64,17 +64,10 @@ public class DeviceController {
     }
 
     @PostMapping("/state")
-    @LogAfterThrowing(message = "ERROR send message from device")
-    @LogAfterReturning(message = "SUCCESS send message from device")
+    @LogAfterThrowing(message = "ERROR add message to file")
+    @LogAfterReturning(message = "SUCCESS add message to file")
     public ResponseEntity<?> getMessageFromDevice(@RequestBody MessageDto message) throws IOException {
-        System.out.println(message.getValue());
-        System.out.println(message.getType());
-        System.out.println(message.getMessage());
-        if (deviceService.checkRegex(message)) {
-            List<AlarmDto> alarms = alarmService.findAlarmsForDevice(message.getRealEstateId(), message.getType());
-            deviceMessageService.create(new DeviceMessage(UUID.randomUUID(), message.getId(), message.getType(),
-                    message.getMessage(), LocalDateTime.now(ZoneOffset.UTC), false, message.getValue()), alarms, message.getRealEstateId());
-        }
+        deviceMessageService.addMessageToFile(message);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -37,8 +37,8 @@ public class CustomAspect {
         Object[] args = joinPoint.getArgs();
 
         String user = null;
-        for(Object i : args) {
-            if(i instanceof JwtAuthenticationRequest) {
+        for (Object i : args) {
+            if (i instanceof JwtAuthenticationRequest) {
                 user = ((JwtAuthenticationRequest) i).getUsername();
             }
         }
@@ -47,26 +47,28 @@ public class CustomAspect {
 
         logger.info("User: " + username + ", Action: " + logBefore.message());
 
-        loggingService.create(new Log(UUID.randomUUID(), logBefore.message(), LogType.SUCCESS));
+        loggingService.create(new Log(UUID.randomUUID(), logBefore.message(), LogType.SUCCESS, "Secure home"));
     }
 
     @AfterThrowing(value = "@annotation(logAfterThrowing)", throwing = "exception")
-    public void logAfterThrowing(JoinPoint joinPoint, Exception exception, LogAfterThrowing logAfterThrowing) throws Throwable {
+    public void logAfterThrowing(JoinPoint joinPoint, Exception exception, LogAfterThrowing logAfterThrowing)
+            throws Throwable {
         Object[] args = joinPoint.getArgs();
 
         String user = null;
-        for(Object i : args) {
-            if(i instanceof JwtAuthenticationRequest) {
+        for (Object i : args) {
+            if (i instanceof JwtAuthenticationRequest) {
                 user = ((JwtAuthenticationRequest) i).getUsername();
             }
         }
 
         String username = getUsernameFromRequest() != null ? getUsernameFromRequest() : user;
 
-        String message = "User: " + username + ", Action: " + logAfterThrowing.message() + ", Exception message:" + exception.getMessage();
+        String message = "User: " + username + ", Action: " + logAfterThrowing.message() + ", Exception message:"
+                + exception.getMessage();
         logger.error(message);
 
-        loggingService.create(new Log(UUID.randomUUID(), message, LogType.ERROR));
+        loggingService.create(new Log(UUID.randomUUID(), message, LogType.ERROR, "Secure home"));
     }
 
     @AfterReturning(value = "@annotation(logAfterReturning)")
@@ -74,8 +76,8 @@ public class CustomAspect {
         Object[] args = joinPoint.getArgs();
 
         String user = null;
-        for(Object i : args) {
-            if(i instanceof JwtAuthenticationRequest) {
+        for (Object i : args) {
+            if (i instanceof JwtAuthenticationRequest) {
                 user = ((JwtAuthenticationRequest) i).getUsername();
             }
         }
@@ -85,7 +87,7 @@ public class CustomAspect {
         String message = "User: " + username + ", Action: " + logAfterReturning.message();
         logger.info(message);
 
-        loggingService.create(new Log(UUID.randomUUID(), message, LogType.SUCCESS));
+        loggingService.create(new Log(UUID.randomUUID(), message, LogType.SUCCESS, "Secure home"));
     }
 
     private String getUsernameFromRequest() {

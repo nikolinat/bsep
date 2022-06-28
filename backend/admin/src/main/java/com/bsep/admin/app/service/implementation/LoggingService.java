@@ -33,9 +33,15 @@ public class LoggingService implements ILoggingService {
     public List<Log> searchAndFilter(LogSearchDto logSearchDto) {
         List<Log> logs = findAll();
 
-        return logs.stream().filter(log -> (logSearchDto.getLogType() == null || log.getLogType() == logSearchDto.getLogType()) &&
-                (logSearchDto.getMessageRegex().isEmpty() || log.getMessage().contains(logSearchDto.getMessageRegex()) ||
-                        log.getMessage().matches(logSearchDto.getMessageRegex())) &&
-                (logSearchDto.getDateTime() == null || log.getDateTime().toLocalDate().isEqual(logSearchDto.getDateTime().toLocalDate()))).collect(Collectors.toList());
+        return logs.stream()
+                .filter(log -> (logSearchDto.getLogType() == null || log.getLogType() == logSearchDto.getLogType()) &&
+                        (logSearchDto.getMessageRegex().isEmpty()
+                                || log.getMessage().contains(logSearchDto.getMessageRegex()) ||
+                                log.getMessage().matches(logSearchDto.getMessageRegex()))
+                        &&
+                        (logSearchDto.getDateTime() == null
+                                || log.getDateTime().toLocalDate().isEqual(logSearchDto.getDateTime().toLocalDate()) &&
+                                        (logSearchDto.getApplicationName().equals(log.getApplicationName()))))
+                .collect(Collectors.toList());
     }
 }

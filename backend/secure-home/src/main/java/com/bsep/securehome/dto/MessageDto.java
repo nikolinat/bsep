@@ -15,8 +15,8 @@ public class MessageDto {
     public MessageDto() {
     }
 
-
-    public MessageDto(LocalDateTime dateTime, String id, DeviceType type, String message, Long realEstateId, Integer value) {
+    public MessageDto(LocalDateTime dateTime, String id, DeviceType type, String message, Long realEstateId,
+            Integer value) {
         this.dateTime = dateTime;
         this.id = id;
         this.type = type;
@@ -24,7 +24,6 @@ public class MessageDto {
         this.realEstateId = realEstateId;
         this.value = value;
     }
-  
 
     public LocalDateTime getDateTime() {
         return this.dateTime;
@@ -58,7 +57,6 @@ public class MessageDto {
         this.message = message;
     }
 
-
     public Long getRealEstateId() {
         return this.realEstateId;
     }
@@ -75,5 +73,9 @@ public class MessageDto {
         this.value = value;
     }
 
-    
+    @Override
+    public String toString() {
+        return dateTime + "," + id + "," + message + ","
+                + realEstateId + "," + type + "," + value + System.lineSeparator();
+    }
 }

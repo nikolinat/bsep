@@ -10,11 +10,13 @@ public class LogSearchDto {
     private String messageRegex;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dateTime;
+    private String applicationName;
 
-    public LogSearchDto(LogType logType, String messageRegex, LocalDateTime dateTime) {
+    public LogSearchDto(LogType logType, String messageRegex, LocalDateTime dateTime, String applicationName) {
         this.logType = logType;
         this.messageRegex = messageRegex;
         this.dateTime = dateTime;
+        this.applicationName = applicationName;
     }
 
     public LogSearchDto() {
@@ -43,5 +45,13 @@ public class LogSearchDto {
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
     }
 }
