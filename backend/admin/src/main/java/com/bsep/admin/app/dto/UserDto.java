@@ -1,6 +1,5 @@
 package com.bsep.admin.app.dto;
 
-import java.util.List;
 import java.util.Set;
 
 public class UserDto {

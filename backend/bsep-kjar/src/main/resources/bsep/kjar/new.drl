@@ -1,0 +1,10 @@
+package bsep.kjar;
+
+rule "New rule"
+	no-loop
+	agenda-group "newRule"
+	when
+		eval(true)
+    then
+		System.out.println("TU SAAAAAAAAAAM");
+end

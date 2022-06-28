@@ -32,9 +32,17 @@ import com.bsep.securehome.model.RealEstate;
 import com.bsep.securehome.model.Task;
 import com.bsep.securehome.model.enums.DeviceType;
 
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.IvParameterSpec;
+import java.util.Base64;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
 @Component
 public class DeviceService implements ApplicationContextAware {
     private ApplicationContext applicationContext;
+    private String key = "ThisIsA16ByteKey";
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -144,5 +152,29 @@ public class DeviceService implements ApplicationContextAware {
                 new CronTrigger(seconds + " * * * * ?",
                         TimeZone.getTimeZone(TimeZone.getDefault().getID())));
         jobsMap.put(deviceDto.getId(), scheduledTask);
+    }
+
+    public String decrypt(String ciphertext) {
+        try {
+            byte[] cipherbytes = Base64.getDecoder().decode(ciphertext);
+
+            byte[] initVector = Arrays.copyOfRange(cipherbytes, 0, 16);
+
+            byte[] messagebytes = Arrays.copyOfRange(cipherbytes, 16, cipherbytes.length);
+
+            IvParameterSpec iv = new IvParameterSpec(initVector);
+            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+
+            byte[] byte_array = cipher.doFinal(messagebytes);
+
+            return new String(byte_array, StandardCharsets.UTF_8);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
     }
 }

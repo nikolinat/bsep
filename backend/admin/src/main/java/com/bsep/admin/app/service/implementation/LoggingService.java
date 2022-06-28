@@ -4,6 +4,9 @@ import com.bsep.admin.app.dto.LogSearchDto;
 import com.bsep.admin.app.model.Log;
 import com.bsep.admin.app.repository.LogRepository;
 import com.bsep.admin.app.service.contract.ILoggingService;
+
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class LoggingService implements ILoggingService {
     private final LogRepository logRepository;
+    private final KieContainer kieContainer;
 
     @Autowired
-    public LoggingService(LogRepository logRepository) {
+    public LoggingService(LogRepository logRepository, KieContainer kieContainer) {
         this.logRepository = logRepository;
+        this.kieContainer = kieContainer;
     }
 
     @Override
@@ -26,6 +31,11 @@ public class LoggingService implements ILoggingService {
 
     @Override
     public Log create(Log log) {
+        KieSession kieSession = kieContainer.newKieSession();
+        kieSession.insert(log);
+        kieSession.getAgenda().getAgendaGroup("newRule").setFocus();
+        kieSession.fireAllRules();
+        kieSession.dispose();
         return logRepository.save(log);
     }
 

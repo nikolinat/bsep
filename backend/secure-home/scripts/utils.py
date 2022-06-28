@@ -1,3 +1,4 @@
+import base64
 import datetime
 import glob
 import os
@@ -5,6 +6,9 @@ import random
 import time
 
 import requests
+from Crypto.Cipher import AES
+
+key = "ThisIsA16ByteKey"
 
 
 class Device:
@@ -35,6 +39,23 @@ def read(type):
     return devices
 
 
+def pad(byte_array):
+    BLOCK_SIZE = 16
+    pad_len = BLOCK_SIZE - len(byte_array) % BLOCK_SIZE
+    return byte_array + (bytes([pad_len]) * pad_len)
+
+
+def encrypt(key, message):
+    byte_array = message.encode("UTF-8")
+
+    padded = pad(byte_array)
+
+    iv = os.urandom(AES.block_size)
+    cipher = AES.new(key.encode("UTF-8"), AES.MODE_CBC, iv)
+    encrypted = cipher.encrypt(padded)
+    return base64.b64encode(iv + encrypted).decode("UTF-8")
+
+
 def state(devices, messages):
     while 1:
         for k, v in devices.items():
@@ -47,12 +68,12 @@ def state(devices, messages):
                 value = random.randrange(15, 30)
             requests.post('https://localhost:8444/api/v1/device/state',
                           verify='../src/main/java/files/keystores/root.cer', json={
-                            'realEstateId': v.real_estate_id,
-                            'dateTime': datetime.datetime.utcnow().isoformat(),
-                            'id': v.id,
-                            'type': v.type,
-                            'message': message,
-                            'value': value
-                            },
+                    'realEstateId': v.real_estate_id,
+                    'dateTime': datetime.datetime.utcnow().isoformat(),
+                    'id': v.id,
+                    'type': v.type,
+                    'message': encrypt(key, message),
+                    'value': value
+                },
                           headers={'Content-Type': 'application/json'})
             time.sleep(int(v.period) / 3)
