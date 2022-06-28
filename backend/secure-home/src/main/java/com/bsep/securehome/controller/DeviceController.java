@@ -60,8 +60,9 @@ public class DeviceController {
     @LogAfterThrowing(message = "ERROR add message to file")
     @LogAfterReturning(message = "SUCCESS add message to file")
     public ResponseEntity<?> getMessageFromDevice(@RequestBody MessageDto message) throws IOException {
+        String decryptedMessage = deviceService.decrypt(message.getMessage());
+        message.setMessage(decryptedMessage);
         deviceMessageService.addMessageToFile(message);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

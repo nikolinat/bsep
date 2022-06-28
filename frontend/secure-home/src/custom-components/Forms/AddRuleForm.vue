@@ -106,8 +106,6 @@ export default {
             }else{
                   this.rule.message = 'Air conditioning is in cooling mode';
             }
-        }else{
-          console.log(this.rule);
         }
       this.createRule(this.rule);      
     },
@@ -123,23 +121,24 @@ export default {
             value: -1,
             label: ''
         })
-    this.signs = [  {
-                        label:"GREATER",
-                        value: ">="
-                        }, 
-                      {
-                        label: "LESS",
-                        value: "<="
-                    }];
+    this.signs = [  
+      {
+        label:"GREATER",
+        value: ">="
+      }, 
+      {
+        label: "LESS",
+        value: "<="
+      }];
     this.modes = [
-         {
-                        label:"HOT",
-                        value: "HOT"
-                        }, 
-                      {
-                        label: "COOL",
-                        value: "COOL"
-                    }];
+      {
+        label:"HOT",
+        value: "HOT"
+      }, 
+      {
+        label: "COOL",
+        value: "COOL"
+      }];
     
   },
 };
