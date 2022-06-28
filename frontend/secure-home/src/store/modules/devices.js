@@ -3,13 +3,15 @@ import axios from "axios";
 const state = {
   device: null,
   result: null,
-  devices: null
+  devices: null,
+  filteredDevices: null,
 };
 
 const getters = {
   getDevice: (state) => state.device,
   getResult: (state) => state.result,
   getDevices: (state) => state.devices,
+  getFilteredDevices: (state) => state.filteredDevices,
 };
 
 const actions = {
@@ -26,19 +28,37 @@ const actions = {
       });
   },
   fetchDevicesForRealEstate: (context, realestateId) => {
-    axios.get('/device/' + realestateId)
-    .then(response => {
+    axios
+      .get("/device/" + realestateId)
+      .then((response) => {
         context.commit("setDevices", response.data);
-    })
-    .catch(error => {
-        context.commit('setResult', {
-            label: 'fetch',
-            ok: false,
-            message: error.response.data.message
+      })
+      .catch((error) => {
+        context.commit("setResult", {
+          label: "fetch",
+          ok: false,
+          message: error.response.data.message,
         });
-    }); 
-},
+      });
+  },
 
+  fetchReportForDevices: (context, reportFilterDto) => {
+    const queryParam = { ...reportFilterDto };
+    console.log(queryParam);
+    axios
+      .get("/device/devices", { params: queryParam })
+      .then((response) => {
+        console.log(response);
+        context.commit("setFilteredDevices", response.data);
+      })
+      .catch((error) => {
+        context.commit("setResult", {
+          label: "fetch",
+          ok: false,
+          message: error.response.data.message,
+        });
+      });
+  },
 };
 const mutations = {
   setDevice: (state, device) => {
@@ -47,6 +67,9 @@ const mutations = {
 
   setDevices: (state, devices) => {
     state.devices = devices;
+  },
+  setFilteredDevices: (state, filteredDevices) => {
+    state.filteredDevices = filteredDevices;
   },
   setResult: (state, result) => {
     state.result = result;

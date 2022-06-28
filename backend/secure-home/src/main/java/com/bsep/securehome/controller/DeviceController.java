@@ -2,6 +2,8 @@ package com.bsep.securehome.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import com.bsep.securehome.annotation.LogAfterReturning;
 import com.bsep.securehome.annotation.LogAfterThrowing;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bsep.securehome.dto.DeviceDto;
 import com.bsep.securehome.dto.MessageDto;
+import com.bsep.securehome.dto.SearchDeviceDto;
+import com.bsep.securehome.model.DevicesLog;
 import com.bsep.securehome.service.implementation.DeviceMessageService;
 import com.bsep.securehome.service.implementation.DeviceService;
 
@@ -60,4 +64,12 @@ public class DeviceController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/devices")
+    public ResponseEntity<List<DevicesLog>> searchDevices(SearchDeviceDto searchDeviceDto) throws IOException {
+        List<DevicesLog> devices =  deviceService.fetchReportForDevices(searchDeviceDto);
+
+        return new ResponseEntity<>(devices, HttpStatus.OK);
+    }
+
 }
