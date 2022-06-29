@@ -45,9 +45,12 @@ public class CustomAspect {
 
         String username = getUsernameFromRequest() != null ? getUsernameFromRequest() : user;
 
-        logger.info("User: " + username + ", Action: " + logBefore.message());
+        String message = user != null ? "User: " + username + ", Action: " + logBefore.message()
+                : "Action: " + logBefore.message();
 
-        loggingService.create(new Log(UUID.randomUUID(), logBefore.message(), LogType.SUCCESS, "Secure home"));
+        logger.info(message);
+
+        loggingService.create(new Log(UUID.randomUUID(), message, LogType.SUCCESS, "Secure home"));
     }
 
     @AfterThrowing(value = "@annotation(logAfterThrowing)", throwing = "exception")
@@ -64,8 +67,11 @@ public class CustomAspect {
 
         String username = getUsernameFromRequest() != null ? getUsernameFromRequest() : user;
 
-        String message = "User: " + username + ", Action: " + logAfterThrowing.message() + ", Exception message:"
-                + exception.getMessage();
+        String message = username != null
+                ? "User: " + username + ", Action: " + logAfterThrowing.message() + ", Exception message:"
+                        + exception.getMessage()
+                : "Action: " + logAfterThrowing.message() + ", Exception message:"
+                        + exception.getMessage();
         logger.error(message);
 
         loggingService.create(new Log(UUID.randomUUID(), message, LogType.ERROR, "Secure home"));
@@ -84,7 +90,9 @@ public class CustomAspect {
 
         String username = getUsernameFromRequest() != null ? getUsernameFromRequest() : user;
 
-        String message = "User: " + username + ", Action: " + logAfterReturning.message();
+        String message = username != null ? "User: " + username + ", Action: " + logAfterReturning.message()
+                : "Action: "
+                        + logAfterReturning.message();
         logger.info(message);
 
         loggingService.create(new Log(UUID.randomUUID(), message, LogType.SUCCESS, "Secure home"));

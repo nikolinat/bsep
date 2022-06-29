@@ -1,11 +1,11 @@
-package com.bsep.securehome.service.implementation;
+package com.bsep.admin.app.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bsep.securehome.model.Notification;
-import com.bsep.securehome.service.contract.INotificationService;
-import com.bsep.securehome.sockets.SocketsModule;
+import com.bsep.admin.app.model.Notification;
+import com.bsep.admin.app.service.contract.INotificationService;
+import com.bsep.admin.app.sockets.SocketsModule;
 
 @Service
 public class NotificationService implements INotificationService {
@@ -20,4 +20,5 @@ public class NotificationService implements INotificationService {
     public void sendNotification(Notification notification) {
         sockets.brodcast(String.valueOf(notification.getId()), notification);
     }
+
 }

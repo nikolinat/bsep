@@ -1,0 +1,18 @@
+package admin.kjar;
+import com.bsep.admin.app.dto.LogAlarm;
+import com.bsep.admin.app.model.enums.LogType;
+import com.bsep.admin.app.model.Log;
+
+rule "Log alarm-admin"
+	no-loop
+	agenda-group "adminLogAlarm"
+	when
+		$log: Log(logType == LogType.ERROR, applicationName == "Admin")
+    then
+		System.out.println("CAO");
+		LogAlarm logAlarm = new LogAlarm();
+		logAlarm.setMessage($log.getMessage());
+		insert(logAlarm);
+end
+
+
