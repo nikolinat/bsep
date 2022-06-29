@@ -73,8 +73,8 @@ public class DeviceService implements ApplicationContextAware {
     public DeviceService(DevicesLogRepository devicesLogRepository) {
         this.devicesLogRepository = devicesLogRepository;
     }
-    
-    public DeviceDto createDevice(DeviceDto device) throws IOException{
+
+    public DeviceDto createDevice(DeviceDto device) throws IOException {
         device.setId(UUID.randomUUID().toString());
         String filePath = "src/main/java/files/config/" + device.getRealEstateId() + ".txt";
         File file = new File(filePath);
@@ -101,7 +101,7 @@ public class DeviceService implements ApplicationContextAware {
 
     public ArrayList<DeviceDto> findDevicesForRealEstate(Long realEstateId) throws FileNotFoundException {
         ArrayList<DeviceDto> devices = new ArrayList<>();
-        String filePath = configPath+"src/main/java/files/config/"+realEstateId + ".txt";
+        String filePath = configPath + "src/main/java/files/config/" + realEstateId + ".txt";
         File file = new File(filePath);
         if (file.exists()) {
             Scanner scanner = new Scanner(file);
@@ -121,30 +121,30 @@ public class DeviceService implements ApplicationContextAware {
     public List<DevicesLog> fetchReportForDevices(SearchDeviceDto searchDeviceDto) throws FileNotFoundException {
         List<DevicesLog> devices = devicesLogRepository.findAll();
 
-        if(searchDeviceDto.getStartDateTime() != "")
-        {
+        if (searchDeviceDto.getStartDateTime() != "") {
             searchDeviceDto.setStartDate(LocalDate.parse(searchDeviceDto.getStartDateTime()));
-        }
-        else{
+        } else {
             searchDeviceDto.setStartDate(LocalDate.parse("1900-01-01"));
         }
-        if(searchDeviceDto.getEndDateTime() != "")
-        {
+        if (searchDeviceDto.getEndDateTime() != "") {
             searchDeviceDto.setEndDate(LocalDate.parse(searchDeviceDto.getEndDateTime()));
-        }
-        else{
+        } else {
             searchDeviceDto.setEndDate(LocalDate.parse("2100-01-01"));
         }
 
-        List<DevicesLog> findDevices = devices.stream().filter(device -> (device.getRealEstateId() == searchDeviceDto.getRealEstateId())
-        && ( (device.getType().toString().contains(searchDeviceDto.getType())) && LocalDate.parse(device.getDateTime()) .isAfter(searchDeviceDto.getStartDate())
-        && LocalDate.parse(device.getDateTime()) .isBefore(searchDeviceDto.getEndDate()))
-        || ((device.getType().toString()=="")  && LocalDate.parse(device.getDateTime()) .isAfter(searchDeviceDto.getStartDate())
-        && LocalDate.parse(device.getDateTime()) .isBefore(searchDeviceDto.getEndDate()))).collect(Collectors.toList());
-        
+        List<DevicesLog> findDevices = devices
+                .stream().filter(device -> (device.getRealEstateId() == searchDeviceDto.getRealEstateId())
+                        && ((device.getType().toString().contains(searchDeviceDto.getType()))
+                                && LocalDate.parse(device.getDateTime()).isAfter(searchDeviceDto.getStartDate())
+                                && LocalDate.parse(device.getDateTime()).isBefore(searchDeviceDto.getEndDate()))
+                        || ((device.getType().toString() == "")
+                                && LocalDate.parse(device.getDateTime()).isAfter(searchDeviceDto.getStartDate())
+                                && LocalDate.parse(device.getDateTime()).isBefore(searchDeviceDto.getEndDate())))
+                .collect(Collectors.toList());
+
         return findDevices;
     }
-    
+
     public String findRegex(Long realEstateId, String deviceId) throws FileNotFoundException {
         String filePath = "src/main/java/files/config/" + realEstateId + ".txt";
         File file = new File(filePath);

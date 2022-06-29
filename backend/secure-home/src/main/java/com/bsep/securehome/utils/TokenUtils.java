@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.bsep.securehome.model.Role;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -17,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -45,10 +48,13 @@ public class TokenUtils {
 
     private final SecureRandom secureRandom = new SecureRandom();
 
-    public String generateToken(String username, String role, Integer id, String cookieSecureContent) {
+    public String generateToken(String username, List<Role> role, Integer id, String cookieSecureContent) {
+        List<String> rolesStrings = new ArrayList<>();
+        role.forEach(r -> rolesStrings.add(r.getName()));
+        String roles = rolesStrings.stream().collect(Collectors.joining(", "));
         String secureContentHash = generateSecureContentHash(cookieSecureContent);
         return Jwts.builder()
-                .claim("role", role)
+                .claim("role", roles)
                 .claim("id", id)
                 .claim("cookieSecureContent", secureContentHash)
                 .setIssuer(APP_NAME)
@@ -84,7 +90,7 @@ public class TokenUtils {
         if (secureContent != null) {
             isSecureContentValid = validateTokenSecureContent(secureContent, token);
         }
-        //Zakomentarisi posle
+        // Zakomentarisi posle
         isSecureContentValid = true;
         return isUsernameValid && isAlgorithmValid && isSecureContentValid;
     }

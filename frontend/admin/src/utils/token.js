@@ -47,7 +47,12 @@ export function getRoleFromToken() {
 
     const roleFromToken = decodeToken()?.role;
 
-	return Object.keys(Roles).find(role => Roles[role] === roleFromToken);
+	const splittedRoles = roleFromToken.split(",");
+
+	const roles = []
+	splittedRoles.forEach(role => roles.push(Object.keys(Roles).find(r => Roles[r] === role)))
+
+	return splittedRoles;
 }
 
 export function isUserLoggedIn() {

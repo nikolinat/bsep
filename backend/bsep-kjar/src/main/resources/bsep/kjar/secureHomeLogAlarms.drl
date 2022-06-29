@@ -10,6 +10,7 @@ rule "Log alarm-secure home"
 	when
 		$log: Log(logType == LogType.ERROR, applicationName == "Secure home")
     then
+		System.out.println("ODVEFW");
 		LogAlarm logAlarm = new LogAlarm();
 		logAlarm.setMessage($log.getMessage());
 		insert(logAlarm);

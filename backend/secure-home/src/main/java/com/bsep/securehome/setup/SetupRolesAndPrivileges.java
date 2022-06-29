@@ -116,6 +116,7 @@ public class SetupRolesAndPrivileges implements
     void addOwner() {
         if (userRepository.findByUsername("pera123") == null) {
             Role ownerRole = roleRepository.findByName("ROLE_HOUSE_OWNER");
+            Role tenantRole = roleRepository.findByName("ROLE_TENANT");
             User user = new User();
             user.setEmailAddress("peraperic@gmail.com");
             user.setName("pera");
@@ -123,7 +124,7 @@ public class SetupRolesAndPrivileges implements
             user.setPassword("$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra");
             user.setUsername("pera123");
             user.setSalt("0e4ace1c-d09e-11ec-9d64-0242ac120002".getBytes());
-            user.setRoles(Collections.singletonList(ownerRole));
+            user.setRoles(Arrays.asList(ownerRole, tenantRole));
             user.setDeleted(false);
             userRepository.save(user);
         }

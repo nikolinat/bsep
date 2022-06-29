@@ -11,7 +11,7 @@
           :values="[user.name, user.lastName, user.username, user.email, formatRoles(user)]"
         >
           <div class="pull-right text-gray">
-            <DropDownMenu v-if="role === 'ROLE_ADMIN'">
+            <DropDownMenu v-if="role.includes('ROLE_ADMIN')">
               <ModalOpener :modalBoxId="'deleteUser'">
                 <DropDownItem @click="selectedUser = user">Delete</DropDownItem>
               </ModalOpener>
