@@ -69,7 +69,7 @@ public class Task implements Runnable {
                     deviceMessageService.create(new DeviceMessage(UUID.randomUUID(),
                             messageDto.getId(), messageDto.getType(),
                             messageDto.getMessage(), LocalDateTime.now(ZoneOffset.UTC), false,
-                            messageDto.getValue()), alarms,
+                            messageDto.getValue(),  messageDto.getRealEstateId()), alarms,
                             messageDto.getRealEstateId());
                 }
             }

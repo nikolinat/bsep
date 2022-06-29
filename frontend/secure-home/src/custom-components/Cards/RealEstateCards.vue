@@ -22,6 +22,9 @@
                             <ModalOpener :modalBoxId="'alarmsModal'">
                                 <Button @click="handleViewAlarms(realEstate.id)">Alarms</Button>
                             </ModalOpener>
+                            <ModalOpener :modalBoxId="'reportModal'">
+                                <Button @click="handleViewReport(realEstate.id)">Report</Button>
+                            </ModalOpener>
                         </div>
                     </RotatingCard>
                 </template>
@@ -62,6 +65,17 @@
                 <AddAlarmForm :realEstateId="realEstateId" />
             </div>
         </Modal>
+         <Modal v-if="realEstateId !== null" modalBoxId="reportModal" :title="'Report'" sizeClass="modal-lg">
+            <div slot="body">
+                <card>
+                    <Report :realEstateId="realEstateId" />
+                </card>
+            <card>
+                <ReportTable />
+            </card>
+            </div>
+          
+        </Modal>
 
     </div>
 </template>
@@ -78,6 +92,9 @@ import DeviceMessageTable from '../Tables/DeviceMessageTable.vue'
 import SearchFilterDevicesMessages from '../Forms/SearchFilterDevicesMessages.vue'
 import AlarmsTable from '../Tables/AlarmsTable.vue'
 import AddAlarmForm from '../Forms/AddAlarmForm.vue'
+import Report from "../Forms/ReportForm.vue"
+import Card from '../../generic-components/Card/Card.vue'
+import ReportTable from '../../custom-components/Tables/ReportTable.vue'
 
 import { mapActions, mapGetters } from 'vuex'
 
@@ -93,7 +110,10 @@ export default {
         DeviceMessageTable,
         SearchFilterDevicesMessages,
         AlarmsTable,
-        AddAlarmForm
+        AddAlarmForm,
+        Report,
+        Card,
+        ReportTable
     },
     name: 'RealEstates',
 
@@ -141,6 +161,9 @@ export default {
         },
 
         handleCreateAlarm(id){
+            this.realEstateId = id;
+        },
+        handleViewReport(id){
             this.realEstateId = id;
         }
     }

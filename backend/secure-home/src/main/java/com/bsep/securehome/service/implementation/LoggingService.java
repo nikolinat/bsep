@@ -37,7 +37,7 @@ public class LoggingService implements ILoggingService {
     public Log create(Log log) {
         KieSession kieSession = kieContainer.newKieSession();
         kieSession.insert(log);
-        kieSession.getAgenda().getAgendaGroup("alarm").setFocus();
+        kieSession.getAgenda().getAgendaGroup("newRule").setFocus();
         kieSession.fireAllRules();
         kieSession.dispose();
         Collection<Object> ruleOutputObjects = (Collection<Object>) kieSession.getObjects();

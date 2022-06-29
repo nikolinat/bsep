@@ -1,14 +1,8 @@
 <template>
-  <div>
+  <div class="content">
     <Table>
       <TableHead
-        :columnNames="[
-          'Id',
-          'Name',
-          'Type',
-          '',
-          ''
-        ]"
+        :columnNames="['Id',  'Type', 'Number of alarms']"
       ></TableHead>
       <TableBody>
         <TableRow
@@ -16,9 +10,8 @@
           :key="i"
           :values="[
             device.id,
-            device.name,
             device.type,
-            '',
+            device.number,
           ]"
         >
         </TableRow>
@@ -32,29 +25,36 @@ import Table from "../../generic-components/Table/Table.vue";
 import TableHead from "../../generic-components/Table/TableHead.vue";
 import TableBody from "../../generic-components/Table/TableBody.vue";
 import TableRow from "../../generic-components/Table/TableRow.vue";
+import { mapActions, mapGetters } from "vuex";
+
 export default {
-  props: {
-    devices: {},
-  },
   data: () => {
     return {
+      devices: [],
     };
   },
   components: {
     Table,
     TableHead,
     TableBody,
-    TableRow
+    TableRow,
+  },
+
+  watch: {
+    searchedDevices(devices) {
+      this.devices = devices;
+    },
   },
   computed: {
-  },
-  watch: {
-     
+    ...mapGetters({
+      searchedDevices: "devices/getFilteredDevices",
+      result: "devices/getResult",
+    }),
   },
   methods: {
-   
+    ...mapActions({
+      fetchDevices: "devices/fetchReportForDevices",
+    }),
   },
-  mounted() {
-    }
 };
 </script>

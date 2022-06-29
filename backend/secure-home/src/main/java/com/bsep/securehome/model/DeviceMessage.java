@@ -26,6 +26,8 @@ public class DeviceMessage {
     private Boolean alarm;
 
     private Integer value;
+    
+    private Long realEstateId;
 
     public DeviceMessage() {}
 
@@ -48,6 +50,18 @@ public class DeviceMessage {
         this.alarm = alarm;
         this.value = value;
     }
+
+    public DeviceMessage(UUID id, String deviceId, DeviceType type, String message, LocalDateTime dateTime, Boolean alarm, Integer value, Long realEstateId) {
+        this.id = id;
+        this.deviceId = deviceId;
+        this.type = type;
+        this.message = message;
+        this.dateTime = dateTime;
+        this.alarm = alarm;
+        this.value = value;
+        this.realEstateId = realEstateId;
+    }
+
 
 
     public UUID getId() {
@@ -104,6 +118,14 @@ public class DeviceMessage {
 
     public void setValue(Integer value) {
         this.value = value;
+    }
+
+    public Long getRealEstateId() {
+        return this.realEstateId;
+    }
+
+    public void setRealEstateId(Long realEstateId) {
+        this.realEstateId = realEstateId;
     }
 
 }

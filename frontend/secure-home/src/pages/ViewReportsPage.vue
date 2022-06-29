@@ -7,7 +7,7 @@
             <Report :realEstateId="this.$route.params.id" />
           </card>
           <card>
-            <DevicesTable />
+            <ReportTable />
           </card>
         </div>
       </div>
@@ -18,20 +18,20 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import Card from "../generic-components/Card/Card.vue";
-import DevicesTable from "../custom-components/Tables/DevicesTable.vue";
+import ReportTable from "../custom-components/Tables/ReportTable.vue";
 import Report from "../custom-components/Forms/ReportForm.vue";
 
 export default {
   components: {
     Card,
-    DevicesTable,
+    ReportTable,
     Report,
   },
-  name: "RealEstates",
+  name: "Reports",
 
   data: () => {
     return {
-      realEstate: "0",
+      realEstate: null,
     };
   },
   computed: {
