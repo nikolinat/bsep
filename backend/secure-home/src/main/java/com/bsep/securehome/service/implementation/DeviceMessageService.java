@@ -18,7 +18,9 @@ import com.bsep.securehome.repository.DeviceMessageRepository;
 import com.bsep.securehome.repository.RealEstateRepository;
 import com.bsep.securehome.service.EmailService;
 import com.bsep.securehome.dto.DeviceDto;
+import com.bsep.securehome.dto.DeviceReportDto;
 import com.bsep.securehome.dto.MessageDto;
+import com.bsep.securehome.dto.SearchDeviceDto;
 import com.bsep.securehome.dto.SearchFilterDeviceMessagesDto;
 import com.bsep.securehome.service.contract.IDeviceMessageService;
 import com.bsep.securehome.service.contract.INotificationService;
@@ -127,5 +129,43 @@ public class DeviceMessageService implements IDeviceMessageService {
         } else {
             Files.write(Paths.get(filePath), messageDto.toString().getBytes(), StandardOpenOption.CREATE);
         }
+    }
+
+    private DeviceReportDto check(String id, List<DeviceReportDto> list) {
+        for (DeviceReportDto deviceReportDto : list) {
+            if (deviceReportDto.getId().equals(id)) {
+                return deviceReportDto;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<DeviceReportDto> report(SearchDeviceDto searchDeviceDto) throws FileNotFoundException {
+        List<DeviceMessage> deviceMessagesForRealEstate = findByRealEstateId(searchDeviceDto.getRealEstateId());
+
+        List<DeviceMessage> deviceMessagesFiltered = deviceMessagesForRealEstate.stream()
+                .filter(deviceMessage -> (searchDeviceDto.getType() == null
+                        || deviceMessage.getType() == searchDeviceDto.getType()) &&
+                        (searchDeviceDto.getEndDate() == null ||
+                                searchDeviceDto.getEndDate().toLocalDate()
+                                        .isAfter(deviceMessage.getDateTime().toLocalDate()))
+                        &&
+                        (searchDeviceDto.getStartDate() == null || searchDeviceDto
+                                .getStartDate().toLocalDate().isBefore(deviceMessage.getDateTime().toLocalDate())))
+                .collect(Collectors.toList());
+
+        List<DeviceReportDto> devicesReport = new ArrayList<>();
+        for (DeviceMessage deviceMessage : deviceMessagesFiltered) {
+            DeviceReportDto drt = check(deviceMessage.getDeviceId(), devicesReport);
+            if (drt == null) {
+                devicesReport.add(new DeviceReportDto(deviceMessage.getType(), 0, deviceMessage.getDeviceId()));
+            } else {
+                Integer number = drt.getNumber();
+                number = number + 1;
+                drt.setNumber(number);
+            }
+        }
+        return devicesReport;
     }
 }
