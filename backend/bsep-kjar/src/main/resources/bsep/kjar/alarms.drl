@@ -2,6 +2,7 @@ package bsep.kjar;
 import com.bsep.securehome.model.DeviceMessage;
 import com.bsep.securehome.model.enums.DeviceType;
 import com.bsep.securehome.dto.AlarmDto;
+import com.bsep.securehome.dto.LogAlarm;
 import com.bsep.securehome.model.enums.LogType;
 import com.bsep.securehome.model.Log;
 import java.time.LocalDateTime;
@@ -18,21 +19,5 @@ rule "Device alarm"
 		modify($deviceMessage){
 			setAlarm(true);
 		}
-end
-
-
-rule "Log alarm"
-	no-loop
-	agenda-group "alarm"
-	when
-		$log: Log(logType == LogType.ERROR)
-    then
-		DeviceMessage deviceMessage = new DeviceMessage();
-		deviceMessage.setId(UUID.randomUUID());
-        deviceMessage.setDateTime(LocalDateTime.now());
-		deviceMessage.setMessage($log.getMessage());
-		deviceMessage.setAlarm(true);
-		insert(deviceMessage);
-	
 end
 

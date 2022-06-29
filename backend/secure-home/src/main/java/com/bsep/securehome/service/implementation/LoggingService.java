@@ -1,8 +1,9 @@
 package com.bsep.securehome.service.implementation;
 
-import com.bsep.securehome.model.DeviceMessage;
+import com.bsep.securehome.dto.LogAlarm;
 import com.bsep.securehome.model.Log;
-import com.bsep.securehome.repository.DeviceMessageRepository;
+import com.bsep.securehome.model.Notification;
+import com.bsep.securehome.model.User;
 import com.bsep.securehome.repository.LogRepository;
 import com.bsep.securehome.service.contract.ILoggingService;
 
@@ -17,15 +18,19 @@ import java.util.List;
 @Service
 public class LoggingService implements ILoggingService {
     private final LogRepository logRepository;
-    private DeviceMessageRepository deviceMessageRepository;
     private final KieContainer kieContainer;
+    private final NotificationService notificationService;
+    private final UserService userService;
 
     @Autowired
-    public LoggingService(LogRepository logRepository, DeviceMessageRepository deviceMessageRepository,
-            KieContainer kieContainer) {
+    public LoggingService(LogRepository logRepository,
+            KieContainer kieContainer,
+            NotificationService notificationService,
+            UserService userService) {
         this.logRepository = logRepository;
-        this.deviceMessageRepository = deviceMessageRepository;
         this.kieContainer = kieContainer;
+        this.notificationService = notificationService;
+        this.userService = userService;
     }
 
     @Override
@@ -37,16 +42,22 @@ public class LoggingService implements ILoggingService {
     public Log create(Log log) {
         KieSession kieSession = kieContainer.newKieSession();
         kieSession.insert(log);
-        kieSession.getAgenda().getAgendaGroup("newRule").setFocus();
+        kieSession.getAgenda().getAgendaGroup("secure home log alarm").setFocus();
         kieSession.fireAllRules();
         kieSession.dispose();
         Collection<Object> ruleOutputObjects = (Collection<Object>) kieSession.getObjects();
-		for(Object o : ruleOutputObjects) {
-			if( o instanceof DeviceMessage) {
-				deviceMessageRepository.save((DeviceMessage) o);
-			}
-		}
-		
+        for (Object o : ruleOutputObjects) {
+            if (o instanceof LogAlarm) {
+                List<User> admins = userService.findAdmins();
+                LogAlarm logAlarm = (LogAlarm) o;
+                logAlarm.setIsAlerted(true);
+                admins.forEach(admin -> notificationService
+                        .sendNotification(
+                                new Notification("notificationSocket/" + Integer.toString(admin.getId()), "Log alarm",
+                                        logAlarm.getMessage())));
+            }
+        }
+
         return logRepository.save(log);
     }
 }

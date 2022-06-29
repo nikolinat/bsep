@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository,
-                       PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -132,16 +132,30 @@ public class UserService implements UserDetailsService {
         List<User> users = userRepository.findAll();
 
         List<Role> roles = new ArrayList<>();
-        searchFilterUserDto.getRoles().forEach(role -> roles.add(roleRepository.findById(Long.valueOf(role)).orElse(null)));
+        searchFilterUserDto.getRoles()
+                .forEach(role -> roles.add(roleRepository.findById(Long.valueOf(role)).orElse(null)));
 
-        return users.stream().filter(user -> (searchFilterUserDto.getUsername().isEmpty() || user.getUsername().contains(searchFilterUserDto.getUsername())) &&
-                (searchFilterUserDto.getEmail().isEmpty() || user.getEmailAddress().contains(searchFilterUserDto.getEmail())) &&
+        return users.stream().filter(user -> (searchFilterUserDto.getUsername().isEmpty()
+                || user.getUsername().contains(searchFilterUserDto.getUsername())) &&
+                (searchFilterUserDto.getEmail().isEmpty()
+                        || user.getEmailAddress().contains(searchFilterUserDto.getEmail()))
+                &&
                 (searchFilterUserDto.getName().isEmpty() || user.getName().contains(searchFilterUserDto.getName())) &&
-                (searchFilterUserDto.getLastName().isEmpty() || user.getLastName().contains(searchFilterUserDto.getLastName())) &&
+                (searchFilterUserDto.getLastName().isEmpty()
+                        || user.getLastName().contains(searchFilterUserDto.getLastName()))
+                &&
                 (roles.isEmpty() || roles.containsAll(user.getRoles()))).collect(Collectors.toList());
     }
 
     public User findUser(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public List<User> findAdmins() {
+        List<User> users = findAll();
+
+        return users.stream().filter(user -> user.getRoles().stream()
+                .filter(role -> role.getName().equals("ROLE_ADMIN")).collect(Collectors.toList()).size() > 0)
+                .collect(Collectors.toList());
     }
 }

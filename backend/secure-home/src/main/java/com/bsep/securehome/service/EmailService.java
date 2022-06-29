@@ -4,6 +4,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.bsep.securehome.annotation.LogAfterReturning;
+import com.bsep.securehome.annotation.LogAfterThrowing;
+
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
@@ -19,6 +22,8 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
+    @LogAfterThrowing(message = "ERROR sending email for email verification")
+    @LogAfterReturning(message = "SUCCESS sending email for email verification")
     public void sendEmailVerificationMail(String toEmail, String token) {
         String path = "http://localhost:8080/email-verification/";
         try {
@@ -37,6 +42,8 @@ public class EmailService {
         }
     }
 
+    @LogAfterThrowing(message = "ERROR sending email for blocked account")
+    @LogAfterReturning(message = "SUCCESS sending email for blocked account")
     public void sendEmailForBlockedAccount(String toEmail) {
         try {
             MimeMessage msg = javaMailSender.createMimeMessage();
@@ -53,6 +60,8 @@ public class EmailService {
         }
     }
 
+    @LogAfterThrowing(message = "ERROR sending certificate")
+    @LogAfterReturning(message = "SUCCESS sending certificate")
     public void sendCertificate(String toEmail, String path) {
         try {
             MimeMessage msg = javaMailSender.createMimeMessage();

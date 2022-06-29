@@ -1,3 +1,0 @@
-40e2bb3a-a911-449a-ba4b-8d053c6bcd65,15,IRON,Leaking water from iron
-15b3e481-6732-4070-9cb7-c4887cb0c6f4,15,COOKER,Cooker is on
-a01b7dd4-e532-4c48-b130-132f3772add5,15,FREEZER,Water is leaking from the freezer

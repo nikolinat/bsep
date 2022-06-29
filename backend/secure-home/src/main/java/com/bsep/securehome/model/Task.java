@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 
 import org.springframework.context.ApplicationContext;
 
+import com.bsep.securehome.annotation.LogAfterReturning;
+import com.bsep.securehome.annotation.LogAfterThrowing;
 import com.bsep.securehome.dto.AlarmDto;
 import com.bsep.securehome.dto.MessageDto;
 import com.bsep.securehome.exception.BadLogicException;
@@ -51,6 +53,8 @@ public class Task implements Runnable {
         }
     }
 
+    @LogAfterThrowing(message = "ERROR reading from messages file")
+    @LogAfterReturning(message = "SUCCESS reading from messages file")
     private List<MessageDto> readMessagesFromFile() throws FileNotFoundException {
         LocalDateTime now = LocalDateTime.now();
         List<MessageDto> messageDtos = new ArrayList<>();
