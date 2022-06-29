@@ -59,3 +59,11 @@ function decodeToken() {
 	const token = sessionStorage.getItem('token');
 	return token ? jwt_decoder(token) : null;
 }
+
+export function getIdFromToken() {
+	if(hasTokenExpired()) {
+		return null;
+	}
+
+    return decodeToken()?.id;
+}

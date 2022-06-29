@@ -1,5 +1,5 @@
 import axios from "axios";
-import {setToken, removeToken, getRoleFromToken} from '../../utils/token'
+import {setToken, removeToken} from '../../utils/token'
 import { tryConnecting } from "../../utils/sockets.js";
 
 const state = {
@@ -22,10 +22,7 @@ const actions = {
                 message: ''
             });
 
-            const role = getRoleFromToken();
-            if(role === "ROLE_HOUSE_OWNER" || role === "ROLE_TENANT") {
-                tryConnecting();
-            }
+            tryConnecting();
             
         })
         .catch(error => {

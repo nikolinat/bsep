@@ -1,5 +1,6 @@
 import axios from "axios";
-import {setToken, removeToken} from '../../utils/token'
+import {setToken, removeToken, getRoleFromToken} from '../../utils/token'
+import { tryConnecting } from "../../utils/sockets.js";
 
 const state = {
     result: null
@@ -20,6 +21,11 @@ const actions = {
                 ok: true,
                 message: ''
             });
+
+            const role = getRoleFromToken();
+            if(role === "ROLE_ADMIN") {
+                tryConnecting();
+            }
         })
         .catch(error => {
             console.log(error.response.data.message);
