@@ -2,24 +2,28 @@
   <Form>
     <form-row>
       <div class="col-6">
-        <text-input label="Type" v-model="reportFilterDto.type" type="text" />
+         <SelectOptionInput v-if="realEstateId !== null"
+                       label="Select device type" :showLabel="false " v-model="reportFilterDto.type" :options="types"
+        ></SelectOptionInput>
       </div>
     </form-row>
 
     <form-row>
       <div class="col-6">
-        <text-input
-          label="Start date"
-          v-model="reportFilterDto.startDateTime"
-          type="date"
-        />
+         <DateTimePicker
+            v-model="reportFilterDto.startDate"
+            label="Start date"
+            type="datetime"
+             id="start"
+            />
       </div>
       <div class="col-6">
-        <text-input
-          label="End date"
-          v-model="reportFilterDto.endDateTime"
-          type="date"
-        />
+        <DateTimePicker
+            v-model="reportFilterDto.endDate"
+            label="End date"
+            type="datetime"
+            id="end"
+            />
       </div>
     </form-row>
 
@@ -31,28 +35,32 @@
 import Button from "../../generic-components/Form/Button.vue";
 import Form from "../../generic-components/Form/Form.vue";
 import FormRow from "../../generic-components/Form/FormRow.vue";
-import TextInput from "../../generic-components/Form/TextInput.vue";
+import SelectOptionInput from "../../generic-components/Form/SelectOptionInput.vue"
+import DateTimePicker from '../../generic-components/Form/DateTimePicker.vue'
 import { mapGetters, mapActions } from "vuex";
-
+import {types} from '../../constants.js'
+import moment from 'moment'
 export default {
   props: {
-    realEstateId: String,
+    realEstateId: null,
   },
   components: {
     Form,
     FormRow,
-    TextInput,
     Button,
+    DateTimePicker,
+    SelectOptionInput
   },
 
   data: function () {
     return {
       reportFilterDto: {
-        realEstateId: "0",
-        type: "",
-        startDateTime: "",
-        endDateTime: "",
+        realEstateId: 0,
+        type: null,
+        startDate:null,
+        endDate: null,
       },
+      types: []
     };
   },
 
@@ -69,12 +77,16 @@ export default {
     }),
 
     handleSearchAndFilter() {
+      this.reportFilterDto.startDate = moment( this.reportFilterDto.startDate).format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS);
+       this.reportFilterDto.endDate = moment( this.reportFilterDto.endDate).format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS);
       this.fetchReportForDevices(this.reportFilterDto);
     },
   },
 
   mounted() {
+    this.types = types;
     this.reportFilterDto.realEstateId = this.realEstateId;
+    console.log(this.realEstateId);
   },
 };
 </script>

@@ -1,31 +1,31 @@
 package com.bsep.securehome.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.bsep.securehome.model.enums.DeviceType;
 
 public class SearchDeviceDto {
 
     private Long realEstateId;
 
-    private String type;
+    private DeviceType type;
 
-    // @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
-    private String startDateTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime startDate;
 
-    // @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
-    private String endDateTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime endDate;
 
-    private LocalDate startDate;
+    public SearchDeviceDto() {
+    }
 
-    private LocalDate endDate;
-
-    public SearchDeviceDto() {}
-
-
-    public SearchDeviceDto(Long realEstateId,String type, String startDateTime, String endDateTime) {
+    public SearchDeviceDto(Long realEstateId, DeviceType type, LocalDateTime startDate, LocalDateTime endDate) {
         this.realEstateId = realEstateId;
         this.type = type;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Long getRealEstateId() {
@@ -36,53 +36,28 @@ public class SearchDeviceDto {
         this.realEstateId = realEstateId;
     }
 
-    public String getType() {
+    public DeviceType getType() {
         return this.type;
     }
 
-    public void setType(String type) {
+    public void setType(DeviceType type) {
         this.type = type;
     }
 
-
-    public String getStartDateTime() {
-        return this.startDateTime;
-    }
-
-    public void setStartDateTime(String dateTime) {
-        this.startDateTime = dateTime;
-    }
-
-    public String getEndDateTime() {
-        return this.endDateTime;
-    }
-
-    public void setEndDateTime(String dateTime) {
-        this.endDateTime = dateTime;
-    }
-
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
-    public void setStartDate(LocalDate dateTime) {
-        this.startDate = dateTime;
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
-    public void setEndDate(LocalDate dateTime) {
-        this.endDate = dateTime;
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 
-    @Override
-    public String toString() {
-        return "UpdateUserDto{" +
-                "type='" + type + '\'' +
-                ", startDateTime='" + startDateTime + '\'' +
-                ", endDateTime='" + endDateTime + '\'' +
-                '}';
-    }
 }

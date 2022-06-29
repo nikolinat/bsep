@@ -43,12 +43,9 @@ const actions = {
   },
 
   fetchReportForDevices: (context, reportFilterDto) => {
-    const queryParam = { ...reportFilterDto };
-    console.log(queryParam);
     axios
-      .get("/device/devices", { params: queryParam })
+      .put("/device/report", reportFilterDto)
       .then((response) => {
-        console.log(response);
         context.commit("setFilteredDevices", response.data);
       })
       .catch((error) => {

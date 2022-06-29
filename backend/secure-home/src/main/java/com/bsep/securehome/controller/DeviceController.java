@@ -15,14 +15,15 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bsep.securehome.dto.DeviceDto;
+import com.bsep.securehome.dto.DeviceReportDto;
 import com.bsep.securehome.dto.MessageDto;
 import com.bsep.securehome.dto.SearchDeviceDto;
-import com.bsep.securehome.model.DevicesLog;
 import com.bsep.securehome.service.implementation.DeviceMessageService;
 import com.bsep.securehome.service.implementation.DeviceService;
 
@@ -66,11 +67,12 @@ public class DeviceController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/devices")
-    public ResponseEntity<List<DevicesLog>> searchDevices(SearchDeviceDto searchDeviceDto) throws IOException {
-        List<DevicesLog> devices =  deviceService.fetchReportForDevices(searchDeviceDto);
-
-        return new ResponseEntity<>(devices, HttpStatus.OK);
+    @PutMapping("/report")
+    @LogAfterThrowing(message = "ERROR creating report")
+    @LogAfterReturning(message = "SUCCESS acreating report")
+    public ResponseEntity<List<DeviceReportDto>> report(@RequestBody SearchDeviceDto searchDeviceDto) throws IOException {
+        List<DeviceReportDto> deviceReport = deviceMessageService.report(searchDeviceDto);
+        return new ResponseEntity<>(deviceReport, HttpStatus.OK);
     }
 
 }
