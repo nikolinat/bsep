@@ -6,23 +6,29 @@
                  :options="options"></SelectOptionInput>
       </div>
     </form-row>
-  <form-row>
-    <div class="col-12">
+    <form-row v-if="this.rule.type !== null && (this.rule.type == 'AIR_CONDITIONING' || this.rule.type == 'HEATING') ">
+      <div class="col-12">
          <SelectOptionInput label="Select device type" :showLabel="false " v-model="rule.sign" 
             :options="signs"></SelectOptionInput>
-    </div>
+      </div>
     </form-row>
     <form-row v-if="this.rule.type !== null && this.rule.type == 'AIR_CONDITIONING'">
-    <div class="col-12">
+      <div class="col-12">
          <SelectOptionInput label="Select mode" :showLabel="false " v-model="mode" 
             :options="modes"></SelectOptionInput>
-    </div>
+      </div>
     </form-row>
-    <form-row>
-    <div class="col-12">
+    <form-row v-if="this.rule.type !== null && (this.rule.type == 'AIR_CONDITIONING' || this.rule.type == 'HEATING') ">
+      <div class="col-12">
          <text-input label="Temperature value" v-model="rule.number" type="number"
                 :showErrorMessage="showErrorMessage"/>
-    </div>
+      </div>
+    </form-row>
+    <form-row v-if="this.rule.type !== null && (this.rule.type != 'AIR_CONDITIONING' || this.rule.type != 'HEATING') ">
+      <div class="col-12">
+         <text-input label="Message" v-model="rule.message" type="text"
+                :showErrorMessage="showErrorMessage"/>
+      </div>
     </form-row>
 
     <Button @click="handleClick">Add</Button>
@@ -38,6 +44,7 @@ import TextInput from "../../generic-components/Form/TextInput.vue";
 import SelectOptionInput from '../../generic-components/Form/SelectOptionInput.vue'
 import { mapActions, mapGetters} from "vuex";
 import toastr from "toastr";
+import {types} from '../../constants.js'
 
 export default {
   components: {
@@ -92,12 +99,12 @@ export default {
 
     handleClick() {
         if(this.rule.type == 'HEATING'){
-            this.rule.message = 'Grejanje je ukljuceno';
-        }else{
+            this.rule.message = 'Heating is on';
+        }else if (this.rule.type == 'AIR_CONDITIONING'){
             if(this.mode == 'HOT'){
-                  this.rule.message = 'Klima je ukljucena u rezimu grejanja';
+                  this.rule.message = 'Air conditioning is in heating mode';
             }else{
-                  this.rule.message = 'Klima je ukljucena u rezimu hladjenja';
+                  this.rule.message = 'Air conditioning is in cooling mode';
             }
         }
       this.createRule(this.rule);      
@@ -105,31 +112,33 @@ export default {
   },
 
   mounted() {
-    this.options = [  {
-                        label:"AIR CONDITIONING",
-                        value: "AIR_CONDITIONING"
-                        }, 
-                      {
-                        label: "HEATING",
-                        value: "HEATING"
-                    }];
-    this.signs = [  {
-                        label:"GREATER",
-                        value: ">="
-                        }, 
-                      {
-                        label: "LESS",
-                        value: "<="
-                    }];
+    this.options = types;
+    this.options.splice(0, 0, {
+            value: -1,
+            label: ''
+        })
+     this.options.splice(0, 0, {
+            value: -1,
+            label: ''
+        })
+    this.signs = [  
+      {
+        label:"GREATER",
+        value: ">="
+      }, 
+      {
+        label: "LESS",
+        value: "<="
+      }];
     this.modes = [
-         {
-                        label:"HOT",
-                        value: "HOT"
-                        }, 
-                      {
-                        label: "COOL",
-                        value: "COOL"
-                    }];
+      {
+        label:"HOT",
+        value: "HOT"
+      }, 
+      {
+        label: "COOL",
+        value: "COOL"
+      }];
     
   },
 };

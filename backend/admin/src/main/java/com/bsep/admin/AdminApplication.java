@@ -47,6 +47,16 @@ public class AdminApplication {
         };
     }
 
+    @Bean
+    public KieContainer kieContainer() {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kContainer = ks
+                .newKieContainer(ks.newReleaseId("admin.kjar", "admin-kjar", "0.0.1-SNAPSHOT"));
+        KieScanner kScanner = ks.newKieScanner(kContainer);
+        kScanner.start(10000);
+        return kContainer;
+    }
+
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(AdminApplication.class);
         Map<String, Object> props = new HashMap<>();
@@ -58,16 +68,6 @@ public class AdminApplication {
         props.put("server.port", "8443");
         app.setDefaultProperties(props);
         app.run(args);
-    }
-
-    @Bean
-    public KieContainer kieContainer() {
-        KieServices ks = KieServices.Factory.get();
-        KieContainer kContainer = ks
-                .newKieContainer(ks.newReleaseId("admin.kjar", "admin-kjar", "0.0.1-SNAPSHOT"));
-        KieScanner kScanner = ks.newKieScanner(kContainer);
-        kScanner.start(10000);
-        return kContainer;
     }
 
     @Bean

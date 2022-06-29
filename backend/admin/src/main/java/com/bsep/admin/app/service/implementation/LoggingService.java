@@ -61,7 +61,6 @@ public class LoggingService implements ILoggingService {
                                         logAlarm.getMessage())));
             }
         }
-
         return logRepository.save(log);
     }
 

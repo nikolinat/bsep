@@ -1,7 +1,7 @@
 from utils import read, state
 
-messages = ['Klima je ukljucena', 'Nestalo je struje', 'Klima je iskljucena', 'Klima je ukljucena u rezimu hladjenja',
-            'Klima je ukljucena u rezimu grejanja']
+messages = ['Air conditioning is on', 'No electricity', 'Air conditioning is off',
+            'Air conditioning is in cooling mode', 'Air conditioning is in heating mode']
 
 
 def main():
