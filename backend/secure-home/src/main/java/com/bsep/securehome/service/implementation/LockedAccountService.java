@@ -14,7 +14,6 @@ public class LockedAccountService implements ILockedAccountService {
 
     private LockedAccountRepository lockedAccountRepository;
 
-
     @Autowired
     public LockedAccountService(LockedAccountRepository lockedAccountRepository) {
         this.lockedAccountRepository = lockedAccountRepository;
@@ -30,7 +29,6 @@ public class LockedAccountService implements ILockedAccountService {
         LockedAccount lockedAccount = this.findByUsername(username);
         int count = lockedAccount.getLoginCounts();
         count = count + 1;
-        System.out.println(count);
         lockedAccount.setLoginCounts(count);
         lockedAccount.setDateTime(LocalDateTime.now());
         return this.lockedAccountRepository.save(lockedAccount);

@@ -1,0 +1,16 @@
+package bsep.kjar;
+import com.bsep.securehome.dto.LogAlarm;
+import com.bsep.securehome.model.enums.LogType;
+import com.bsep.securehome.model.Log;
+
+
+rule "Log alarm-secure home"
+	no-loop
+	agenda-group "secure home log alarm"
+	when
+		$log: Log(logType == LogType.ERROR, applicationName == "Secure home")
+    then
+		LogAlarm logAlarm = new LogAlarm();
+		logAlarm.setMessage($log.getMessage());
+		insert(logAlarm);
+end

@@ -1,1 +1,2 @@
-46a703f0-2c01-49f1-b3cf-f837b75b29c0,16,IRON,Curi voda iz pegle
+40e2bb3a-a911-449a-ba4b-8d053c6bcd65,16,IRON,Curi voda iz pegle
+15b3e481-6732-4070-9cb7-c4887cb0c6f4,16,COOKER,Sporet je upaljen
