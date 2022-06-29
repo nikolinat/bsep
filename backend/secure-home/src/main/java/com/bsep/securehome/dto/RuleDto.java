@@ -1,5 +1,7 @@
 package com.bsep.securehome.dto;
 
+import java.util.UUID;
+
 import com.bsep.securehome.model.enums.DeviceType;
 
 public class RuleDto {
@@ -7,16 +9,19 @@ public class RuleDto {
     private String sign;
     private String message;
     private DeviceType type;
+    private UUID id;
 
     public RuleDto() {
     }
 
-    public RuleDto(Integer number, String sign, String message, DeviceType type) {
+    public RuleDto(Integer number, String sign, String message, DeviceType type, UUID id) {
         this.number = number;
         this.sign = sign;
         this.message = message;
         this.type = type;
+        this.id = id;
     }
+
 
     public Integer getNumber() {
         return this.number;
@@ -49,5 +54,14 @@ public class RuleDto {
     public void setType(DeviceType type) {
         this.type = type;
     }
+
+    public UUID getId() {
+        return this.id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
 
 }

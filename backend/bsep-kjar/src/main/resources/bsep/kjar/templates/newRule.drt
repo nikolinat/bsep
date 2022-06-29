@@ -4,10 +4,11 @@ number
 sign
 message
 type
+id
  
 template "New rule template"
  
-rule "New rule alarm"
+rule "New rule alarm @{id}"
 	no-loop
 	agenda-group "alarm"
 	when
