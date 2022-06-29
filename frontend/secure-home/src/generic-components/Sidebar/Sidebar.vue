@@ -7,8 +7,8 @@
         <sidebar-item v-if="role.includes('ROLE_ADMIN')" name="Registration user" icon="dashboard" to="/new-user"></sidebar-item>
         <sidebar-item v-if="role.includes('ROLE_ADMIN')" name="Users" icon="assignment" to="/users"></sidebar-item>
         <sidebar-item  v-if="role.includes('ROLE_ADMIN')" name="Real estates" icon="assignment" to="/real-estates"></sidebar-item>
-         <sidebar-item  v-if="role.includes('ROLE_ADMIN')" name="Rules" icon="assignment" to="/rule"></sidebar-item>
-
+        <sidebar-item  v-if="role.includes('ROLE_ADMIN')" name="Devices Rules" icon="assignment" to="/rule"></sidebar-item>
+        <sidebar-item  v-if="role.includes('ROLE_ADMIN')" name="Log Rules" icon="assignment" to="/log-rule"></sidebar-item>
         <sidebar-item  v-if="role.includes('ROLE_TENANT') || role.includes('ROLE_HOUSE_OWNER')" name="Real estates owner" icon="assignment" to="/owner-real-estates"></sidebar-item>
         <sidebar-item  v-if="role.includes('ROLE_TENANT') || role.includes('ROLE_HOUSE_OWNER')" name="Real estates tenant" icon="assignment" to="/tenant-real-estates"></sidebar-item>
       </ul>

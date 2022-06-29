@@ -9,17 +9,6 @@ const getters = {
 };
 
 const actions = {
-    createRule: (context, rule) => {
-        axios
-            .post(`/rule`, rule)
-            .then(() => {
-                context.commit("setResult", { label: "create", ok: true });
-            })
-            .catch((error) => {
-                console.log(error);
-                context.commit("setResult", { label: "create", ok: false });
-            });
-    },
     createLogRule: (context, rule) => {
         axios
             .post(`/rule/log`, rule)

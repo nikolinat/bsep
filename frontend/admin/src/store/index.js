@@ -4,7 +4,7 @@ import certificates from "./modules/certificates.js";
 import csr from "./modules/csr.js";
 import authentication from "./modules/authetication.js"
 import log from "./modules/log.js"
-
+import rules from "./modules/rules.js"
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -12,6 +12,7 @@ export default new Vuex.Store({
     certificates,
     csr,
     authentication,
-    log
+    log,
+    rules
   },
 });

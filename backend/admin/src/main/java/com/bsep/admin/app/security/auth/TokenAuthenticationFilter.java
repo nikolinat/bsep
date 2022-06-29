@@ -39,8 +39,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String username;
         String authToken = tokenUtils.getToken(request);
         // zameniti posle
-        // String secureContent = tokenUtils.getSecureContentFromCookie(request);
-        String secureContent = "";
+        String secureContent = tokenUtils.getSecureContentFromCookie(request);
+        // String secureContent = "";
         try {
             if (authToken != null) {
                 invalidTokenService.findByToken(authToken);

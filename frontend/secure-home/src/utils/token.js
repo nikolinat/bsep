@@ -48,6 +48,9 @@ export function getRoleFromToken() {
 
     const roleFromToken = decodeToken()?.role;
 
+	if(roleFromToken === undefined) {
+        return [];
+    }
 	const splittedRoles = roleFromToken.split(",");
 
 	const roles = []

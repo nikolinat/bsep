@@ -22,7 +22,7 @@
                             <ModalOpener :modalBoxId="'alarmsModal'">
                                 <Button @click="handleViewAlarms(realEstate.id)">Alarms</Button>
                             </ModalOpener>
-                            <ModalOpener :modalBoxId="'reportModal'">
+                            <ModalOpener v-if="roles.includes('ROLE_HOUSE_OWNER') && isOwner === true" :modalBoxId="'reportModal'">
                                 <Button @click="handleViewReport(realEstate.id)">Report</Button>
                             </ModalOpener>
                         </div>

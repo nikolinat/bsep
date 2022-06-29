@@ -1,0 +1,6 @@
+package admin.kjar;
+import com.bsep.admin.app.dto.LogAlarm;
+import com.bsep.admin.app.model.enums.LogType;
+import com.bsep.admin.app.model.Log;
+
+

@@ -64,7 +64,7 @@ export default {
                 return;
 
             if(ok) {
-                this.$router.push('/');
+                this.$router.push('/logs');
             } else {
                 toastr.error(message)
             }

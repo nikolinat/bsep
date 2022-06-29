@@ -88,6 +88,15 @@ const routes = [
     },
   },
   {
+    path: "/log-rule",
+    name: "LogRulePage",
+    component: () => import("@/pages/LogRulePage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN]
+    },
+  },
+  {
     path: "*",
     name: "catchAll",
     component: () => import("@/pages/HomePage.vue"),

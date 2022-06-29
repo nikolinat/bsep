@@ -85,7 +85,7 @@ const routes = [
     component: () => import("@/pages/ViewDevicesPage.vue"),
     meta: {
       layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN],
+      role: [Roles.ROLE_ADMIN, Roles.ROLE_HOUSE_OWNER, Roles.ROLE_TENANT],
     },
   },
   {
@@ -94,7 +94,7 @@ const routes = [
     component: () => import("@/pages/ViewReportsPage.vue"),
     meta: {
       layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN],
+      role: [Roles.ROLE_ADMIN, Roles.ROLE_HOUSE_OWNER],
     },
   },
   {
@@ -103,13 +103,22 @@ const routes = [
     component: () => import("@/pages/ViewAlarmsPage.vue"),
     meta: {
       layout: "AppLayoutMain",
-      role: [Roles.ROLE_ADMIN]
+      role: [Roles.ROLE_ADMIN, Roles.ROLE_HOUSE_OWNER, Roles.ROLE_TENANT]
     },
   },
   {
     path: "/rule",
     name: "RulePage",
     component: () => import("@/pages/RulePage.vue"),
+    meta: {
+      layout: "AppLayoutMain",
+      role: [Roles.ROLE_ADMIN, Roles.ROLE_HOUSE_OWNER]
+    },
+  },
+  {
+    path: "/log-rule",
+    name: "LogRulePage",
+    component: () => import("@/pages/LogRulePage.vue"),
     meta: {
       layout: "AppLayoutMain",
       role: [Roles.ROLE_ADMIN]

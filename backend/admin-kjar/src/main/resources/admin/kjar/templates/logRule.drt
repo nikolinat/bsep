@@ -1,0 +1,27 @@
+template header
+ 
+message
+type
+id
+
+package admin.kjar;
+import com.bsep.admin.app.dto.LogAlarm;
+import com.bsep.admin.app.model.enums.LogType;
+import com.bsep.admin.app.model.Log;
+
+dialect "java"
+
+template "Log rule template"
+ 
+rule "New log alarm @{id}"
+	no-loop
+	agenda-group "adminLogAlarm"
+	when
+        $log: Log(logType == LogType.@{type},  message.contains("@{message}"))
+    then
+	    LogAlarm logAlarm = new LogAlarm();
+		logAlarm.setMessage($log.getMessage());
+		insert(logAlarm);
+end
+
+end template

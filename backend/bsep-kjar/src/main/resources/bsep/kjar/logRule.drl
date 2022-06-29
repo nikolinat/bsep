@@ -4,15 +4,4 @@ import com.bsep.securehome.model.enums.LogType;
 import com.bsep.securehome.model.Log;
 
 
-rule "New log alarm 3442be25-68bc-47d0-a6e1-36debd0652c2"
-	no-loop
-	agenda-group "secure home log alarm"
-	when
-        $log: Log(logType == LogType.ERROR,  message.contains("credentials"))
-    then
-	    LogAlarm logAlarm = new LogAlarm();
-		logAlarm.setMessage($log.getMessage());
-		insert(logAlarm);
-end
-
 

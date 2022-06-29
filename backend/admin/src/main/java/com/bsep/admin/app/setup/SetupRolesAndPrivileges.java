@@ -43,9 +43,10 @@ public class SetupRolesAndPrivileges implements
         Privilege writeCsr = createPrivilegeIfNotFound("WRITE_CSR");
         Privilege editCsr = createPrivilegeIfNotFound("EDIT_CSR");
         Privilege readLogs = createPrivilegeIfNotFound("READ_LOGS");
+        Privilege createRuleLog = createPrivilegeIfNotFound("CREATE_RULE_LOG");
 
         List<Privilege> adminPrivileges = Arrays.asList(readCertificates, editCertificate, readUsers, readCsr, editCsr,
-                writeCsr, readLogs);
+                writeCsr, readLogs, createRuleLog);
         List<Privilege> ownerPrivileges = new ArrayList<>();
         List<Privilege> tenantPrivileges = new ArrayList<>();
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);

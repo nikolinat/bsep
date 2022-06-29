@@ -50,12 +50,14 @@ public class LoggingService implements ILoggingService {
             if (o instanceof LogAlarm) {
                 List<User> admins = userService.findAdmins();
                 LogAlarm logAlarm = (LogAlarm) o;
+                if(!logAlarm.getIsAlerted()){
                 logAlarm.setIsAlerted(true);
                 admins.forEach(admin -> notificationService
                         .sendNotification(
                                 new Notification("notificationSocket/" + Integer.toString(admin.getId()), "Log alarm",
                                         logAlarm.getMessage())));
             }
+        }
         }
 
         return logRepository.save(log);

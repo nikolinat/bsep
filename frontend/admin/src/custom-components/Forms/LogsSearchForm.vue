@@ -89,7 +89,7 @@ export default {
                 logType: null,
                 messageRegex: "",
                 dateTime: moment(),
-                applicationName: ""
+                applicationName: "Admin"
             }
         }
     },

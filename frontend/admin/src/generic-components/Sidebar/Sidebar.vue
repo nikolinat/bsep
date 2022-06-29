@@ -29,6 +29,11 @@
           icon="assignment"
           to="/logs"
         ></sidebar-item>
+          <sidebar-item
+          name="Logs rule"
+          icon="assignment"
+          to="/log-rule"
+        ></sidebar-item>
       </ul>
     </div>
   </div>

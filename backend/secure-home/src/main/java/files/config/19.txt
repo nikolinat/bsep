@@ -1,3 +1,6 @@
 2e3834f9-f551-4d57-b2c5-fb116e7649e7,19,Pegla,IRON,20,Iron is on|Leaking water from iron|Iron shut down|No electricity
 3ed058e3-441a-4d1d-b42d-6c96edd85dcc,19,Frizider,FRIDGE,20,Fridge is on|Fridge is open
 4dc5b905-0170-41ac-8e43-9624b1e3d761,19,Zamrzivac,FREEZER,20,Freezer is open|Water is leaking from the freezer
+f6c72503-094f-4349-8774-2d655fe72afc,19,Sporet,COOKER,20,Cooker is on|Cooker is off
+eadc4918-2588-48cb-9f0e-a48c277f7375,19,Tv,TV,10,Tv is on
+4b434930-3199-443e-86ae-6eafe785f89a,19,Camera,CAMERAS,10,Cameras is on
