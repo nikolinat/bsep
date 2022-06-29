@@ -1,0 +1,27 @@
+template header
+ 
+message
+type
+id
+
+package bsep.kjar;
+import com.bsep.securehome.dto.LogAlarm;
+import com.bsep.securehome.model.enums.LogType;
+import com.bsep.securehome.model.Log;
+
+dialect "java"
+
+template "Log rule template"
+ 
+rule "New log alarm @{id}"
+	no-loop
+	agenda-group "secure home log alarm"
+	when
+        $log: Log(logType == LogType.@{type},  message.contains("@{message}"))
+    then
+	    LogAlarm logAlarm = new LogAlarm();
+		logAlarm.setMessage($log.getMessage());
+		insert(logAlarm);
+end
+
+end template

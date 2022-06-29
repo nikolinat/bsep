@@ -64,6 +64,7 @@ public class Task implements Runnable {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 MessageDto messageDto = mapMessage(scanner.nextLine());
+                messageDto.setMessage(deviceService.decrypt(messageDto.getMessage()));
                 messageDto.setDateTime(messageDto.getDateTime().plusHours(2));
                 if (deviceService.checkRegex(messageDto)
                         && now.minusSeconds(this.period).isBefore(messageDto.getDateTime())

@@ -55,13 +55,16 @@ public class SetupRolesAndPrivileges implements
         Privilege readAlarms = createPrivilegeIfNotFound("READ_ALARMS");
         Privilege readRealEstatesByTenantOwner = createPrivilegeIfNotFound("READ_REAL_ESTATES_BY_TENANT_OWNER");
         Privilege readLogs = createPrivilegeIfNotFound("READ_LOGS");
+        Privilege createRule = createPrivilegeIfNotFound("CREATE_RULE");
+        Privilege createRuleLog = createPrivilegeIfNotFound("CREATE_RULE_LOG");
+        Privilege createReport = createPrivilegeIfNotFound("CREATE_REPORT");
 
         List<Privilege> adminPrivileges = Arrays.asList(readCertificates, editCertificate, readUsers, writeUsers,
                 readCsr, editCsr, readRealEstate, removeUsers, readDevice, createDevice, createAlarm, readAlarms,
                 readCertificates, editCertificate, readUsers, readCsr, editCsr,
-                writeCsr, readLogs);
+                writeCsr, readLogs, createRule, createRuleLog, createReport);
         List<Privilege> ownerPrivileges = Arrays.asList(writeCsr, removeUsers, readDevice, createAlarm, readAlarms,
-                readRealEstatesByTenantOwner);
+                readRealEstatesByTenantOwner, createRule, createReport);
         List<Privilege> tenantPrivileges = Arrays.asList(readDevice, readAlarms, readRealEstatesByTenantOwner);
 
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);

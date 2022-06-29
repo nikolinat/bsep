@@ -61,16 +61,17 @@ public class DeviceController {
     @LogAfterThrowing(message = "ERROR add message to file")
     @LogAfterReturning(message = "SUCCESS add message to file")
     public ResponseEntity<?> getMessageFromDevice(@RequestBody MessageDto message) throws IOException {
-        String decryptedMessage = deviceService.decrypt(message.getMessage());
-        message.setMessage(decryptedMessage);
+        message.setMessage(message.getMessage());
         deviceMessageService.addMessageToFile(message);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('CREATE_REPORT')")
     @PutMapping("/report")
     @LogAfterThrowing(message = "ERROR creating report")
     @LogAfterReturning(message = "SUCCESS acreating report")
-    public ResponseEntity<List<DeviceReportDto>> report(@RequestBody SearchDeviceDto searchDeviceDto) throws IOException {
+    public ResponseEntity<List<DeviceReportDto>> report(@RequestBody SearchDeviceDto searchDeviceDto)
+            throws IOException {
         List<DeviceReportDto> deviceReport = deviceMessageService.report(searchDeviceDto);
         return new ResponseEntity<>(deviceReport, HttpStatus.OK);
     }

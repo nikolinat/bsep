@@ -18,6 +18,7 @@ public class NotificationService implements INotificationService {
 
     @Override
     public void sendNotification(Notification notification) {
+        System.out.println("NOTIFICATION" +notification.getMessage());
         sockets.brodcast(String.valueOf(notification.getId()), notification);
     }
 }
