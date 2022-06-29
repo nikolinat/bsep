@@ -108,7 +108,7 @@ router.beforeEach((to, from, next) => {
   const { role} = to.meta;
 	if(role){
 		const userRole = getRoleFromToken();
-		if(role.length && !role.includes(userRole)){
+		if(role.length && !role.some(r=> userRole.indexOf(r) >= 0)){
 			return next({path: 'auth'});
 		}
 

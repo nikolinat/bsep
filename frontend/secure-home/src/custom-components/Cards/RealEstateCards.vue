@@ -16,7 +16,7 @@
                             <ModalOpener :modalBoxId="'devicesMessagesModal'">
                                 <Button @click="handleViewDevicesMessages(realEstate.id)">Messages</Button>
                             </ModalOpener>
-                             <ModalOpener :modalBoxId="'createAlarmModal'">
+                             <ModalOpener v-if="roles.includes('ROLE_HOUSE_OWNER') && isOwner === true" :modalBoxId="'createAlarmModal'">
                                 <Button @click="handleCreateAlarm(realEstate.id)">Add alarm</Button>
                             </ModalOpener>
                             <ModalOpener :modalBoxId="'alarmsModal'">
@@ -92,6 +92,7 @@ import DeviceMessageTable from '../Tables/DeviceMessageTable.vue'
 import SearchFilterDevicesMessages from '../Forms/SearchFilterDevicesMessages.vue'
 import AlarmsTable from '../Tables/AlarmsTable.vue'
 import AddAlarmForm from '../Forms/AddAlarmForm.vue'
+import { getRoleFromToken } from '../../utils/token.js'
 import Report from "../Forms/ReportForm.vue"
 import Card from '../../generic-components/Card/Card.vue'
 import ReportTable from '../../custom-components/Tables/ReportTable.vue'
@@ -99,7 +100,7 @@ import ReportTable from '../../custom-components/Tables/ReportTable.vue'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-    props: ['realEstates'],
+    props: ['realEstates', 'isOwner'],
     components: {
         RotatingCard,
         Button,
@@ -121,7 +122,8 @@ export default {
         return {
             owners: [],
             tenants: [],
-            realEstateId: null
+            realEstateId: null,
+            roles: []
         }
     },
     computed: {
@@ -166,6 +168,9 @@ export default {
         handleViewReport(id){
             this.realEstateId = id;
         }
+    },
+    mounted() {
+        this.roles = getRoleFromToken();
     }
 }
 </script>

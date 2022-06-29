@@ -23,7 +23,7 @@ const actions = {
             });
 
             const role = getRoleFromToken();
-            if(role === "ROLE_ADMIN") {
+            if(role.includes("ROLE_ADMIN")) {
                 tryConnecting();
             }
         })

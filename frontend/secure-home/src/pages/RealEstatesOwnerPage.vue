@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <RealEstateCards :realEstates="realEstates" />
+        <RealEstateCards :realEstates="realEstates" :isOwner="true"/>
     </div>
 </template>
 

@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthenticationService implements IAuthenticationService {
@@ -33,7 +35,8 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Autowired
     public AuthenticationService(TokenUtils tokenUtils, LockedAccountService lockedAccountService,
-                                 AuthenticationManager authenticationManager, EmailService emailService, UserService userService, CookieUtil cookieUtil) {
+            AuthenticationManager authenticationManager, EmailService emailService, UserService userService,
+            CookieUtil cookieUtil) {
         this.tokenUtils = tokenUtils;
         this.authenticationManager = authenticationManager;
         this.lockedAccountService = lockedAccountService;
@@ -42,9 +45,9 @@ public class AuthenticationService implements IAuthenticationService {
         this.cookieUtil = cookieUtil;
     }
 
-
     @Override
-    public UserTokenState authenticate(JwtAuthenticationRequest jwtAuthenticationRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public UserTokenState authenticate(JwtAuthenticationRequest jwtAuthenticationRequest)
+            throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -52,18 +55,20 @@ public class AuthenticationService implements IAuthenticationService {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             User user = (User) authentication.getPrincipal();
-            String role = user.getRoles().get(0).getName();
-            if (!role.equals("ROLE_ADMIN")) {
+            if (user.getRoles().stream().filter(role -> role.getName().equals("ROLE_ADMIN"))
+                    .collect(Collectors.toList()).size() == 0) {
                 throw new InvalidCredentialsException("Only admin can login in this application.");
             }
             Integer id = user.getId();
             HttpCookie cookie = cookieUtil.createAccessTokenCookie(tokenUtils.generateCookieContent(), 3600L);
-            String jwt = tokenUtils.generateToken(user.getUsername(), role, id, cookie.getValue());
+            String jwt = tokenUtils.generateToken(user.getUsername(), user.getRoles(), id, cookie.getValue());
             int expiresIn = tokenUtils.getExpiredIn();
-            if (lockedAccountService.findByUsername(jwtAuthenticationRequest.getUsername()) != null && lockedAccountService.findByUsername(jwtAuthenticationRequest.getUsername()).getLoginCounts() < 3) {
+            if (lockedAccountService.findByUsername(jwtAuthenticationRequest.getUsername()) != null
+                    && lockedAccountService.findByUsername(jwtAuthenticationRequest.getUsername())
+                            .getLoginCounts() < 3) {
                 lockedAccountService.delete(jwtAuthenticationRequest.getUsername());
             }
-            return new UserTokenState(jwt, expiresIn, role, id, cookie);
+            return new UserTokenState(jwt, expiresIn, user.getRoles().get(0).getName(), id, cookie);
 
         } catch (AuthenticationException e) {
             String username = jwtAuthenticationRequest.getUsername();
